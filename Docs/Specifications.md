@@ -25,4 +25,9 @@ This software is expecting the following out of its user's machine:
 
 The dependencies of this software include the following:
 
-* ???
+* Predefined game engine by Chris Marriott
+
+## Code Documentation
+
+The code itself is to be documented according to JSDoc standards, which takes inspiration
+from Javadoc.

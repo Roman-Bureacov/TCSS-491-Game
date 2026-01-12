@@ -4,7 +4,7 @@ The drawing system will be similar to that of 3D graphics, where you have a came
 a scene, however the scene is split into panes, and the camera itself is its own pane.
 
 The panes and objects are all defined using matrices, where panes and objects are 
-positioned using 3x3 homogenous matrices. To move these, you perform a transformation,
+positioned using 4x4 homogenous matrices. To move these, you perform a transformation,
 simply a matrix multiplication.
 
 ## Camera
@@ -42,27 +42,39 @@ The global pane is the panes in which all other panes are defined with respect t
 Every pane is defined with an origin that is a 3x3 matrix, of the form:
 
 ```
-X1 Y1 C1
-X2 Y2 C2
-0  0  1
+X1 Y1 Z1 C1
+X2 Y2 Z2 C2
+X3 Y3 Z3 C3
+0  0  0  1
 ```
 
 which has an X and Y component along with a translation component C. To move a pane
 around, simply multiply it by a 3x3 non-singular transformation matrix. Note that
-the components `X2` and `Y1` are primarily for rotations, if the panes are rotated.
+the components other than the diagonal for `X`, `Y`, and `Z` are for rotations and
+(most of the time) may be ignored.
 
 Points themselves within the panes are defined as column vectors of the form:
 
 ```
 X
 Y
+0
 1
 ```
 
-Where the 1 is specifically for homogenous coordinate purposes.
+Where the 1 is specifically for homogenous coordinate purposes. Note that the Z coordinate
+is 0, this is because everything is drawn in panes, and the only 3D that should occur is
+that of the panes themselves from the global pane---it is only the panes themselves that
+should differ in the z component, nothing else.
 
-To transform objects around in panes, you perform a matrix multiplication with the 
-transformation matrix `T` and the column vector `V`: `TV = newCoord`.
+## Objects
+
+Objects themselves are simple rectangles, every object positioned on the pane that may be
+drawn is strictly a rectangle. This means that the camera itself is merely a stand-in for 
+positioning objects, not necessarily rasterizing them.
+
+Objects are positioned in object coordinates, specifically with respect to the pane's
+coordinate system.
 
 ## Transformation
 
