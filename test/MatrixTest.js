@@ -12,6 +12,12 @@ const fillMatrix = (M) => {
     }
 }
 
+/**
+ * tests if two numerical values are approximately the same (for floating-point values)
+ * @param A value
+ * @param B value
+ * @returns {boolean} if they're close enough
+ */
 let approx = (A, B) => {
     return (Math.abs(A - B) < 10e-6);
 };

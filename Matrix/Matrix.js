@@ -5,6 +5,17 @@ Roman Bureacov
  */
 
 /**
+ * Creates and returns an identity matrix.
+ * @param dimension the dimension of the matrix
+ * @returns {Matrix} the identity matrix
+ */
+const identity = (dimension) => {
+    let m = new Matrix(dimension);
+    for (let i = 0; i < dimension; i++) m.set(i, i, 1);
+    return m;
+}
+
+/**
  * Performs matrix multiplication, returning a new matrix.
  *
  * @param L the left matrix
@@ -159,17 +170,6 @@ export class Matrix {
     }
 
     /**
-     * Creates and returns an identity matrix.
-     * @param dimension the dimension of the matrix
-     * @returns {Matrix} the identity matrix
-     */
-    identity(dimension) {
-        let m = new Matrix(dimension);
-        for (let i = 0; i < dimension; i++) m.set(i, i, 1);
-        return m;
-    }
-
-    /**
      * Duplicates and returns a copy of this matrix.
      * @returns {Matrix}
      */
@@ -185,6 +185,5 @@ export class Matrix {
  * Object that represents matrix operations.
  *
  * @author Roman Bureacov
- * @type
  */
-export const MatrixOp = { multiply, cofactor, inverse }
+export const MatrixOp = { multiply, determinant, cofactor, inverse, identity }
