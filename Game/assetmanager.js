@@ -43,5 +43,6 @@ class AssetManager {
     getAsset(path) {
         return this.cache[path];
     };
-};
+}
 
+export { AssetManager }

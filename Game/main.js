@@ -1,4 +1,6 @@
 import { Matrix } from "../Matrix/Matrix.js";
+import { GameEngine } from "./gameengine.js"
+import { AssetManager } from "./assetmanager.js";
 
 const gameEngine = new GameEngine();
 
