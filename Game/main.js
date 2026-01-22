@@ -1,3 +1,5 @@
+import { Matrix } from "../Matrix/Matrix.js";
+
 const gameEngine = new GameEngine();
 
 const ASSET_MANAGER = new AssetManager();
