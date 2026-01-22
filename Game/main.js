@@ -40,9 +40,9 @@ ASSET_MANAGER.downloadAll(async () => {
     canvas.height = CANVAS_H;
 
     //Arena1
-    [arena1TileSet, arena1Map] = setPromiseAndLoadArenaText(arenas.arena1.tileSet, arenas.arena1.map);
-    [tilesetSheet, mapTxt] = await Promise.all([arena1TileSet, arena1Map]);
-    const arena1TileMap = setTileMap(tilesetSheet, "arena01", mapTxt, arenas.arena1.legend)
+    let arena1TilesetSheet, arena1MapTxt;
+    [arena1TilesetSheet, arena1MapTxt] = await Promise.all(setPromiseAndLoadArenaText(arenas.arena1.tileSet, arenas.arena1.map));
+    const arena1TileMap = setTileMap(arena1TilesetSheet, "arena01", arena1MapTxt, arenas.arena1.legend)
     
 
     gameEngine.init(ctx);
