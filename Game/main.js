@@ -1,6 +1,6 @@
-import { Matrix } from "../Matrix/Matrix.js";
-import { GameEngine } from "./gameengine.js"
-import { AssetManager } from "./assetmanager.js";
+import {Matrix} from "../Matrix/Matrix.js";
+import {GameEngine} from "./gameengine.js"
+import {AssetManager} from "./assetmanager.js";
 import {ArenaFactory} from "./arenaFactory.js";
 import {loadArenaTxt} from "./arenaFactory.js";
 import {parseTxtToMap} from "./arenaFactory.js";
@@ -51,9 +51,7 @@ ASSET_MANAGER.downloadAll(async () => {
     canvas.focus();
 
     //Arena1
-    let arena1TilesetSheet, arena1MapTxt;
-    [arena1TilesetSheet, arena1MapTxt] = await Promise.all(setPromiseAndLoadArenaText(arenas.arena1.tileSet, arenas.arena1.map));
-    const arena1TileMap = setTileMap(arena1TilesetSheet,arena1MapTxt, arenas.arena1.background ,arenas.arena1.name, arenas.arena1.tileWidth, arenas.arena1.tileHeight ,arenas.arena1.legend)
+    let arena1TileMap = await setArenaAssets(arenas.arena1);
 
     gameEngine.init(ctx);
 
@@ -101,11 +99,17 @@ function setPromiseAndLoadArenaText(tileset, map) {
  * @param theArenaLegend the arenas Legend Object
  * @returns {TileMap} a new TileMap Object.
  */
-function setTileMap(theTileSheet, theMapText, theArenasBackground ,theArenaName, theTileWidth,theTileHeight, theArenaLegend) {
-    const col = CANVAS_W/theTileWidth;
-    const row = CANVAS_H/theTileHeight;
-    const factory = new ArenaFactory(theTileSheet, theArenasBackground ,theArenaName, theTileWidth,theTileHeight, ASSET_MANAGER, gameEngine, CANVAS_W, CANVAS_H);
-    const buildMap = parseTxtToMap(theMapText, col ,row ,theArenaLegend);
+function setTileMap(theTileSheet, theMapText, theArenasBackground, theArenaName, theTileWidth, theTileHeight, theArenaLegend) {
+    const col = CANVAS_W / theTileWidth;
+    const row = CANVAS_H / theTileHeight;
+    const factory = new ArenaFactory(theTileSheet, theArenasBackground, theArenaName, theTileWidth, theTileHeight, ASSET_MANAGER, gameEngine, CANVAS_W, CANVAS_H);
+    const buildMap = parseTxtToMap(theMapText, col, row, theArenaLegend);
     return new TileMap(factory, buildMap);
 }
 
+async function setArenaAssets(arenaObj) {
+    let arenaTilesetSheet, arenaMapTxt;
+    [arenaTilesetSheet, arenaMapTxt] = await Promise.all(setPromiseAndLoadArenaText(arenaObj.tileSet, arenaObj.map));
+
+    return setTileMap(arenaTilesetSheet, arenaMapTxt, arenaObj.background, arenaObj.name, arenaObj.tileWidth, arenaObj.tileHeight, arenaObj.legend)
+}
