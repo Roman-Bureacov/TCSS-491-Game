@@ -5,12 +5,19 @@ import {ArenaFactory} from "./arenaFactory.js";
 import {loadArenaTxt} from "./arenaFactory.js";
 import {parseTxtToMap} from "./arenaFactory.js";
 import {TileMap} from "./arenaFactory.js";
+import {AwesomeCharacter} from "./assets/sprites/character/awesome_character.js";
+
+import {PhysicsEntity} from "./assets/sprites/character/PhysicsEntity.js";
 
 const gameEngine = new GameEngine();
 const ASSET_MANAGER = new AssetManager();
 const CANVAS = document.querySelector('#gameWorld');
 const CANVAS_W = CANVAS.width;
 const CANVAS_H = CANVAS.height;
+
+
+let img = "../img/Guy.png";
+var char;
 
 /**
  * Arena maps and assets
@@ -42,6 +49,7 @@ const arenas = {
     },
     // Add more arenas assets here
 }
+ASSET_MANAGER.queueDownload(img)
 
 
 ASSET_MANAGER.downloadAll(async () => {
@@ -51,12 +59,19 @@ ASSET_MANAGER.downloadAll(async () => {
     canvas.focus();
 
     //Arena1
-    let arena1TileMap = await setArenaAssets(arenas.arena1);
+    const arena1TileMap = await setArenaAssets(arenas.arena1);
+
+
+
+    char = new AwesomeCharacter(gameEngine, ASSET_MANAGER.getAsset(img));
 
     gameEngine.init(ctx);
 
     //Add new Arenas/sprite entities.
     gameEngine.addEntity(arena1TileMap);
+
+    gameEngine.addEntity(char);
+
 
     // Start the gameEngine
     gameEngine.start();

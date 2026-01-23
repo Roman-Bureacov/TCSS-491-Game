@@ -5,13 +5,13 @@ A concrete implementation of the character class
 import { Character } from "./character.js"
 import {Spritesheet} from "./animation.js";
 import {Animator} from "./animation.js";
-import {KeyMapper} from "../keymapper.js";
+import {KeyMapper} from "../../../keymapper.js";
 
 export class AwesomeCharacter extends Character {
     constructor(game, image) {
         super(game, image);
 
-        this.spritesheet = new Spritesheet(this.image, 3, 14);
+        this.spritesheet = new Spritesheet(image, 3, 14);
 
         this.states = Object.freeze({
             MOVE : "move ",

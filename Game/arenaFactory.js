@@ -33,29 +33,18 @@ export class ArenaFactory {
         this.tileRows = canvasH / this.tileHeight;
 
 
-        this.assetManager.downloadAll(async () => {
-            let bg;
-            let bgImg = new Image();
-            console.log(`Background loaded: ${arenaBackgroundPath}`)
+        // In ArenaFactory constructor (remove the assetManager.downloadAll(...) wrapper)
 
+        const bgImg = new Image();
+        bgImg.onload = () => {
+            this.bgImg = bgImg;
+            // IMPORTANT: add background FIRST so it draws behind everything
+            this.gameEngine.addEntity(new BackgroundFactory(bgImg))
+        };
 
-            const bgPromise = new Promise((resolve, reject) => {
-                bgImg.onload = () => resolve(bgImg);
-                bgImg.onerror = () => reject(new Error("Background failed to load"));
-                bgImg.src = arenaBackgroundPath;
+        bgImg.onerror = () => console.error("Background failed to load:", arenaBackgroundPath);
+        bgImg.src = arenaBackgroundPath;
 
-
-            });
-
-            try {
-                [bg] = await Promise.all([bgPromise]);
-            } catch (e) {
-                console.error(e);
-                return;
-            }
-
-            this.gameEngine.addEntity(new BackgroundFactory(bg));
-        });
 
     }
 

@@ -2,7 +2,7 @@
 This code manages animation.
  */
 
-import {Matrix} from "../../Matrix/Matrix.js";
+import {Matrix} from "../../../../Matrix/Matrix.js";
 
 /**
  * Object that represents a simple animator object
@@ -82,12 +82,12 @@ export class Spritesheet extends Matrix {
         super(rows, columns);
         Object.assign(this, { image, rows, columns });
 
-        this.frameWidth = image.frameWidth / columns;
-        this.frameHeight = image.frameHeight / rows;
+        this.frameWidth = image.width/ columns;
+        this.frameHeight = image.height / rows;
 
         for (let r = 0; r < rows; r++) {
             for (let c = 0; c < columns; c++) {
-                this.set(r, c, {x: c * this.frameWidth, y: r * this.frameHeight});
+                super.set(r, c, {x: c * this.frameWidth, y: r * this.frameHeight});
             }
         }
     }
