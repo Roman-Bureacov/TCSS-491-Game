@@ -6,7 +6,7 @@ Roman Bureacov
 
 /**
  * Creates and returns an identity matrix.
- * @param dimension the dimension of the matrix
+ * @param {number} dimension the dimension of the matrix
  * @returns {Matrix} the identity matrix
  */
 const identity = (dimension) => {
@@ -18,8 +18,8 @@ const identity = (dimension) => {
 /**
  * Performs matrix multiplication, returning a new matrix.
  *
- * @param L the left matrix
- * @param R the right matrix
+ * @param {Matrix} L the left matrix
+ * @param {Matrix} R the right matrix
  * @return undefined if the multiplication is impossible, resulting matrix otherwise.
  */
 const multiply = (L, R) => {
@@ -43,7 +43,7 @@ const multiply = (L, R) => {
 
 /**
  * Finds the determinant of the matrix
- * @param M the matrix
+ * @param {Matrix} M the matrix
  * @returns {number|null} null if the matrix is not square, the determinant otherwise
  */
 const determinant = (M) => {
@@ -64,9 +64,9 @@ const determinant = (M) => {
 
 /**
  * Finds the cofactor of the matrix
- * @param M the matrix
- * @param row the row index
- * @param column the column index
+ * @param {Matrix} M the matrix
+ * @param {number} row the row index
+ * @param {number} column the column index
  * @returns {number|null} null if the matrix is non-square, the cofactor otherwise
  */
 const cofactor = (M, row, column) => {
@@ -90,7 +90,7 @@ const cofactor = (M, row, column) => {
 
 /**
  * Calculates the inverse of the matrix
- * @param M
+ * @param {Matrix} M
  * @return null if the matrix is singular, the inverse of the matrix otherwise
  */
 const inverse = (M) => {
@@ -131,8 +131,8 @@ const inverse = (M) => {
 export class Matrix {
     /**
      * Creates a matrix of specified size with all entries 0
-     * @param rows the number of rows in the matrix
-     * @param columns the number of columns in the matrix
+     * @param {number} rows the number of rows in the matrix
+     * @param {number=rows} columns the number of columns in the matrix
      */
     constructor(rows, columns = rows) {
         Object.assign(this, {
@@ -150,9 +150,9 @@ export class Matrix {
      *
      * If the indices are out of bounds, nothing happens.
      *
-     * @param row the row to look at
-     * @param col the column to look at
-     * @param value the value to set
+     * @param {number} row the row to look at
+     * @param {number} col the column to look at
+     * @param {*} value the value to set
      */
     set(row, col, value) {
         if (this.matrix[row * this.columns + col] !== undefined)
@@ -161,8 +161,8 @@ export class Matrix {
 
     /**
      * Gets the value at the position.
-     * @param row the row to look at
-     * @param col the column to look at
+     * @param {number} row the row to look at
+     * @param {number} col the column to look at
      * @returns {*} the value at the point in the matrix
      */
     get(row, col) {
@@ -171,7 +171,7 @@ export class Matrix {
 
     /**
      * Duplicates and returns a copy of this matrix.
-     * @returns {Matrix}
+     * @returns {Matrix} the copy
      */
     duplicate() {
         let m = new Matrix(this.rows, this.columns);
