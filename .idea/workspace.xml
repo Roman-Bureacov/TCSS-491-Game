@@ -4,8 +4,13 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="a08718b8-ac73-4cb8-b286-185a0b662aef" name="Changes" comment="working port of animation assignment code">
+    <list default="true" id="a08718b8-ac73-4cb8-b286-185a0b662aef" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/Game/arenaFactory.js" beforeDir="false" afterPath="$PROJECT_DIR$/Game/arenaFactory.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Game/assetmanager.js" beforeDir="false" afterPath="$PROJECT_DIR$/Game/assetmanager.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Game/backgroundFactory.js" beforeDir="false" afterPath="$PROJECT_DIR$/Game/backgroundFactory.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Game/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/Game/index.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Game/main.js" beforeDir="false" afterPath="$PROJECT_DIR$/Game/main.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/index.html" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -26,6 +31,7 @@
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+    <option name="SWAP_SIDES_IN_COMPARE_BRANCHES" value="true" />
   </component>
   <component name="GitHubPullRequestSearchHistory">{
   &quot;lastFilter&quot;: {
@@ -61,17 +67,17 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "git-widget-placeholder": "animation-import-merge",
-    "last_opened_file_path": "C:/Users/Kassi/OneDrive/Computer/Documents/GitHub/TCSS-491-Game/Game/assets/soundFx",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "settings.editor.selected.configurable": "settings.sync"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;git-widget-placeholder&quot;: &quot;animation-import-merge&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/Kassi/OneDrive/Computer/Documents/GitHub/TCSS-491-Game/Game/assets/soundFx&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;settings.sync&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="C:\Users\Kassi\OneDrive\Computer\Documents\GitHub\TCSS-491-Game\Game\assets\soundFx" />

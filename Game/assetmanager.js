@@ -1,4 +1,4 @@
-class AssetManager {
+export class AssetManager {
     constructor() {
         this.successCount = 0;
         this.errorCount = 0;
@@ -44,5 +44,3 @@ class AssetManager {
         return this.cache[path];
     };
 }
-
-export { AssetManager }

@@ -1,6 +1,6 @@
 'use strict';
 
-class BackgroundFactory {
+export class BackgroundFactory {
     constructor(theImg) {
         this.img = theImg;
         this.removeFromWorld = false;
