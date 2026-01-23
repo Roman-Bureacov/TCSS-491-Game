@@ -7,17 +7,12 @@ import {parseTxtToMap} from "./arenaFactory.js";
 import {TileMap} from "./arenaFactory.js";
 import {AwesomeCharacter} from "./assets/sprites/character/awesome_character.js";
 
-import {PhysicsEntity} from "./assets/sprites/character/PhysicsEntity.js";
-
 const gameEngine = new GameEngine();
 const ASSET_MANAGER = new AssetManager();
 const CANVAS = document.querySelector('#gameWorld');
 
-
-
-
 let img = "../img/Guy.png";
-var char;
+let char;
 
 /**
  * Arena maps and assets
@@ -48,6 +43,30 @@ const arenas = {
         floor: 737, // The y-value of the floor.
     },
     // Add more arenas assets here
+    arena2: {
+        tileSet: "./assets/tileset/Industrial Tileset/1_Industrial_Tileset_1.png",
+        background: "./assets/background/background01.jpeg",
+        map: "./assets/maps/arena02.txt",
+        name: "arena02",
+        tileWidth: 32, // The width of the tile Set tiles
+        tileHeight: 32, // The height of the tile set tiles.
+        legend: {
+            "<": 0, // left platform piece
+            "#": 1, // center platform piece
+            ">": 2, // right platform piece
+
+            "!": 3, // Single platform piece
+
+            "/": 6, // left Floor piece
+            "_": 7, // center floor piece
+            "\\": 8, // right floor piece
+            " ": -1, // Spaces
+        },
+        lp: [], //left platform [left most, right most, y value]
+        cp: [],//center platform [left most, right most, y value]
+        rp: [], // right platform [left most, right most, y value]
+        floor: 737, // The y-value of the floor.
+    }
 }
 
 export const global = {
@@ -56,8 +75,8 @@ export const global = {
     arenas: arenas,
 }
 
-ASSET_MANAGER.queueDownload(img)
 
+ASSET_MANAGER.queueDownload(img)
 
 ASSET_MANAGER.downloadAll(async () => {
     const canvas = document.getElementById("gameWorld");
@@ -66,7 +85,7 @@ ASSET_MANAGER.downloadAll(async () => {
     canvas.focus();
 
     //Arena1
-    const arena1TileMap = await setArenaAssets(arenas.arena1);
+    const arena1TileMap = await setArenaAssets(arenas.arena2);
 
 
     char = new AwesomeCharacter(gameEngine, ASSET_MANAGER.getAsset(img));
@@ -77,7 +96,6 @@ ASSET_MANAGER.downloadAll(async () => {
     gameEngine.addEntity(arena1TileMap);
 
     gameEngine.addEntity(char);
-
 
     // Start the gameEngine
     gameEngine.start();
@@ -128,6 +146,12 @@ function setTileMap(theTileSheet, theMapText, theArenasBackground, theArenaName,
     return new TileMap(factory, buildMap);
 }
 
+/**
+ * Builds the arena
+ *
+ * @param arenaObj The arena object
+ * @returns {Promise<TileMap>} a returned promise of the tiled map of the arena.
+ */
 async function setArenaAssets(arenaObj) {
     let arenaTilesetSheet, arenaMapTxt;
     [arenaTilesetSheet, arenaMapTxt] = await Promise.all(setPromiseAndLoadArenaText(arenaObj.tileSet, arenaObj.map));
