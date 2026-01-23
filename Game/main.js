@@ -2,18 +2,20 @@ const gameEngine = new GameEngine();
 
 let ASSET_MANAGER = new AssetManager();
 
-const TILE_SIZE = 32;
-
 const CANVAS_W = 1024;
 const CANVAS_H = 768;
 
-const COLS = CANVAS_W / TILE_SIZE;
-const ROWS = CANVAS_H / TILE_SIZE
-
+/**
+ * Arena maps and assets
+ */
 const arenas = {
     arena1: {
         tileSet: "./assets/tileset/Industrial Tileset/1_Industrial_Tileset_1B.png",
+        background: "./assets/background/background02.jpeg",
         map: "./assets/maps/arena01.txt",
+        name: "arena01",
+        tileWidth: 32, // The width of the tile Set tiles
+        tileHeight: 32, // The height of the tile set tiles.
         legend: {
             "<": 0, // left platform piece
             "#": 1, // center platform piece
@@ -25,7 +27,11 @@ const arenas = {
             "_": 7, // center floor piece
             "\\": 8, // right floor piece
             " ": -1, // Spaces
-        }
+        },
+        lp: [35, 354, 353], //left platform [left most, right most, y value]
+        cp: [356, 703, 515],//center platform [left most, right most, y value]
+        rp: [705, 990, 353], // right platform [left most, right most, y value]
+        floor: 737, // The y-value of the floor.
     },
     // Add more arenas assets here
 }
@@ -42,12 +48,13 @@ ASSET_MANAGER.downloadAll(async () => {
     //Arena1
     let arena1TilesetSheet, arena1MapTxt;
     [arena1TilesetSheet, arena1MapTxt] = await Promise.all(setPromiseAndLoadArenaText(arenas.arena1.tileSet, arenas.arena1.map));
-    const arena1TileMap = setTileMap(arena1TilesetSheet, "arena01", arena1MapTxt, arenas.arena1.legend)
+    const arena1TileMap = setTileMap(arena1TilesetSheet,arena1MapTxt, arenas.arena1.background ,arenas.arena1.name,
+         arenas.arena1.tileWidth, arenas.arena1.tileHeight ,arenas.arena1.legend)
     
 
     gameEngine.init(ctx);
 
-    //Add new Arenas sprite entities.
+    //Add new Arenas/sprite entities.
     gameEngine.addEntity(arena1TileMap);
 
     // Start the gameEngine
@@ -83,14 +90,19 @@ function setPromiseAndLoadArenaText(tileset, map) {
 /**
  * Sets the tileMap Object
  * @param theTileSheet The arenas tileSheet
+ * @param theArenasBackground The path to the arenas background.
  * @param theArenaName the Arenas String name
  * @param theMapText the Map Text Path
+ * @param theTileWidth
+ * @param theTileHeight
  * @param theArenaLegend the arenas Legend Object
  * @returns {TileMap} a new TileMap Object.
  */
-function setTileMap(theTileSheet, theArenaName, theMapText, theArenaLegend) {
-    const factory = new ArenaFactory(theTileSheet, theArenaName);
-    const buildMap = parseTxtToMap(theMapText, COLS, ROWS, theArenaLegend);
-    return new TileMap(factory, buildMap, COLS, ROWS);
+function setTileMap(theTileSheet, theMapText, theArenasBackground ,theArenaName, theTileWidth,theTileHeight, theArenaLegend) {
+    const col = CANVAS_W/theTileWidth;
+    const row = CANVAS_H/theTileHeight;
+    const factory = new ArenaFactory(theTileSheet, theArenasBackground ,theArenaName, theTileWidth,theTileHeight);
+    const buildMap = parseTxtToMap(theMapText, col ,row ,theArenaLegend);
+    return new TileMap(factory, buildMap);
 }
 

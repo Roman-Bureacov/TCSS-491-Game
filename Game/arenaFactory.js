@@ -3,27 +3,29 @@
 class ArenaFactory {
 
     /**
-     * Constructs the arena builder object
+     * Constructs the arena factory object
      * @param theTileSheet The tile asset sheet path
+     * @param arenaBackgroundPath The path to the arena background
      * @param arenaName The name of the arena
+     * @param tileWidth The width of the tileSet
+     * @param tileHeight The height of the tileSet
      */
-    constructor(theTileSheet, arenaName) {
-        Object.assign(this, {theTileSheet, arenaName});
+    constructor(theTileSheet, arenaBackgroundPath, arenaName, tileWidth, tileHeight) {
 
-        setBackground(ASSET_MANAGER, arenaName)
+        Object.assign(this, {theTileSheet, arenaName, tileWidth, tileHeight});
+
+        this.tileCols = CANVAS_W / this.tileWidth;
+        this.tileRows = CANVAS_H / this.tileHeight;
+
 
         ASSET_MANAGER.downloadAll(async () => {
             let bg;
             let bgImg = new Image();
 
-            const arenaBackground = {
-                "arena01": "./assets/background/Background03.jpeg",
-            }
-
             const bgPromise = new Promise((resolve, reject) => {
                 bgImg.onload = () => resolve(bgImg);
                 bgImg.onerror = () => reject(new Error("Background failed to load"));
-                bgImg.src = arenaBackground[arenaName];
+                bgImg.src = arenaBackgroundPath;
             });
 
             try {
@@ -39,35 +41,41 @@ class ArenaFactory {
     }
 
     srcRect(theTileID) {
-        const cols = Math.floor(this.theTileSheet.width / TILE_SIZE);
+        const cols = Math.floor(this.theTileSheet.width / this.tileWidth);
         if (!cols) throw new Error("Tileset image not loaded yet (width=0).");
 
-        const sx = (theTileID % cols) * TILE_SIZE;
-        const sy = Math.floor(theTileID / cols) * TILE_SIZE;
+        const sx = (theTileID % cols) * this.tileWidth;
+        const sy = Math.floor(theTileID / cols) * this.tileHeight;
 
-        return {sx, sy, sw: TILE_SIZE, sh: TILE_SIZE};
+        return {sx, sy, sw: this.tileWidth, sh: this.tileHeight};
     }
 
 
-    draw(ctx, map, cols, rows) {
-        for (let y = 0; y < rows; y++) {
-            for (let x = 0; x < cols; x++) {
-                const tileId = map[y * cols + x];
+    draw(ctx, map) {
+        for (let y = 0; y < this.tileRows; y++) {
+            for (let x = 0; x < this.tileCols; x++) {
+                const tileId = map[y * this.tileCols + x];
                 if (tileId < 0) continue;
                 const {sx, sy, sw, sh} = this.srcRect(tileId);
                 ctx.drawImage(
                     this.theTileSheet,
                     sx, sy, sw, sh,
-                    x * TILE_SIZE, y * TILE_SIZE,
-                    TILE_SIZE, TILE_SIZE);
+                    x * this.tileWidth, y * this.tileHeight,
+                    this.tileWidth, this.tileHeight);
             }
         }
-
-
     }
-
 }
 
+
+/**
+ * Parses the arena map text file into tiles given the passed legend and the map text.
+ * @param txt The path to the map text file
+ * @param cols The number of columns in the tile set
+ * @param rows The number of rows in the tile set
+ * @param legend The map translator.
+ * @returns {any[]} a 2d array of how the tilesets tile numerical value
+ */
 function parseTxtToMap(txt, cols, rows, legend) {
     const lines = txt.replace(/\r/g, "").split("\n"); // KEEP blank lines
 
@@ -94,11 +102,9 @@ async function loadArenaTxt(path) {
  * Gets the tiles based on the current column and row
  */
 class TileMap {
-    constructor(factory, map, cols, rows) {
+    constructor(factory, map) {
         this.factory = factory;
         this.map = map;
-        this.cols = cols;
-        this.rows = rows;
         this.removeFromWorld = false;
     }
 
@@ -107,11 +113,8 @@ class TileMap {
     }
 
     draw(ctx) {
-        this.factory.draw(ctx, this.map, this.cols, this.rows);
+        this.factory.draw(ctx, this.map);
 
     }
 }
 
-function setBackground(assetManager, arenaName) {
-
-}

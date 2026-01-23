@@ -67,7 +67,7 @@ class Animator {
 class Spritesheet extends Matrix {
     constructor(image, rows, columns) {
         super(rows, columns);
-        Object.assign(this, { image, rows, columns });
+        Object.assign(this, { image, tileRows: rows, columns });
 
         this.width = image.width / columns;
         this.height = image.height / rows;
