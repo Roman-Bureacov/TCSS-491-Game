@@ -11,7 +11,6 @@ let img = "../img/Guy.png";
 ASSET_MANAGER.queueDownload(img);
 
 var char;
-let ASSET_MANAGER = new AssetManager();
 
 const TILE_SIZE = 32;
 

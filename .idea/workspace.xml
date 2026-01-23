@@ -4,86 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="a08718b8-ac73-4cb8-b286-185a0b662aef" name="Changes" comment="Added a sample arena, background music, character sound fx, sword sound fx, background images">
-      <change afterPath="$PROJECT_DIR$/Game/assets/background/background02.jpeg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Game/assets/background/background03.jpeg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Game/arenaFactory.js" beforeDir="false" afterPath="$PROJECT_DIR$/Game/arenaFactory.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Game/assets/background/Action Pack - CITY/Action Pack - CITY/Assets/Assets_City.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Game/assets/background/Action Pack - CITY/Action Pack - CITY/Assets/Assets_city.aseprite" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Game/assets/background/Action Pack - CITY/Action Pack - CITY/Autor_note.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Game/assets/background/Action Pack - CITY/Action Pack - CITY/Legacy Action Pack - CHARACTER/Aseprite/All_Green.aseprite" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Game/assets/background/Action Pack - CITY/Action Pack - CITY/Legacy Action Pack - CHARACTER/Aseprite/Base.aseprite" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Game/assets/background/Action Pack - CITY/Action Pack - CITY/Legacy Action Pack - CHARACTER/Aseprite/Dead.aseprite" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Game/assets/background/Action Pack - CITY/Action Pack - CITY/Legacy Action Pack - CHARACTER/Aseprite/Full.aseprite" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Game/assets/background/Action Pack - CITY/Action Pack - CITY/Legacy Action Pack - CHARACTER/Aseprite/Jump.aseprite" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Game/assets/background/Action Pack - CITY/Action Pack - CITY/Legacy Action Pack - CHARACTER/Aseprite/Run_bot.aseprite" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Game/assets/background/Action Pack - CITY/Action Pack - CITY/Legacy Action Pack - CHARACTER/Aseprite/Run_top.aseprite" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Game/assets/background/Action Pack - CITY/Action Pack - CITY/Legacy Action Pack - CHARACTER/Aseprite/Shot.aseprite" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Game/assets/background/Action Pack - CITY/Action Pack - CITY/Legacy Action Pack - CHARACTER/Aseprite/run.aseprite" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Game/assets/background/Action Pack - CITY/Action Pack - CITY/Legacy Action Pack - CHARACTER/Gifs/Full-Social.gif" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Game/assets/background/Action Pack - CITY/Action Pack - CITY/Legacy Action Pack - CHARACTER/Gifs/Full.gif" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Game/assets/background/Action Pack - CITY/Action Pack - CITY/Legacy Action Pack - CHARACTER/Gifs/Shot.gif" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Game/assets/background/Action Pack - CITY/Action Pack - CITY/Legacy Action Pack - CHARACTER/Gifs/Social.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Game/assets/background/Action Pack - CITY/Action Pack - CITY/Legacy Action Pack - CHARACTER/Sheets/Full-Sheet-Green.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Game/assets/background/Action Pack - CITY/Action Pack - CITY/Legacy Action Pack - CHARACTER/Sheets/Full-Sheet.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Game/assets/background/Action Pack - CITY/Action Pack - CITY/Legacy Action Pack - CHARACTER/Sheets/Shot-Sheet.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Game/assets/background/Action Pack - CITY/Action Pack - CITY/Social/Assets_city.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Game/assets/background/Action Pack - CITY/Action Pack - CITY/Social/MockUp-01.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Game/assets/background/Action Pack - CITY/Action Pack - CITY/Social/Test_city_1.aseprite" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Game/assets/background/Action Pack - CITY/Action Pack - CITY/Social/Test_city_1.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Game/assets/background/Action Pack - CITY/Action Pack - CITY/Social/Test_city_2.aseprite" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Game/assets/background/Action Pack - CITY/Action Pack - CITY/Social/Test_city_2.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Game/assets/background/Final/Background_0.png" beforeDir="false" afterPath="$PROJECT_DIR$/Game/assets/background/Background01.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Game/assets/background/Final/Background_1.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Game/assets/background/Final/Grass_background_1.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Game/assets/background/Final/Grass_background_2.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Game/assets/background/Final/Salt.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Game/assets/background/Final/Social/Autor_note.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Game/assets/background/Final/Social/moon.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Game/assets/background/Final/Social/test_1.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Game/assets/background/Final/Social/test_2.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Game/assets/background/Final/Tiles.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Game/assets/background/Final/brush.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Game/assets/tileset/[FREE] Industrial Tileset/1. Read Me.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Game/assets/tileset/[FREE] Industrial Tileset/2. How To ... Part 1.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Game/assets/tileset/[FREE] Industrial Tileset/3. How To ... Part 2.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Game/assets/tileset/[FREE] Industrial Tileset/4. License.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Game/assets/tileset/[FREE] Industrial Tileset/FREE/5. Industrial Tileset - Starter Pack 32p/0_Template_Tileset.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Game/assets/tileset/[FREE] Industrial Tileset/FREE/5. Industrial Tileset - Starter Pack 32p/1_Industrial_Tileset_1.png" beforeDir="false" afterPath="$PROJECT_DIR$/Game/assets/tileset/Industrial Tileset/1_Industrial_Tileset_1.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Game/assets/tileset/[FREE] Industrial Tileset/FREE/5. Industrial Tileset - Starter Pack 32p/1_Industrial_Tileset_1B.png" beforeDir="false" afterPath="$PROJECT_DIR$/Game/assets/tileset/Industrial Tileset/1_Industrial_Tileset_1B.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Game/assets/tileset/[FREE] Industrial Tileset/FREE/5. Industrial Tileset - Starter Pack 32p/1_Industrial_Tileset_1C.png" beforeDir="false" afterPath="$PROJECT_DIR$/Game/assets/tileset/Industrial Tileset/1_Industrial_Tileset_1C.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Game/assets/tileset/[FREE] Industrial Tileset/FREE/5. Industrial Tileset - Starter Pack 32p/2_Industrial_Tileset_1B_Background.png" beforeDir="false" afterPath="$PROJECT_DIR$/Game/assets/tileset/Industrial Tileset/2_Industrial_Tileset_1B_Background.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Game/assets/tileset/[FREE] Industrial Tileset/FREE/5. Industrial Tileset - Starter Pack 32p/2_Industrial_Tileset_1C_Background_Violet.png" beforeDir="false" afterPath="$PROJECT_DIR$/Game/assets/tileset/Industrial Tileset/2_Industrial_Tileset_1C_Background_Violet.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Game/assets/tileset/[FREE] Industrial Tileset/FREE/5. Industrial Tileset - Starter Pack 32p/2_Industrial_Tileset_1_Background.png" beforeDir="false" afterPath="$PROJECT_DIR$/Game/assets/tileset/Industrial Tileset/2_Industrial_Tileset_1_Background.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Game/assets/tileset/[FREE] Industrial Tileset/FREE/5. Industrial Tileset - Starter Pack 32p/3_Far_Background_Tile.png" beforeDir="false" afterPath="$PROJECT_DIR$/Game/assets/tileset/Industrial Tileset/3_Far_Background_Tile.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Game/assets/tileset/[FREE] Industrial Tileset/FREE/6. Character Animations 32p/Anim_Robot_Jump1_v1.1_frames/1.png" beforeDir="false" afterPath="$PROJECT_DIR$/Game/assets/sprites/6. Character Animations 32p/Anim_Robot_Jump1_v1.1_frames/1.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Game/assets/tileset/[FREE] Industrial Tileset/FREE/6. Character Animations 32p/Anim_Robot_Jump1_v1.1_frames/2.png" beforeDir="false" afterPath="$PROJECT_DIR$/Game/assets/sprites/6. Character Animations 32p/Anim_Robot_Jump1_v1.1_frames/2.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Game/assets/tileset/[FREE] Industrial Tileset/FREE/6. Character Animations 32p/Anim_Robot_Jump1_v1.1_frames/3.png" beforeDir="false" afterPath="$PROJECT_DIR$/Game/assets/sprites/6. Character Animations 32p/Anim_Robot_Jump1_v1.1_frames/3.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Game/assets/tileset/[FREE] Industrial Tileset/FREE/6. Character Animations 32p/Anim_Robot_Jump1_v1.1_frames/4.png" beforeDir="false" afterPath="$PROJECT_DIR$/Game/assets/sprites/6. Character Animations 32p/Anim_Robot_Jump1_v1.1_frames/4.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Game/assets/tileset/[FREE] Industrial Tileset/FREE/6. Character Animations 32p/Anim_Robot_Jump1_v1.1_frames/5.png" beforeDir="false" afterPath="$PROJECT_DIR$/Game/assets/sprites/6. Character Animations 32p/Anim_Robot_Jump1_v1.1_frames/5.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Game/assets/tileset/[FREE] Industrial Tileset/FREE/6. Character Animations 32p/Anim_Robot_Jump1_v1.1_frames/6.png" beforeDir="false" afterPath="$PROJECT_DIR$/Game/assets/sprites/6. Character Animations 32p/Anim_Robot_Jump1_v1.1_frames/6.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Game/assets/tileset/[FREE] Industrial Tileset/FREE/6. Character Animations 32p/Anim_Robot_Jump1_v1.1_frames/7.png" beforeDir="false" afterPath="$PROJECT_DIR$/Game/assets/sprites/6. Character Animations 32p/Anim_Robot_Jump1_v1.1_frames/7.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Game/assets/tileset/[FREE] Industrial Tileset/FREE/6. Character Animations 32p/Anim_Robot_Jump1_v1.1_frames/8.png" beforeDir="false" afterPath="$PROJECT_DIR$/Game/assets/sprites/6. Character Animations 32p/Anim_Robot_Jump1_v1.1_frames/8.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Game/assets/tileset/[FREE] Industrial Tileset/FREE/6. Character Animations 32p/Anim_Robot_Jump1_v1.1_spritesheet.png" beforeDir="false" afterPath="$PROJECT_DIR$/Game/assets/sprites/6. Character Animations 32p/Anim_Robot_Jump1_v1.1_spritesheet.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Game/assets/tileset/[FREE] Industrial Tileset/FREE/6. Character Animations 32p/Anim_Robot_Jump1_v1.gif" beforeDir="false" afterPath="$PROJECT_DIR$/Game/assets/sprites/6. Character Animations 32p/Anim_Robot_Jump1_v1.gif" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Game/assets/tileset/[FREE] Industrial Tileset/FREE/6. Character Animations 32p/Anim_Robot_Walk1_v1.1_frames/1.png" beforeDir="false" afterPath="$PROJECT_DIR$/Game/assets/sprites/6. Character Animations 32p/Anim_Robot_Walk1_v1.1_frames/1.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Game/assets/tileset/[FREE] Industrial Tileset/FREE/6. Character Animations 32p/Anim_Robot_Walk1_v1.1_frames/2.png" beforeDir="false" afterPath="$PROJECT_DIR$/Game/assets/sprites/6. Character Animations 32p/Anim_Robot_Walk1_v1.1_frames/2.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Game/assets/tileset/[FREE] Industrial Tileset/FREE/6. Character Animations 32p/Anim_Robot_Walk1_v1.1_frames/3.png" beforeDir="false" afterPath="$PROJECT_DIR$/Game/assets/sprites/6. Character Animations 32p/Anim_Robot_Walk1_v1.1_frames/3.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Game/assets/tileset/[FREE] Industrial Tileset/FREE/6. Character Animations 32p/Anim_Robot_Walk1_v1.1_frames/4.png" beforeDir="false" afterPath="$PROJECT_DIR$/Game/assets/sprites/6. Character Animations 32p/Anim_Robot_Walk1_v1.1_frames/4.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Game/assets/tileset/[FREE] Industrial Tileset/FREE/6. Character Animations 32p/Anim_Robot_Walk1_v1.1_frames/5.png" beforeDir="false" afterPath="$PROJECT_DIR$/Game/assets/sprites/6. Character Animations 32p/Anim_Robot_Walk1_v1.1_frames/5.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Game/assets/tileset/[FREE] Industrial Tileset/FREE/6. Character Animations 32p/Anim_Robot_Walk1_v1.1_frames/6.png" beforeDir="false" afterPath="$PROJECT_DIR$/Game/assets/sprites/6. Character Animations 32p/Anim_Robot_Walk1_v1.1_frames/6.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Game/assets/tileset/[FREE] Industrial Tileset/FREE/6. Character Animations 32p/Anim_Robot_Walk1_v1.1_spritesheet.png" beforeDir="false" afterPath="$PROJECT_DIR$/Game/assets/sprites/6. Character Animations 32p/Anim_Robot_Walk1_v1.1_spritesheet.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Game/assets/tileset/[FREE] Industrial Tileset/FREE/6. Character Animations 32p/Anim_Robot_Walk1_v1.gif" beforeDir="false" afterPath="$PROJECT_DIR$/Game/assets/sprites/6. Character Animations 32p/Anim_Robot_Walk1_v1.gif" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Game/assets/tileset/brackeys_platformer_assets/brackeys_platformer_assets/LICENSE &amp; CREDITS.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Game/assets/tileset/brackeys_platformer_assets/brackeys_platformer_assets/music/time_for_adventure.mp3" beforeDir="false" afterPath="$PROJECT_DIR$/Game/assets/music/time_for_adventure.mp3" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Game/assets/tileset/brackeys_platformer_assets/brackeys_platformer_assets/sounds/coin.wav" beforeDir="false" afterPath="$PROJECT_DIR$/Game/assets/soundFx/sounds/coin.wav" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Game/assets/tileset/brackeys_platformer_assets/brackeys_platformer_assets/sounds/explosion.wav" beforeDir="false" afterPath="$PROJECT_DIR$/Game/assets/soundFx/sounds/explosion.wav" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Game/assets/tileset/brackeys_platformer_assets/brackeys_platformer_assets/sounds/hurt.wav" beforeDir="false" afterPath="$PROJECT_DIR$/Game/assets/soundFx/sounds/hurt.wav" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Game/assets/tileset/brackeys_platformer_assets/brackeys_platformer_assets/sounds/jump.wav" beforeDir="false" afterPath="$PROJECT_DIR$/Game/assets/soundFx/sounds/jump.wav" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Game/assets/tileset/brackeys_platformer_assets/brackeys_platformer_assets/sounds/power_up.wav" beforeDir="false" afterPath="$PROJECT_DIR$/Game/assets/soundFx/sounds/power_up.wav" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Game/assets/tileset/brackeys_platformer_assets/brackeys_platformer_assets/sounds/tap.wav" beforeDir="false" afterPath="$PROJECT_DIR$/Game/assets/soundFx/sounds/tap.wav" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Game/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/Game/index.html" afterDir="false" />
+    <list default="true" id="a08718b8-ac73-4cb8-b286-185a0b662aef" name="Changes" comment="working port of animation assignment code">
       <change beforePath="$PROJECT_DIR$/Game/main.js" beforeDir="false" afterPath="$PROJECT_DIR$/Game/main.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -112,22 +33,22 @@
     &quot;assignee&quot;: &quot;Kjw072892&quot;
   }
 }</component>
-  <component name="GithubPullRequestsUISettings"><![CDATA[{
-  "selectedUrlAndAccountId": {
-    "url": "https://github.com/Roman-Bureacov/TCSS-491-Game.git",
-    "accountId": "190c2852-ffa4-4492-a865-bb0e1c0aa158"
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;https://github.com/Roman-Bureacov/TCSS-491-Game.git&quot;,
+    &quot;accountId&quot;: &quot;190c2852-ffa4-4492-a865-bb0e1c0aa158&quot;
   },
-  "recentNewPullRequestHead": {
-    "server": {
-      "useHttp": false,
-      "host": "github.com",
-      "port": null,
-      "suffix": null
+  &quot;recentNewPullRequestHead&quot;: {
+    &quot;server&quot;: {
+      &quot;useHttp&quot;: false,
+      &quot;host&quot;: &quot;github.com&quot;,
+      &quot;port&quot;: null,
+      &quot;suffix&quot;: null
     },
-    "owner": "Roman-Bureacov",
-    "repository": "TCSS-491-Game"
+    &quot;owner&quot;: &quot;Roman-Bureacov&quot;,
+    &quot;repository&quot;: &quot;TCSS-491-Game&quot;
   }
-}]]></component>
+}</component>
   <component name="ProjectColorInfo">{
   &quot;customColor&quot;: &quot;&quot;,
   &quot;associatedIndex&quot;: 2
@@ -142,7 +63,7 @@
   </component>
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
-    "git-widget-placeholder": "#1 on kassie",
+    "git-widget-placeholder": "animation-import-merge",
     "last_opened_file_path": "C:/Users/Kassi/OneDrive/Computer/Documents/GitHub/TCSS-491-Game/Game/assets/soundFx",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
