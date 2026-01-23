@@ -2,10 +2,11 @@
 A concrete implementation of the character class
  */
 
-import { Character } from "./character.js"
+import {Character} from "./character.js"
 import {Spritesheet} from "./animation.js";
 import {Animator} from "./animation.js";
 import {KeyMapper} from "../../../keymapper.js";
+import {global} from "../../../main.js";
 
 export class AwesomeCharacter extends Character {
     constructor(game, image) {
@@ -14,9 +15,9 @@ export class AwesomeCharacter extends Character {
         this.spritesheet = new Spritesheet(image, 3, 14);
 
         this.states = Object.freeze({
-            MOVE : "move ",
-            ATTACK : "attack ",
-            IDLE : "idle ",
+            MOVE: "move ",
+            ATTACK: "attack ",
+            IDLE: "idle ",
         });
 
         this.state = this.states.IDLE;
@@ -25,8 +26,8 @@ export class AwesomeCharacter extends Character {
         this.velocityMax.x = 100;
 
         this.constantAcceleration = {
-            [Character.DIRECTION.LEFT] : 0,
-            [Character.DIRECTION.RIGHT] : 0,
+            [Character.DIRECTION.LEFT]: 0,
+            [Character.DIRECTION.RIGHT]: 0,
         };
         this.lastState = this.state;
 
@@ -36,28 +37,28 @@ export class AwesomeCharacter extends Character {
 
     setupAnimation() {
         this.animations = {
-            [this.states.MOVE + Character.DIRECTION.RIGHT] : new Animator(
+            [this.states.MOVE + Character.DIRECTION.RIGHT]: new Animator(
                 this.spritesheet,
-                [ [1, 0], [1, 1], [1, 2], [1, 3], [1, 4], [1, 5] ],
+                [[1, 0], [1, 1], [1, 2], [1, 3], [1, 4], [1, 5]],
                 1),
             [this.states.MOVE + Character.DIRECTION.LEFT]: new Animator(
                 this.spritesheet,
-                [ [1, 13], [1, 12], [1, 11], [1, 10], [1, 9], [1, 8] ],
+                [[1, 13], [1, 12], [1, 11], [1, 10], [1, 9], [1, 8]],
                 1
             ),
             [this.states.IDLE + Character.DIRECTION.RIGHT]: new Animator(
                 this.spritesheet,
-                [ [0, 0] ],
+                [[0, 0]],
                 1
             ),
             [this.states.IDLE + Character.DIRECTION.LEFT]: new Animator(
                 this.spritesheet,
-                [ [0, 13] ],
+                [[0, 13]],
                 1
             ),
             [this.states.ATTACK + Character.DIRECTION.RIGHT]: new Animator(
                 this.spritesheet,
-                [ [2, 0], [2, 1], [2, 2], [2, 3], [2, 4], [2, 5], [2, 6] ],
+                [[2, 0], [2, 1], [2, 2], [2, 3], [2, 4], [2, 5], [2, 6]],
                 0.5,
                 false,
                 () => {
@@ -68,7 +69,7 @@ export class AwesomeCharacter extends Character {
             ),
             [this.states.ATTACK + Character.DIRECTION.LEFT]: new Animator(
                 this.spritesheet,
-                [ [2, 13], [2, 12], [2, 11], [2, 10], [2, 9], [2, 8], [2, 7] ],
+                [[2, 13], [2, 12], [2, 11], [2, 10], [2, 9], [2, 8], [2, 7]],
                 0.5,
                 false,
                 () => {
@@ -86,19 +87,19 @@ export class AwesomeCharacter extends Character {
         this.keymapper = new KeyMapper();
 
         this.keymapper.inputMap = {
-            [KeyMapper.getName("KeyD", true)] : "move right",
-            [KeyMapper.getName("KeyA", true)] : "move left",
-            [KeyMapper.getName("KeyS", true)] : "attack",
-            [KeyMapper.getName("KeyD", false)] : "stop right",
-            [KeyMapper.getName("KeyA", false)] : "stop left",
+            [KeyMapper.getName("KeyD", true)]: "move right",
+            [KeyMapper.getName("KeyA", true)]: "move left",
+            [KeyMapper.getName("KeyS", true)]: "attack",
+            [KeyMapper.getName("KeyD", false)]: "stop right",
+            [KeyMapper.getName("KeyA", false)]: "stop left",
         };
 
         this.keymapper.outputMap = {
-            "move right" : () => this.move(150),
-            "move left" : () => this.move(-150),
-            "attack" : () => this.swing(),
-            "stop right" : () => this.stopMoving(Character.DIRECTION.RIGHT),
-            "stop left" : () => this.stopMoving(Character.DIRECTION.LEFT),
+            "move right": () => this.move(150),
+            "move left": () => this.move(-150),
+            "attack": () => this.swing(),
+            "stop right": () => this.stopMoving(Character.DIRECTION.RIGHT),
+            "stop left": () => this.stopMoving(Character.DIRECTION.LEFT),
         };
     }
 
@@ -146,14 +147,14 @@ export class AwesomeCharacter extends Character {
         for (let key in this.game.keys) this.keymapper.sendKeyEvent(this.game.keys[key]);
 
         // hard-coded gobbledegook
-        if (this.position.x > 1000) this.position.x = -100;
-        else if (this.position.x < -100) this.position.x = 1000;
+        if (this.position.x > global.CANVAS_W - 20) this.position.x = -75;
+        else if (this.position.x < -75) this.position.x = global.CANVAS_W - 20;
 
         ({
-            [this.states.ATTACK] : () => {
+            [this.states.ATTACK]: () => {
                 this.velocity.x /= 1.05;
             },
-            [this.states.MOVE] : () => {
+            [this.states.MOVE]: () => {
                 this.acceleration.x =
                     this.constantAcceleration[Character.DIRECTION.LEFT]
                     + this.constantAcceleration[Character.DIRECTION.RIGHT];
@@ -162,12 +163,12 @@ export class AwesomeCharacter extends Character {
                     this.setState(this.states.IDLE);
                 } else this.setState(this.states.MOVE);
             },
-            [this.states.IDLE] : () => {
+            [this.states.IDLE]: () => {
                 this.velocity.x /= 1.05;
             }
         })[this.state]?.();
 
-        switch(this.state) {
+        switch (this.state) {
             case this.states.ATTACK:
 
         }

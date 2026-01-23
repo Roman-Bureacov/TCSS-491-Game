@@ -12,8 +12,8 @@ import {PhysicsEntity} from "./assets/sprites/character/PhysicsEntity.js";
 const gameEngine = new GameEngine();
 const ASSET_MANAGER = new AssetManager();
 const CANVAS = document.querySelector('#gameWorld');
-const CANVAS_W = CANVAS.width;
-const CANVAS_H = CANVAS.height;
+
+
 
 
 let img = "../img/Guy.png";
@@ -49,6 +49,13 @@ const arenas = {
     },
     // Add more arenas assets here
 }
+
+export const global = {
+    CANVAS_W: CANVAS.width,
+    CANVAS_H: CANVAS.height,
+    arenas: arenas,
+}
+
 ASSET_MANAGER.queueDownload(img)
 
 
@@ -60,7 +67,6 @@ ASSET_MANAGER.downloadAll(async () => {
 
     //Arena1
     const arena1TileMap = await setArenaAssets(arenas.arena1);
-
 
 
     char = new AwesomeCharacter(gameEngine, ASSET_MANAGER.getAsset(img));
@@ -115,9 +121,9 @@ function setPromiseAndLoadArenaText(tileset, map) {
  * @returns {TileMap} a new TileMap Object.
  */
 function setTileMap(theTileSheet, theMapText, theArenasBackground, theArenaName, theTileWidth, theTileHeight, theArenaLegend) {
-    const col = CANVAS_W / theTileWidth;
-    const row = CANVAS_H / theTileHeight;
-    const factory = new ArenaFactory(theTileSheet, theArenasBackground, theArenaName, theTileWidth, theTileHeight, ASSET_MANAGER, gameEngine, CANVAS_W, CANVAS_H);
+    const col = global.CANVAS_W / theTileWidth;
+    const row = global.CANVAS_H / theTileHeight;
+    const factory = new ArenaFactory(theTileSheet, theArenasBackground, theArenaName, theTileWidth, theTileHeight, ASSET_MANAGER, gameEngine, global.CANVAS_W, global.CANVAS_H);
     const buildMap = parseTxtToMap(theMapText, col, row, theArenaLegend);
     return new TileMap(factory, buildMap);
 }
