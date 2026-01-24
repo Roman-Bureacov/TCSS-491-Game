@@ -204,3 +204,37 @@ test("Matrix inversion of a 4x4 matrix", () => {
     strictEqual(approx(inverse.get(3, 3), 2), true);
     
 })
+
+// this was returning NaNs
+test("Matrix multiplication edge case", () => {
+    let l = new Matrix(4);
+    let r = MatrixOp.identity(4);
+
+    l.matrix = [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, -3, 0, 0, 0, 1];
+
+    const product = MatrixOp.multiply(l, r);
+
+    // row 0
+    strictEqual(product.get(0, 0), 1);
+    strictEqual(product.get(0, 1), 0);
+    strictEqual(product.get(0, 2), 0);
+    strictEqual(product.get(0, 3), 0);
+
+    // row 1
+    strictEqual(product.get(1, 0), 0);
+    strictEqual(product.get(1, 1), 1);
+    strictEqual(product.get(1, 2), 0);
+    strictEqual(product.get(1, 3), 0);
+
+    // row 2
+    strictEqual(product.get(2, 0), 0);
+    strictEqual(product.get(2, 1), 0);
+    strictEqual(product.get(2, 2), 1);
+    strictEqual(product.get(2, 3), -3);
+
+    // row 3
+    strictEqual(product.get(3, 0), 0);
+    strictEqual(product.get(3, 1), 0);
+    strictEqual(product.get(3, 2), 0);
+    strictEqual(product.get(3, 3), 1);
+})

@@ -1,6 +1,8 @@
 import {GameEngine} from "./gameengine.js";
 import {AssetManager} from "./assetmanager.js";
 import {AwesomeCharacter} from "./character/awesome_character.js";
+import {Camera, Drawable, Pane, Render, World} from "./render/Render.js";
+import {Matrix, MatrixOp} from "../Matrix/Matrix.js";
 
 export const global = {};
 
@@ -23,13 +25,13 @@ ASSET_MANAGER.queueDownload("sfx/walk05.wav");
 ASSET_MANAGER.queueDownload("sfx/walk06.wav");
 ASSET_MANAGER.queueDownload("sfx/walk07.wav");
 
+
 let char;
 
 // to make certain parameters visible to the window debug console
 window.DEBUG = {
 	engine : gameEngine,
 	assets : ASSET_MANAGER,
-	char : char,
 }
 
 global.assets = ASSET_MANAGER;
@@ -47,15 +49,37 @@ ASSET_MANAGER.downloadAll(() => {
 
 	ASSET_MANAGER.getAudio("sfx/swing.wav").volume = 0.25
 
+	// camera render testing
+	const world = new World();
+	const pane = new Pane()
+	const entity = new Drawable(100, 100);
+	const camera = new Camera(canvas.width, canvas.height);
+	const renderer = new Render(camera, world);
+
+	pane.addDrawable(entity);
+	world.addPane(pane);
+	let transform = MatrixOp.identity(4);
+	transform.set(2, 3, 3);
+	camera.transform(transform);
+
+	window.DEBUG.render = {
+		world : world,
+		renderer : renderer,
+		pane : pane,
+		entity : entity,
+	}
 
 	gameEngine.init(ctx);
 
 	let img = ASSET_MANAGER.getAsset(imgName);
 	let c = char = new AwesomeCharacter(gameEngine, img);
+
+	window.DEBUG.char = char;
+
 	c.position.x = 500 - c.spritesheet.width/2;
 	c.position.y = 190;
 	gameEngine.addEntity(c);
 	gameEngine.addEntity(background);
 
-	gameEngine.start();
+	// gameEngine.start();
 });
