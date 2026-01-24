@@ -103,7 +103,11 @@ class Camera extends SpaceObject {
     aperture = {width: 0, height: 0, aspect: 0}
 
     /**
-     * The canvas which this camera sees
+     * The canvas which this camera sees.
+     *
+     * If the camera's aperture parameters, or focal length, change, reassign this canvas
+     * using the static method for computing the canvas coordinates.
+     *
      * @typedef {Readonly<{left: number, right: number, top: number, bottom: number}>} canvas
      */
     canvas = undefined;
@@ -187,6 +191,9 @@ class Render {
      * @param context the drawing context
      */
     render(context) {
+        // clear raster
+        context.clearRect(0, 0, context.canvas.frameWidth, context.canvas.frameHeight);
+
         let worldToCamera = MatrixOp.inverse(this.camera.matrix);
         for (let pane of this.world.panes) {
             let objectToCamera = MatrixOp.multiply(worldToCamera, pane.matrix);
@@ -254,7 +261,6 @@ class World {
  * @param {Camera} camera the camera this that views what the matrix represents
  */
 const toRaster = (matrix, camera) => {
-    console.log(matrix);
 
     let z = matrix.get(2, 3);
     // convert to screen space, perspective divide
