@@ -21,7 +21,7 @@ export class GameEngine {
     /**
      * Constructs a game engine
      * @param options engine options
-     * @param renderer the renderer the engine will draw
+     * @param {Render} renderer the renderer the engine will draw
      */
     constructor(options, renderer) {
         // What you will use to draw
@@ -41,7 +41,7 @@ export class GameEngine {
             debugging: false,
         };
 
-        this.render = new Render()
+        this.render = renderer
     };
 
     init(ctx) {
@@ -123,12 +123,16 @@ export class GameEngine {
 
     draw() {
         // Clear the whole canvas with transparent color (rgba(0, 0, 0, 0))
-        this.ctx.clearRect(0, 0, this.ctx.canvas.frameWidth, this.ctx.canvas.frameHeight);
+        // this.ctx.clearRect(0, 0, this.ctx.canvas.frameWidth, this.ctx.canvas.frameHeight);
 
+        /*
         // Draw latest things first
         for (let i = this.entities.length - 1; i >= 0; i--) {
             this.entities[i].draw(this.ctx, this);
         }
+         */
+
+        this.render.render(this.ctx);
     };
 
     update() {

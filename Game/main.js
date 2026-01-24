@@ -55,12 +55,11 @@ ASSET_MANAGER.downloadAll(() => {
 	// camera render testing
 	const world = new World();
 	const pane = new Pane()
-	// const entity = new Drawable(100, 100);
 	const camera = new Camera(canvas.width, canvas.height);
 	const renderer = new Render(camera, world);
 
-	// pane.addDrawable(entity);
 	world.addPane(pane);
+	// move camera to view stuff
 	let transform = MatrixOp.identity(4);
 	transform.set(2, 3, 3);
 	camera.transform(transform);
@@ -70,6 +69,16 @@ ASSET_MANAGER.downloadAll(() => {
 		renderer : renderer,
 		pane : pane,
 		// entity : entity,
+		renderLoop : true,
+		date : new Date(),
+		loop : async function() {
+			while (window.DEBUG.render.renderLoop) {
+				let time = Date.now();
+				window.DEBUG.render.renderer.render(ctx);
+				await new Promise(requestAnimationFrame);
+				console.log("Frame time: " + (Date.now() - time) + " ms");
+			}
+			},
 	}
 
 	gameEngine.init(ctx);
@@ -77,13 +86,14 @@ ASSET_MANAGER.downloadAll(() => {
 	let img = ASSET_MANAGER.getAsset(imgName);
 	let spritesheet = new Spritesheet(img, 3, 14)
 	let c  = new AwesomeCharacter(gameEngine, spritesheet);
-	pane.addDrawable(c);
 
+	pane.addDrawable(c);
 
 	window.DEBUG.char = c;
 
 	gameEngine.addEntity(c);
 	gameEngine.addEntity(background);
+	gameEngine.render = renderer;
 
-	// gameEngine.start();
+	gameEngine.start();
 });

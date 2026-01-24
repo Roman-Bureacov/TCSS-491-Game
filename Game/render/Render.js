@@ -158,6 +158,18 @@ class Camera extends SpaceObject {
     }
 
     /**
+     * Tells the camera to look at the specific coordinate with respect to
+     * the world origin
+     *
+     * @param x the x coordinate with respect to the world origin
+     * @param y the y coordiante with respect to the world origin
+     */
+    lookAt(x, y) {
+        this.matrix.set(0, 3, x);
+        this.matrix.set(1, 3, y);
+    }
+
+    /**
      * Sets focal length and recomputes the canvas coordinates
      * @param focalLength the new focal length in millimeters
      */
@@ -228,16 +240,15 @@ class Render {
      */
     render(context) {
         // clear raster
-        context.clearRect(0, 0, context.canvas.frameWidth, context.canvas.frameHeight);
+        context.clearRect(0, 0, context.canvas.width, context.canvas.height);
 
         let worldToCamera = MatrixOp.inverse(this.camera.matrix);
         for (let pane of this.world.panes) {
-            let objectToCamera = MatrixOp.multiply(worldToCamera, pane.matrix);
+            let paneToCamera = MatrixOp.multiply(worldToCamera, pane.matrix);
 
             for (let drawable of pane.drawables) {
-                let entityMatrix = MatrixOp.multiply(objectToCamera, drawable.matrix);
+                let entityMatrix = MatrixOp.multiply(paneToCamera, drawable.matrix);
 
-                console.log(entityMatrix);
                 // if on or behind camera...
                 if (entityMatrix.get(2, 3) >= 0) continue;
 
@@ -250,8 +261,6 @@ class Render {
                 let y = entityMatrix.get(1, 3);
                 let scaleX = entityMatrix.get(0, 0);
                 let scaleY = entityMatrix.get(1, 1);
-                console.log("Perspective divide scale X " + scaleX);
-                console.log("Perspective divide scale Y " + scaleY);
 
 
                 let p = drawable.drawingProperties;
@@ -341,6 +350,7 @@ const toRaster = (matrix, camera) => {
     let rasterY = (1 - NDCY) * camera.image.height; // Y axis in reverse
     matrix.set(0, 3, rasterX);
     matrix.set(1, 3, rasterY);
+
 }
 
 export { Pane, Camera, Render, World, Drawable }
