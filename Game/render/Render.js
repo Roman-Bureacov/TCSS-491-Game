@@ -264,7 +264,7 @@ class World {
 const toRaster = (matrix, camera) => {
     console.log(matrix);
 
-    let z = matrix.get(3, 3);
+    let z = matrix.get(2, 3);
     // convert to screen space, perspective divide
 
     // near plane = 1
@@ -273,29 +273,25 @@ const toRaster = (matrix, camera) => {
     // now in screen space, we can ignore the Z-coordinate
 
     // convert into NDC
+    // normally this would map to [-1, 1], such as below:
     // x = 2 * screen.x / ( r - l) - ( r + l ) / ( r - l )
+    // y = 2 * screen.y / ( t - b) - ( t + b ) / ( t - b )
+    // but we aren't a GPU, so we can take some liberty and normalize the coordinates to [0, 1]:
+    // x = (x - l) / (r - l)
+    // y = (y - b) / (t - b)
     let c = camera.canvas;
 
-    console.log("before NDC: ");
-    console.log(matrix);
     let x = matrix.get(0, 3)
-    matrix.set(0, 3,
-        2 * x / (c.right - c.left) - (c.right + c.left) / (c.right - c.left)
-        )
+    let NDCX = (x - c.left) / (c.right - c.left);
 
-    // y = 2 * screen.y / ( t - b) - ( t + b ) / ( t - b )
     let y = matrix.get(1, 3)
-    matrix.set(1, 3,
-        2 * y / (c.top - c.bottom) - (c.top + c.bottom) / (c.top - c.bottom)
-    )
-    console.log("after NDC: ");
-    console.log(matrix);
+    let NDCY = (y - c.bottom) / (c.top - c.bottom);
 
     // convert into raster space
-    let NDCX = matrix.get(0, 3);
-    let NDCY = matrix.get(1, 3);
-    matrix.set(0, 3, (NDCX + 1) / 2 * camera.image.width);
-    matrix.set(1, 3, (1 - NDCY) / 2 * camera.image.height); // Y axis in reverse
+    let rasterX = NDCX * camera.image.width;
+    let rasterY = (1 - NDCY) * camera.image.height; // Y axis in reverse
+    matrix.set(0, 3, rasterX);
+    matrix.set(1, 3, rasterY);
 }
 
 export { Pane, Camera, Render, World, Drawable }
