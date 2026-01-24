@@ -192,18 +192,10 @@ class Render {
             let objectToCamera = MatrixOp.multiply(worldToCamera, pane.matrix);
 
             for (let drawable of pane.drawables) {
-                console.log("Matrix mult");
-                console.log("object to camera");
-                console.log(objectToCamera);
-                console.log("drawable:");
-                console.log(drawable.matrix);
                 let object = MatrixOp.multiply(objectToCamera, drawable.matrix);
-                console.log("before raster");
-                console.log(object);
 
                 // if on or behind camera...
                 if (object.get(2, 3) >= 0) continue;
-                console.log("now transforming...")
 
                 // scale is given by X1 and Y2, ignore Z1...3
                 toRaster(object, this.camera);
