@@ -4,7 +4,7 @@ import {AwesomeCharacter} from "./character/awesome_character.js";
 import {Camera, Drawable, Pane, Render, World} from "./render/Render.js";
 import {Matrix, MatrixOp} from "../Matrix/Matrix.js";
 import {Spritesheet} from "./character/animation.js";
-import {Entity} from "./entity.js";
+import {Entity, StaticEntity} from "./entity.js";
 import {Character} from "./character/character.js";
 
 export const global = {};
@@ -39,12 +39,6 @@ window.DEBUG = {
 
 global.assets = ASSET_MANAGER;
 
-let background = {
-	draw : (context) => {
-		context.drawImage(ASSET_MANAGER.getAsset("img/background.png"), 0, 0);
-	},
-	update : () => {},
-}
 
 ASSET_MANAGER.downloadAll(() => {
 	const canvas = document.getElementById("gameWorld");
@@ -52,13 +46,21 @@ ASSET_MANAGER.downloadAll(() => {
 
 	ASSET_MANAGER.getAudio("sfx/swing.wav").volume = 0.25
 
+	let background = new StaticEntity(
+		new Spritesheet(ASSET_MANAGER.getAsset("img/background.png"), 1, 1)
+	);
+
+	let img = ASSET_MANAGER.getAsset(imgName);
+	let spritesheet = new Spritesheet(img, 3, 14)
+	let c  = new AwesomeCharacter(gameEngine, spritesheet);
+
 	// camera render testing
 	const world = new World();
 	const pane = new Pane()
+	const backgroundPane = new Pane();
 	const camera = new Camera(canvas.width, canvas.height);
 	const renderer = new Render(camera, world);
 
-	world.addPane(pane);
 	// move camera to view stuff
 	let transform = MatrixOp.identity(4);
 	transform.set(2, 3, 3);
@@ -83,16 +85,17 @@ ASSET_MANAGER.downloadAll(() => {
 
 	gameEngine.init(ctx);
 
-	let img = ASSET_MANAGER.getAsset(imgName);
-	let spritesheet = new Spritesheet(img, 3, 14)
-	let c  = new AwesomeCharacter(gameEngine, spritesheet);
+
 
 	pane.addDrawable(c);
+	backgroundPane.addDrawable(background);
+
+	world.addPane(backgroundPane);
+	world.addPane(pane);
 
 	window.DEBUG.char = c;
 
 	gameEngine.addEntity(c);
-	gameEngine.addEntity(background);
 	gameEngine.render = renderer;
 
 	gameEngine.start();
