@@ -4,7 +4,23 @@ This code manages animation.
 
 import {Matrix} from "../../Matrix/Matrix.js";
 
+/**
+ * @typedef Frame
+ * @property {number} row the frame row in the spritesheet
+ * @property {number} col the frame column in the spritesheet
+ */
+
 export class Animator {
+
+    /**
+     * This animator's current frame
+     * @type {Frame}
+     */
+    currentFrame = {
+        row : 0,
+        col : 0,
+    }
+
     /**
      * Creates an animator for handling animations
      * @param spritesheet the spritesheet object
@@ -30,10 +46,13 @@ export class Animator {
         this.elapsedTime = 0;
     }
 
-    draw(timeStep, context, x, y, scaleX, scaleY) {
+    /**
+     * Tells this animator to update
+     */
+    update(timeStep) {
         this.elapsedTime += timeStep;
 
-        let frameNumber = this.currentFrame();
+        let frameNumber = this.currentFrameNumber();
 
         // if at the last frame...
         if (frameNumber === this.frames.length - 1) this.isLooping ? this.elapsedTime = 0 : this.callback?.();
@@ -43,30 +62,11 @@ export class Animator {
         }
 
         let frame = this.frames[frameNumber];
-        let frameCoord = this.spritesheet.get(frame[0], frame[1]);
-
-        if (this.reversed) {
-            context.save();
-            context.scale(-1, 1);
-            context.drawImage(this.spritesheet.image,
-                frameCoord.x, frameCoord.y,
-                this.spritesheet.width, this.spritesheet.height,
-                -x - this.spritesheet.width, y,
-                this.spritesheet.width * scaleX, this.spritesheet.height * scaleY
-            );
-            context.restore();
-        } else {
-            context.drawImage(this.spritesheet.image,
-                frameCoord.x, frameCoord.y,
-                this.spritesheet.width, this.spritesheet.height,
-                x, y,
-                this.spritesheet.width * scaleX, this.spritesheet.height * scaleY
-            );
-        }
-
+        this.currentFrame.row = frame[0];
+        this.currentFrame.col = frame[1];
     }
 
-    currentFrame() {
+    currentFrameNumber() {
         return Math.floor(this.elapsedTime / this.frameDelay);
     }
 

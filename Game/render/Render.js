@@ -33,6 +33,14 @@ class SpaceObject {
     }
 }
 
+
+/**
+ * @typedef {Object} DrawingProperties
+ * @property {Spritesheet} spritesheet the spritesheet representing the drawable object
+ * @property {number} row the row in the spritesheet to look at
+ * @property {number} col the column in the spritesheet to look at
+ */
+
 /**
  * A drawable object for the renderer to draw.
  *
@@ -47,8 +55,9 @@ class Drawable extends SpaceObject {
     spritesheet;
 
     /**
-     * The drawing properties of this object
-     * @type {{spritesheet: Spritesheet, row: number, col: number}}
+     * The drawing properties of this drawable object used for rendering.
+     *
+     * @type {DrawingProperties}
      */
     drawingProperties = {
         spritesheet : undefined,

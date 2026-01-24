@@ -116,7 +116,18 @@ export class Character extends Entity {
 
         // state checking here...
 
-        this.updatePhysics(this.game.clockTick);
+        let tick = this.game.clockTick
+        this.updatePhysics(tick);
+
+        let anim = this.animations[this.animationName()];
+        // are we switching animations?
+        if (anim !== this.currentAnimation) {
+            this.currentAnimation = anim;
+            this.currentAnimation.reset();
+        }
+        this.currentAnimation.update(tick);
+        this.drawingProperties.row = this.currentAnimation.currentFrame.row;
+        this.drawingProperties.col = this.currentAnimation.currentFrame.col;
     }
 
     /**
