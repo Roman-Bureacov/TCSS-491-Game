@@ -114,8 +114,8 @@ export class AwesomeCharacter extends Character {
         };
 
         this.keymapper.outputMap = {
-            "move right" : () => this.move(150),
-            "move left" : () => this.move(-150),
+            "move right" : () => this.move(5),
+            "move left" : () => this.move(-5),
             "attack" : () => this.swing(),
             "stop right" : () => this.stopMoving(Character.DIRECTION.RIGHT),
             "stop left" : () => this.stopMoving(Character.DIRECTION.LEFT),
