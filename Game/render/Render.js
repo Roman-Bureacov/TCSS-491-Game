@@ -9,6 +9,9 @@ on where to draw themselves as well as.
 
 import { Matrix, MatrixOp } from "../../Matrix/Matrix.js";
 
+/**
+ * An object in space representing
+ */
 class SpaceObject {
 
     /**
@@ -30,19 +33,37 @@ class SpaceObject {
     }
 }
 
+/**
+ * A drawable object for the renderer to draw.
+ *
+ * @author Roman Bureacov
+ */
 class Drawable extends SpaceObject {
 
     /**
-     * The dimension of the image representing this object
-     * @type {{width: number, height: number}}
+     * The spritesheet representing this drawable object.
+     * @type {Spritesheet}
      */
-    imageDimension = {width: 0, height: 0}
+    spritesheet;
 
-    constructor(imageWidth, imageHeight) {
+    /**
+     * The drawing properties of this object
+     * @type {{spritesheet: Spritesheet, row: number, col: number}}
+     */
+    drawingProperties = {
+        spritesheet : undefined,
+        row: 0,
+        col: 0,
+    }
+
+    /**
+     * Creates a new drawable
+     * @param {Spritesheet} spritesheet the spritesheet representing this object
+     */
+    constructor(spritesheet) {
         super();
-
-        this.imageDimension.width = imageWidth;
-        this.imageDimension.height = imageHeight;
+        Object.assign(this, { spritesheet });
+        this.drawingProperties.spritesheet = spritesheet;
     }
 
 }
@@ -80,12 +101,18 @@ class Pane extends SpaceObject {
  *
  * Note that this camera does not represent near and far planes.
  *
+ * The camera is modeled after a pinhole camera, and
+ * it looks down the -Z axis
+ *
  * @author Roman Bureacov
  */
 class Camera extends SpaceObject {
 
     /**
-     * The focal length for this camera, defined in millimeters
+     * The focal length for this camera, defined in millimeters.
+     *
+     * Use function instead to mutate focal length.
+     *
      * @type {number}
      */
     focalLength = 10;
@@ -127,6 +154,15 @@ class Camera extends SpaceObject {
         this.aperture.width = 22;
         this.aperture.height = this.aperture.width * this.aperture.aspect;
 
+        this.canvas = Camera.getCanvas(this);
+    }
+
+    /**
+     * Sets focal length and recomputes the canvas coordinates
+     * @param focalLength the new focal length in millimeters
+     */
+    setFocalLength(focalLength) {
+        this.focalLength = focalLength;
         this.canvas = Camera.getCanvas(this);
     }
 
@@ -199,25 +235,38 @@ class Render {
             let objectToCamera = MatrixOp.multiply(worldToCamera, pane.matrix);
 
             for (let drawable of pane.drawables) {
-                let object = MatrixOp.multiply(objectToCamera, drawable.matrix);
+                let entityMatrix = MatrixOp.multiply(objectToCamera, drawable.matrix);
 
+                console.log(entityMatrix);
                 // if on or behind camera...
-                if (object.get(2, 3) >= 0) continue;
+                if (entityMatrix.get(2, 3) >= 0) continue;
+
 
                 // scale is given by X1 and Y2, ignore Z1...3
-                toRaster(object, this.camera);
+                // position is given by C1 and C2, ignore C3
+                toRaster(entityMatrix, this.camera);
 
-                let x = object.get(0, 3);
-                let y = object.get(1, 3);
-                context.beginPath();
-                context.lineWidth = 5;
-                context.moveTo(x, y);
-                context.lineTo(x + 25, y + 25);
-                context.stroke();
+                let x = entityMatrix.get(0, 3);
+                let y = entityMatrix.get(1, 3);
+                let scaleX = entityMatrix.get(0, 0);
+                let scaleY = entityMatrix.get(1, 1);
+                console.log("Perspective divide scale X " + scaleX);
+                console.log("Perspective divide scale Y " + scaleY);
+
+
+                let p = drawable.drawingProperties;
+                let position = p.spritesheet.get(p.row, p.col);
+
+                context.drawImage(
+                    p.spritesheet.image,
+                    position.x, position.y,
+                    p.spritesheet.width, p.spritesheet.height,
+                    x, y,
+                    p.spritesheet.width * scaleX, p.spritesheet.height * scaleY
+                );
             }
         }
     }
-
 }
 
 /**
@@ -247,9 +296,6 @@ class World {
         this.panes.push(pane);
     }
 
-
-
-
 }
 
 /**
@@ -268,6 +314,11 @@ const toRaster = (matrix, camera) => {
     // near plane = 1
     matrix.set(0, 3, matrix.get(0, 3) / -z);
     matrix.set(1, 3, matrix.get(1, 3) / -z);
+
+    // perspective divide the scale
+    matrix.set(0, 0, matrix.get(0, 0) / -z);
+    matrix.set(1, 1, matrix.get(1, 1) / -z);
+
     // now in screen space, we can ignore the Z-coordinate
 
     // convert into NDC

@@ -3,6 +3,9 @@ import {AssetManager} from "./assetmanager.js";
 import {AwesomeCharacter} from "./character/awesome_character.js";
 import {Camera, Drawable, Pane, Render, World} from "./render/Render.js";
 import {Matrix, MatrixOp} from "../Matrix/Matrix.js";
+import {Spritesheet} from "./character/animation.js";
+import {Entity} from "./entity.js";
+import {Character} from "./character/character.js";
 
 export const global = {};
 
@@ -52,11 +55,11 @@ ASSET_MANAGER.downloadAll(() => {
 	// camera render testing
 	const world = new World();
 	const pane = new Pane()
-	const entity = new Drawable(100, 100);
+	// const entity = new Drawable(100, 100);
 	const camera = new Camera(canvas.width, canvas.height);
 	const renderer = new Render(camera, world);
 
-	pane.addDrawable(entity);
+	// pane.addDrawable(entity);
 	world.addPane(pane);
 	let transform = MatrixOp.identity(4);
 	transform.set(2, 3, 3);
@@ -66,18 +69,19 @@ ASSET_MANAGER.downloadAll(() => {
 		world : world,
 		renderer : renderer,
 		pane : pane,
-		entity : entity,
+		// entity : entity,
 	}
 
 	gameEngine.init(ctx);
 
 	let img = ASSET_MANAGER.getAsset(imgName);
-	let c = char = new AwesomeCharacter(gameEngine, img);
+	let spritesheet = new Spritesheet(img, 3, 14)
+	let c  = new AwesomeCharacter(gameEngine, spritesheet);
+	pane.addDrawable(c);
 
-	window.DEBUG.char = char;
 
-	c.position.x = 500 - c.spritesheet.width/2;
-	c.position.y = 190;
+	window.DEBUG.char = c;
+
 	gameEngine.addEntity(c);
 	gameEngine.addEntity(background);
 

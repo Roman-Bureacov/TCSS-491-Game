@@ -1,8 +1,15 @@
 // This game shell was happily modified from Googler Seth Ladd's "Bad Aliens" game and his Google IO talk in 2011
 
 import {Timer} from "./timer.js";
+import {Render} from "./render/Render.js";
 
 export class GameEngine {
+
+    /**
+     * The renderer for this engine
+     * @type Render
+     */
+    render;
 
     /**
      * The map of key codes registered before the loop iteration
@@ -11,7 +18,12 @@ export class GameEngine {
     keys = {};
 
 
-    constructor(options) {
+    /**
+     * Constructs a game engine
+     * @param options engine options
+     * @param renderer the renderer the engine will draw
+     */
+    constructor(options, renderer) {
         // What you will use to draw
         // Documentation: https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D
         this.ctx = null;
@@ -28,6 +40,8 @@ export class GameEngine {
         this.options = options || {
             debugging: false,
         };
+
+        this.render = new Render()
     };
 
     init(ctx) {
@@ -140,8 +154,6 @@ export class GameEngine {
         this.update();
         this.draw();
         this.keys = {};
-
-        // TODO: entity should loop back around when off the screen bounds
     };
 
 }

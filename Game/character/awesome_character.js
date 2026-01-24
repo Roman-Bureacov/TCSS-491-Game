@@ -4,10 +4,14 @@ import {KeyMapper} from "../keymapper.js";
 import { global } from "../main.js";
 
 export class AwesomeCharacter extends Character {
-    constructor(game, image) {
-        super(game, image);
 
-        this.spritesheet = new Spritesheet(this.image, 3, 14);
+    /**
+     * Constructs a new awesome character
+     * @param {GameEngine} game the game engine
+     * @param {Spritesheet} spritesheet the spritesheet representing this character
+     */
+    constructor(game, spritesheet) {
+        super(game, spritesheet);
 
         this.states = Object.freeze({
             MOVE : "move ",
@@ -18,7 +22,7 @@ export class AwesomeCharacter extends Character {
         this.state = this.states.IDLE;
         this.facing = Character.DIRECTION.RIGHT;
 
-        this.velocityMax.x = 100;
+        this.physics.velocityMax.x = 100;
 
         this.constantAcceleration = {
             [Character.DIRECTION.LEFT] : 0,
@@ -122,7 +126,7 @@ export class AwesomeCharacter extends Character {
         if (!this.setState(this.states.MOVE)) {
             const newFacing = acceleration < 0 ? Character.DIRECTION.LEFT : Character.DIRECTION.RIGHT;
             if (newFacing !== this.facing) {
-                this.velocity.x /= 2;
+                this.physics.velocity.x /= 2;
                 this.facing = newFacing;
             }
 
@@ -144,30 +148,29 @@ export class AwesomeCharacter extends Character {
     }
 
     update() {
-        super.update();
-        this.acceleration.x = 0;
-        this.acceleration.y = 0;
+        this.physics.acceleration.x = 0;
+        this.physics.acceleration.y = 0;
         for (let key in this.game.keys) this.keymapper.sendKeyEvent(this.game.keys[key]);
 
         // hard-coded gobbledegook
-        if (this.position.x > 1000) this.position.x = -100;
-        else if (this.position.x < -100) this.position.x = 1000;
+        if (this.physics.position.x > 1000) this.physics.position.x = -100;
+        else if (this.physics.position.x < -100) this.physics.position.x = 1000;
 
         ({
             [this.states.ATTACK] : () => {
-                this.velocity.x /= 1.05;
+                this.physics.velocity.x /= 1.05;
             },
             [this.states.MOVE] : () => {
-                this.acceleration.x =
+                this.physics.acceleration.x =
                     this.constantAcceleration[Character.DIRECTION.LEFT]
                     + this.constantAcceleration[Character.DIRECTION.RIGHT];
 
-                if (this.acceleration.x === 0) {
+                if (this.physics.acceleration.x === 0) {
                     this.setState(this.states.IDLE);
                 } else this.setState(this.states.MOVE);
             },
             [this.states.IDLE] : () => {
-                this.velocity.x /= 1.05;
+                this.physics.velocity.x /= 1.05;
             }
         })[this.state]?.();
 
@@ -176,6 +179,7 @@ export class AwesomeCharacter extends Character {
 
         }
 
+        super.update();
     }
 
 }

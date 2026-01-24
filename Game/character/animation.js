@@ -76,6 +76,13 @@ export class Animator {
     }
 }
 
+/**
+ * The object representing a spritesheet as an immutable matrix of frames.
+ *
+ * Entries stored are {x: number, y: number} indicating the position of the frame in pixels.
+ *
+ * @author Roman Bureacov
+ */
 export class Spritesheet extends Matrix {
     constructor(image, rows, columns) {
         super(rows, columns);
@@ -89,5 +96,7 @@ export class Spritesheet extends Matrix {
                 this.set(r, c, {x: c * this.width, y: r * this.height});
             }
         }
+
+        this.matrix = Object.freeze(this.matrix);
     }
 }

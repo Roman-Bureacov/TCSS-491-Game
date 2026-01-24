@@ -1,12 +1,13 @@
 import { PhysicsEntity } from "./PhysicsEntity.js";
 import { Animator } from "./animation.js";
+import {Entity} from "../entity.js";
 
 /**
  * Creates a basic character
  *
  * @author Roman Bureacov
  */
-export class Character extends PhysicsEntity {
+export class Character extends Entity {
 
     /**
      * The scale of this character in the X and Y
@@ -51,30 +52,24 @@ export class Character extends PhysicsEntity {
 
     /**
      * The state of this character as per the states this character may exhibit.
-     * @Type {string}
+     * @Type {string} the state name
      */
     state = "";
 
     /**
-     * The
-     * @type {string}
+     * The facing of this character
+     * @type {string} the facing name
      */
     facing = Character.DIRECTION.RIGHT;
 
     /**
-     * The spritesheet object for this character
-     * @type {Spritesheet}
-     */
-    Spritesheet = null;
-
-    /**
      * Creates a basic character
-     * @param game the game engine
-     * @param image the spritesheet image for this character
+     * @param {GameEngine} game the game engine
+     * @param {Spritesheet} spritesheet the spritesheet for this character
      */
-    constructor(game, image) {
-        super();
-        Object.assign(this, { game, image });
+    constructor(game, spritesheet) {
+        super(spritesheet);
+        Object.assign(this, { game });
 
     }
 
@@ -116,11 +111,12 @@ export class Character extends PhysicsEntity {
      * Updates this character
      */
     update() {
-        this.updatePhysics(this.game.clockTick);
         // if dealing with acceleration, it may be useful to
         // always begin with an acceleration vector of 0
 
         // state checking here...
+
+        this.updatePhysics(this.game.clockTick);
     }
 
     /**
