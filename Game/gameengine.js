@@ -17,7 +17,7 @@ class GameEngine {
 
         // Options and the Details
         this.options = options || {
-            debugging: false,
+            debugging: true,
         };
     };
 
@@ -42,12 +42,12 @@ class GameEngine {
             y: e.clientY - this.ctx.canvas.getBoundingClientRect().top
         });
         
-        this.ctx.canvas.addEventListener("mousemove", e => {
-            if (this.options.debugging) {
-                console.log("MOUSE_MOVE", getXandY(e));
-            }
-            this.mouse = getXandY(e);
-        });
+        // this.ctx.canvas.addEventListener("mousemove", e => {
+        //     if (this.options.debugging) {
+        //         console.log("MOUSE_MOVE", getXandY(e));
+        //     }
+        //     this.mouse = getXandY(e);
+        // });
 
         this.ctx.canvas.addEventListener("click", e => {
             if (this.options.debugging) {
@@ -114,6 +114,4 @@ class GameEngine {
         this.draw();
     };
 
-};
-
-// KV Le was here :)
+}
