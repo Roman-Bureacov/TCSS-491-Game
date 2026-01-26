@@ -6,14 +6,16 @@ import {loadArenaTxt} from "./arenaFactory.js";
 import {parseTxtToMap} from "./arenaFactory.js";
 import {TileMap} from "./arenaFactory.js";
 import {AwesomeCharacter} from "./assets/sprites/character/awesome_character.js";
+import {AwesomeCharacter2} from "./assets/sprites/character/awesome_character2.js";
 
 const gameEngine = new GameEngine();
 const ASSET_MANAGER = new AssetManager();
 const CANVAS = document.querySelector('#gameWorld');
 
-let img = "../img/Guy.png";
-let char;
-
+let guy1Img = "../img/Guy.png";
+let guy1;
+let guy2Img = "./assets/sprites/character/guy2/Guy2.png";
+let guy2;
 /**
  * Arena maps and assets
  */
@@ -66,6 +68,8 @@ const arenas = {
         cp: [],//center platform [left most, right most, y value]
         rp: [], // right platform [left most, right most, y value]
         floor: 737, // The y-value of the floor.
+        playerOnePos : [120, 13],
+        playerTwoPos: [760, 13],
     }
 }
 
@@ -76,7 +80,8 @@ export const global = {
 }
 
 
-ASSET_MANAGER.queueDownload(img)
+ASSET_MANAGER.queueDownload(guy1Img);
+ASSET_MANAGER.queueDownload(guy2Img);
 
 ASSET_MANAGER.downloadAll(async () => {
     const canvas = document.getElementById("gameWorld");
@@ -88,14 +93,17 @@ ASSET_MANAGER.downloadAll(async () => {
     const arena1TileMap = await setArenaAssets(arenas.arena2);
 
 
-    char = new AwesomeCharacter(gameEngine, ASSET_MANAGER.getAsset(img));
+    guy1 = new AwesomeCharacter(gameEngine, ASSET_MANAGER.getAsset(guy1Img), arenas.arena2.playerOnePos[0], arenas.arena2.playerOnePos[1]);
+    
+    guy2 = new AwesomeCharacter2(gameEngine, ASSET_MANAGER.getAsset(guy2Img), arenas.arena2.playerTwoPos[0], arenas.arena2.playerTwoPos[1]);
 
     gameEngine.init(ctx);
 
     //Add new Arenas/sprite entities.
     gameEngine.addEntity(arena1TileMap);
 
-    gameEngine.addEntity(char);
+    gameEngine.addEntity(guy1);
+    gameEngine.addEntity(guy2);
 
     // Start the gameEngine
     gameEngine.start();

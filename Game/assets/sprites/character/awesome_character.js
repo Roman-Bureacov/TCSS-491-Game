@@ -9,8 +9,11 @@ import {KeyMapper} from "../../../keymapper.js";
 import {global} from "../../../main.js";
 
 export class AwesomeCharacter extends Character {
-    constructor(game, image) {
+    constructor(game, image, startPosX, startPosY) {
         super(game, image);
+
+        this.position.x  = startPosX;
+        this.position.y = startPosY;
 
         this.spritesheet = new Spritesheet(image, 3, 14);
 
@@ -19,6 +22,9 @@ export class AwesomeCharacter extends Character {
             ATTACK: "attack ",
             IDLE: "idle ",
         });
+        
+        this.position.x = 120;
+        this.position.y = 13;
 
         this.state = this.states.IDLE;
         this.facing = Character.DIRECTION.RIGHT;

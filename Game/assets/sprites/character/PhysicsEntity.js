@@ -27,7 +27,7 @@ export class PhysicsEntity {
      * The position of this entity
      * @type {{x: number, y: number}}
      */
-    position = {x: 120, y: 13};
+    position = {x: 0, y: 0};
 
     /**
      * The absolute maximum velocity vector for this entity
