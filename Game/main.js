@@ -8,6 +8,7 @@ import {TileMap} from "./arenaFactory.js";
 import {PlayerOne} from "./playerOne.js";
 import {PlayerTwo} from "./playerTwo.js";
 import {getCharacter} from "./characterData.js";
+import {SoundFX} from "./soundFX.js";
 
 const gameEngine = new GameEngine();
 const ASSET_MANAGER = new AssetManager();
@@ -21,6 +22,7 @@ export const arenas = {
     arena1: {
         tileSet: "./assets/tileset/Industrial Tileset/1_Industrial_Tileset_1B.png",
         background: "./assets/background/background02.jpeg",
+        backgroundSound: "backgroundMusic1",
         map: "./assets/maps/arena01.txt",
         name: "arena01",
         tileWidth: 32, // The width of the tile Set tiles
@@ -50,6 +52,7 @@ export const arenas = {
     arena2: {
         tileSet: "./assets/tileset/Industrial Tileset/1_Industrial_Tileset_1C.png",
         background: "./assets/background/background01.jpeg",
+        backgroundSound: "backgroundMusic2",
         map: "./assets/maps/arena02.txt",
         name: "arena02",
         tileWidth: 32, // The width of the tile Set tiles
@@ -124,6 +127,7 @@ ASSET_MANAGER.downloadAll(async () => {
 
     // Start the gameEngine
     gameEngine.start();
+    new SoundFX().play(arena.backgroundSound);
 });
 
 /**

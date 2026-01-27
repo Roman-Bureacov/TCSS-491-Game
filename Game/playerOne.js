@@ -11,14 +11,14 @@ import {characterFactory} from "./characterFactory.js";
 import {SoundFX} from "./soundFX.js";
 
 export class PlayerOne extends Character {
-    constructor(game, assetManager ,characterName, startPosX, startPosY) {
+    constructor(game, assetManager, characterName, startPosX, startPosY) {
         super(game, characterName);
 
         this.character = new characterFactory(characterName, assetManager);
 
-        this.position.x  = startPosX;
+        this.position.x = startPosX;
         this.position.y = startPosY;
-        
+
         console.log("Getting sprite sheet")
         this.spritesheet = this.character.getCharacterSpriteSheet();
 
@@ -27,7 +27,7 @@ export class PlayerOne extends Character {
             ATTACK: "attack ",
             IDLE: "idle ",
         });
-        
+
         this.position.x = startPosX;
         this.position.y = startPosY;
 
@@ -44,7 +44,7 @@ export class PlayerOne extends Character {
 
         this.setupAnimation();
         this.setupKeymap();
-        
+
         this.playSound = new SoundFX({masterVolume: 0.8});
     }
 
@@ -67,7 +67,7 @@ export class PlayerOne extends Character {
                 this.spritesheet,
                 movePad,
                 scale,
-                moveR, 
+                moveR,
                 moveDur),
             [this.states.MOVE + Character.DIRECTION.LEFT]: new Animator(
                 this.spritesheet,
@@ -133,8 +133,8 @@ export class PlayerOne extends Character {
         };
 
         this.keymapper.outputMap = {
-            "move right": () => this.move(150),
-            "move left": () => this.move(-150),
+            "move right": () => this.move(800),
+            "move left": () => this.move(-800),
             "attack": () => this.swing(),
             "stop right": () => this.stopMoving(Character.DIRECTION.RIGHT),
             "stop left": () => this.stopMoving(Character.DIRECTION.LEFT),
@@ -149,7 +149,7 @@ export class PlayerOne extends Character {
         if (!this.setState(this.states.MOVE)) {
             const newFacing = acceleration < 0 ? Character.DIRECTION.LEFT : Character.DIRECTION.RIGHT;
             if (newFacing !== this.facing) {
-                this.velocity.x /= 2;
+                this.velocity.x = 0;
                 this.facing = newFacing;
             }
 
@@ -175,7 +175,9 @@ export class PlayerOne extends Character {
             this.state = this.states.ATTACK;
             this.stateLock = true;
             this.playSound.play(this.character.getCharacter().swordSound)
+
         }
+
     }
 
 
@@ -191,7 +193,7 @@ export class PlayerOne extends Character {
 
         ({
             [this.states.ATTACK]: () => {
-                this.velocity.x /= 1.05;
+                this.velocity.x = 0;
             },
             [this.states.MOVE]: () => {
                 this.acceleration.x =
@@ -203,7 +205,7 @@ export class PlayerOne extends Character {
                 } else this.setState(this.states.MOVE);
             },
             [this.states.IDLE]: () => {
-                this.velocity.x /= 1.05;
+                this.velocity.x = 0;
             }
         })[this.state]?.();
 
@@ -211,8 +213,7 @@ export class PlayerOne extends Character {
             case this.states.ATTACK:
 
         }
-        
-        
+
 
     }
 

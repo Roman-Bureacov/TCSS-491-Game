@@ -126,8 +126,8 @@ export class PlayerTwo extends Character {
         };
 
         this.keymapper.outputMap = {
-            "move right": () => this.move(150),
-            "move left": () => this.move(-150),
+            "move right": () => this.move(800),
+            "move left": () => this.move(-800),
             "attack": () => this.swing(),
             "stop right": () => this.stopMoving(Character.DIRECTION.RIGHT),
             "stop left": () => this.stopMoving(Character.DIRECTION.LEFT),
@@ -172,7 +172,7 @@ export class PlayerTwo extends Character {
     }
 
 
-    update() {
+   update() {
         super.update();
         this.acceleration.x = 0;
         this.acceleration.y = 0;
@@ -184,7 +184,7 @@ export class PlayerTwo extends Character {
 
         ({
             [this.states.ATTACK]: () => {
-                this.velocity.x /= 1.05;
+                this.velocity.x = 0;
             },
             [this.states.MOVE]: () => {
                 this.acceleration.x =
@@ -196,7 +196,7 @@ export class PlayerTwo extends Character {
                 } else this.setState(this.states.MOVE);
             },
             [this.states.IDLE]: () => {
-                this.velocity.x /= 1.05;
+                this.velocity.x = 0;
             }
         })[this.state]?.();
 

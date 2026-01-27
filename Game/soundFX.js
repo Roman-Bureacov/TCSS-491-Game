@@ -22,6 +22,10 @@ export class SoundFX {
         this.add("swordCollide6", "./assets/soundFx/swordSFX/swordCollide6.mp3");
         this.add("swordCollide7", "./assets/soundFx/swordSFX/swordCollide7.mp3");
         this.add("swordCollide8", "./assets/soundFx/swordSFX/swordCollide8.mp3");
+        this.add("backgroundMusic1" , "./assets/music/backgroundMusic1.mp3");
+        this.add("backgroundMusic2" , "./assets/music/backgroundMusic2.mp3");
+        this.add("backgroundMusic2" , "./assets/music/backgroundMusic2.mp3");
+        this.add("timeForAdventure","./assets/music/timeForAdventure.mp3" );
     }
 
     add(name, path, {volume = 1.0, loop = false} = {}) {

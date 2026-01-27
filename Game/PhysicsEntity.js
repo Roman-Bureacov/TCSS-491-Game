@@ -15,7 +15,7 @@ export class PhysicsEntity {
      * The acceleration vector of this entity
      * @type {{x: number, y: number}}
      */
-    acceleration = {x: 0, y: 0};
+    acceleration = {x:0, y: 0};
 
     /**
      * The velocity vector of this entity
