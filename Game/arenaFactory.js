@@ -1,10 +1,14 @@
 'use strict';
 import {BackgroundFactory} from "./backgroundFactory.js";
 
+/**
+ * @author Kassie Whitney
+ */
 export class ArenaFactory {
 
     /**
      * Constructs the arena factory object
+     *
      * @param theTileSheet The tile asset sheet path
      * @param arenaBackgroundPath The path to the arena background
      * @param arenaName The name of the arena
@@ -48,6 +52,12 @@ export class ArenaFactory {
 
     }
 
+    /**
+     * Gets the grid coordinate of the tiles position based on index
+     * 
+     * @param theTileID The tile index value.
+     * @returns {{sx: number, sy: number, sw, sh}}
+     */
     srcRect(theTileID) {
         const cols = Math.floor(this.theTileSheet.width / this.tileWidth);
         if (!cols) throw new Error("Tileset image not loaded yet (width=0).");
@@ -58,13 +68,19 @@ export class ArenaFactory {
         return {sx, sy, sw: this.tileWidth, sh: this.tileHeight};
     }
 
-
+    /**
+     * Draws the tile onto the canvas based on the data in the map
+     * 
+     * @param ctx The canvas context object.
+     * @param map The mapping of the tile blocks.
+     */
     draw(ctx, map) {
         for (let y = 0; y < this.tileRows; y++) {
             for (let x = 0; x < this.tileCols; x++) {
                 const tileId = map[y * this.tileCols + x];
                 if (tileId < 0) continue;
                 const {sx, sy, sw, sh} = this.srcRect(tileId);
+                
                 ctx.drawImage(
                     this.theTileSheet,
                     sx, sy, sw, sh,
@@ -77,6 +93,7 @@ export class ArenaFactory {
 
 /**
  * Parses the arena map text file into tiles given the passed legend and the map text.
+ * 
  * @param txt The path to the map text file
  * @param cols The number of columns in the tile set
  * @param rows The number of rows in the tile set
@@ -99,6 +116,12 @@ export function parseTxtToMap(txt, cols, rows, legend) {
     return map;
 }
 
+/**
+ * Loads the arena map text file
+ * 
+ * @param path The path to the map file
+ * @returns {Promise<string>} returns the map file.
+ */
 export async function loadArenaTxt(path) {
     const res = await fetch(path);
     if (!res.ok) throw new Error(`Failed to load ${path}: ${res.status}`);

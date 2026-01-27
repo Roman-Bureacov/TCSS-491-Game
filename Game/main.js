@@ -48,7 +48,7 @@ export const arenas = {
     },
     // Add more arenas assets here
     arena2: {
-        tileSet: "./assets/tileset/Industrial Tileset/1_Industrial_Tileset_1.png",
+        tileSet: "./assets/tileset/Industrial Tileset/1_Industrial_Tileset_1C.png",
         background: "./assets/background/background01.jpeg",
         map: "./assets/maps/arena02.txt",
         name: "arena02",
@@ -90,7 +90,7 @@ const character1 = "warriorWoman"; //CHARACTER_SELECTOR.getPlayerCharacter()[0] 
 const character2 = "guy2"; //CHARACTER_SELECTOR.getPlayerCharacter()[1] //player 2 character
 
 // The output of the arena object for the game.
-const arena = arenas.arena1; //ARENA_SELECTOR.getArena()
+const arena = arenas.arena2; //ARENA_SELECTOR.getArena()
 
 const character1Img = getCharacter(character1).img;
 const character2Img = getCharacter(character2).img;

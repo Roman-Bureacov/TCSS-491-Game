@@ -1,5 +1,8 @@
 'use strict';
 
+/**
+ * @author Kassie Whitney
+ */
 export class BackgroundFactory {
     constructor(theImg) {
         this.img = theImg;

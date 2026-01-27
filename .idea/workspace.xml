@@ -5,16 +5,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="a08718b8-ac73-4cb8-b286-185a0b662aef" name="Changes" comment="added warrior woman animation character&#10;&#10;finished implementing a character factory&#10;&#10;created a global character object">
-      <change beforePath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Game/animation.js" beforeDir="false" afterPath="$PROJECT_DIR$/Game/animation.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Game/assets/character/PhysicsEntity.js" beforeDir="false" afterPath="$PROJECT_DIR$/Game/PhysicsEntity.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Game/assets/character/animation.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Game/assets/character/character.js" beforeDir="false" afterPath="$PROJECT_DIR$/Game/character.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Game/assets/character/playerOne.js" beforeDir="false" afterPath="$PROJECT_DIR$/Game/playerOne.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Game/assets/character/playerTwo.js" beforeDir="false" afterPath="$PROJECT_DIR$/Game/playerTwo.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Game/characterData.js" beforeDir="false" afterPath="$PROJECT_DIR$/Game/characterData.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Game/characterFactory.js" beforeDir="false" afterPath="$PROJECT_DIR$/Game/characterFactory.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Game/arenaFactory.js" beforeDir="false" afterPath="$PROJECT_DIR$/Game/arenaFactory.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Game/backgroundFactory.js" beforeDir="false" afterPath="$PROJECT_DIR$/Game/backgroundFactory.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Game/main.js" beforeDir="false" afterPath="$PROJECT_DIR$/Game/main.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -125,7 +118,7 @@
       <workItem from="1769037237923" duration="16388000" />
       <workItem from="1769155658563" duration="3452000" />
       <workItem from="1769453776203" duration="4839000" />
-      <workItem from="1769459092903" duration="19589000" />
+      <workItem from="1769459092903" duration="24502000" />
     </task>
     <task id="LOCAL-00001" summary="Added a sample arena, background music, character sound fx, sword sound fx, background images">
       <option name="closed" value="true" />
@@ -191,7 +184,15 @@
       <option name="project" value="LOCAL" />
       <updated>1769478631233</updated>
     </task>
-    <option name="localTasksCounter" value="9" />
+    <task id="LOCAL-00009" summary="added warrior woman animation character&#10;&#10;finished implementing a character factory&#10;&#10;created a global character object">
+      <option name="closed" value="true" />
+      <created>1769480266486</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1769480266486</updated>
+    </task>
+    <option name="localTasksCounter" value="10" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
