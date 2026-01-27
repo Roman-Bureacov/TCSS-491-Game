@@ -23,9 +23,11 @@ export class Entity extends Drawable {
     /**
      * Constructs a new drawable physics entity
      * @param {Spritesheet} spritesheet the spritesheet
+     * @param {number} [dimX=1] the positive x dimension of this entity
+     * @param {number} [dimY=1] the positive y dimension of this entity
      */
-    constructor(spritesheet) {
-        super(spritesheet);
+    constructor(spritesheet, dimX = 1, dimY = 1) {
+        super(spritesheet, dimX, dimY);
     }
 
     /**
@@ -60,9 +62,11 @@ export class StaticEntity extends Drawable {
     /**
      * Constructs a new drawable static entity
      * @param {Spritesheet} spritesheet the spritesheet
+     * @param {number} [dimX=1] the positive x dimension of this entity
+     * @param {number} [dimY=1] the positive y dimension of this entity
      */
-    constructor(spritesheet) {
-        super(spritesheet);
+    constructor(spritesheet, dimX = 1, dimY = 1) {
+        super(spritesheet, dimX, dimY);
     }
 
     /**

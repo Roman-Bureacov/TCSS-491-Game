@@ -18,18 +18,70 @@ class SpaceObject {
      * The matrix representing this object
      * @type {Matrix}
      */
-    matrix = MatrixOp.identity(4);
+    matrix;
 
     constructor() {
-
+        this.matrix = MatrixOp.identity(4);
     }
 
     /**
      * Transforms this object
      * @param {Matrix} transformation the matrix to transform by
      */
-    transform(transformation) {
-        this.matrix = MatrixOp.multiply(this.matrix, transformation);
+    transform = (transformation) =>
+        this.matrix = MatrixOp.multiply(this.matrix, transformation) ;
+
+
+}
+
+/**
+ * Represents an entity in 2D space that has a width and height.
+ *
+ * All drawables are entities, but not all entities are drawable, such as hitboxes.
+ *
+ * Entities have positive dimensions and have origins starting from the top-left
+ *
+ * @author Roman Bureacov
+ */
+class Entity extends SpaceObject {
+
+    /**
+     * A 4x1 column vector representing the scale of this space object.
+     *
+     * The scale is represented at a point with respect to this object's origin.
+     * @type {Matrix}
+     */
+    dimension = new Matrix(4, 1);
+
+    /**
+     * Constructs an entity of the dimension
+     * @param {number} [dimX=1] the positive x dimension of this entity
+     * @param {number} [dimY=1] the positive y dimension of this entity
+     */
+    constructor(dimX = 1, dimY = 1) {
+        super();
+        this.matrix.set(1, 1, -1); // for drawing and scaling, invert Y
+        this.dimension.set(0, 3, 1); // homogenous coordinates
+        this.setDimension(dimX, dimY);
+    }
+
+    /**
+     * Sets the dimension of this entity
+     * @param {number} [dimX=1] the positive x dimension of this entity
+     * @param {number} [dimY=1] the positive y dimension of this entity
+     */
+    setDimension(dimX= 1, dimY = 1) {
+        this.dimension.set(0, 0, dimX);
+        this.dimension.set(1, 0, dimY);
+    }
+
+    /**
+     * Sets the dimension of this entity using aspect ratio
+     * @param {number} dimX the positive x dimension of this entity
+     * @param {number} aspect the aspect ratio of the dimension of this entity
+     */
+    setDimensionAspect(dimX, aspect) {
+        this.setDimension(dimX, dimX * aspect);
     }
 }
 
@@ -46,7 +98,7 @@ class SpaceObject {
  *
  * @author Roman Bureacov
  */
-class Drawable extends SpaceObject {
+class Drawable extends Entity {
 
     /**
      * The spritesheet representing this drawable object.
@@ -68,9 +120,11 @@ class Drawable extends SpaceObject {
     /**
      * Creates a new drawable
      * @param {Spritesheet} spritesheet the spritesheet representing this object
+     * @param {number} [dimX=1] the positive x dimension of this entity
+     * @param {number} [dimY=1] the positive y dimension of this entity
      */
-    constructor(spritesheet) {
-        super();
+    constructor(spritesheet, dimX = 1, dimY = 1) {
+        super(dimX, dimY);
         Object.assign(this, { spritesheet });
         this.drawingProperties.spritesheet = spritesheet;
     }
@@ -251,27 +305,32 @@ class Render {
         // clear raster
         context.clearRect(0, 0, context.canvas.width, context.canvas.height);
 
-        let worldToCamera = MatrixOp.inverse(this.camera.matrix);
-        for (let pane of this.world.panes) {
+                        let worldToCamera = MatrixOp.inverse(this.camera.matrix);
+                for (let pane of this.world.panes) {
+            // panes are defined with respect to the world
+            
             let paneToCamera = MatrixOp.multiply(worldToCamera, pane.matrix);
-
+            
             for (let drawable of pane.drawables) {
-                let entityMatrix = MatrixOp.multiply(paneToCamera, drawable.matrix);
-
+                                                                let entityMatrix = MatrixOp.multiply(paneToCamera, drawable.matrix);
+                
                 // if on or behind camera...
                 if (entityMatrix.get(2, 3) >= 0) continue;
 
+                let endpoint = MatrixOp.multiply(entityMatrix, drawable.dimension);
 
-                // scale is given by X1 and Y2, ignore Z1...3
+                                
+                                                                
                 // position is given by C1 and C2, ignore C3
-                toRaster(entityMatrix, this.camera);
+                Render.#toRasterMatrix(entityMatrix, this.camera);
+                Render.#toRasterPoint(endpoint, this.camera);
 
                 let x = entityMatrix.get(0, 3);
                 let y = entityMatrix.get(1, 3);
-                let scaleX = entityMatrix.get(0, 0);
-                let scaleY = entityMatrix.get(1, 1);
+                let endX = endpoint.get(0, 0);
+                let endY = endpoint.get(1, 0);
 
-
+                
                 let p = drawable.drawingProperties;
                 let position = p.spritesheet.get(p.row, p.col);
 
@@ -280,10 +339,84 @@ class Render {
                     position.x, position.y,
                     p.spritesheet.width, p.spritesheet.height,
                     x, y,
-                    p.spritesheet.width * scaleX, p.spritesheet.height * scaleY
+                    endX - x, endY - y
                 );
             }
         }
+    }
+
+    /**
+     * Converts the column vector from camera space into raster space
+     * @param {Matrix} matrix the column vector
+     * @param {Camera} camera the camera that views the point
+     */
+    static #toRasterPoint(matrix, camera) {
+                                        // perspective divide with z near plane = 1
+        let z = matrix.get(2, 0);
+
+        matrix.set(0, 0, matrix.get(0, 0) / -z);
+        matrix.set(1, 0, matrix.get(1, 0) / -z);
+
+                                
+        // convert to NDC
+        let c = camera.canvas;
+
+        let x = matrix.get(0, 0)
+        let NDCX = (x - c.left) / (c.right - c.left);
+
+        let y = matrix.get(1, 0)
+        let NDCY = (y - c.bottom) / (c.top - c.bottom);
+
+                                
+        // convert into raster space
+        let rasterX = NDCX * camera.image.width;
+        let rasterY = (1 - NDCY) * camera.image.height; // Y axis in reverse
+        matrix.set(0, 0, rasterX);
+        matrix.set(1, 0, rasterY);
+
+                                
+    }
+
+    /**
+     * Converts the matrix from camera space into raster space.
+     *
+     * In addition, sets the perspective division in the X1 and Y2 positions
+     *
+     * @param {Matrix} matrix the matrix representing something in camera space
+     * @param {Camera} camera the camera that views what the matrix represents
+     */
+    static #toRasterMatrix = (matrix, camera) => {
+
+        // convert to screen space, perspective divide
+        let z = matrix.get(2, 3);
+
+        // near plane = 1
+        matrix.set(0, 3, matrix.get(0, 3) / -z);
+        matrix.set(1, 3, matrix.get(1, 3) / -z);
+
+        // now in screen space, we can ignore the Z-coordinate
+
+        // convert into NDC
+        // normally this would map to [-1, 1], such as below:
+        // x = 2 * screen.x / ( r - l) - ( r + l ) / ( r - l )
+        // y = 2 * screen.y / ( t - b) - ( t + b ) / ( t - b )
+        // but we aren't a GPU, so we can take some liberty and normalize the coordinates to [0, 1]:
+        // x = (x - l) / (r - l)
+        // y = (y - b) / (t - b)
+        let c = camera.canvas;
+
+        let x = matrix.get(0, 3)
+        let NDCX = (x - c.left) / (c.right - c.left);
+
+        let y = matrix.get(1, 3)
+        let NDCY = (y - c.bottom) / (c.top - c.bottom);
+
+        // convert into raster space
+        let rasterX = NDCX * camera.image.width;
+        let rasterY = (1 - NDCY) * camera.image.height; // Y axis in reverse
+        matrix.set(0, 3, rasterX);
+        matrix.set(1, 3, rasterY);
+
     }
 }
 
@@ -316,50 +449,4 @@ class World {
 
 }
 
-/**
- * Converts the matrix from camera space into raster space.
- *
- * In addition, sets the perspective division in the X1 and Y2 positions
- *
- * @param {Matrix} matrix the matrix representing something in camera space
- * @param {Camera} camera the camera this that views what the matrix represents
- */
-const toRaster = (matrix, camera) => {
-
-    let z = matrix.get(2, 3);
-    // convert to screen space, perspective divide
-
-    // near plane = 1
-    matrix.set(0, 3, matrix.get(0, 3) / -z);
-    matrix.set(1, 3, matrix.get(1, 3) / -z);
-
-    // perspective divide the scale
-    matrix.set(0, 0, matrix.get(0, 0) / -z);
-    matrix.set(1, 1, matrix.get(1, 1) / -z);
-
-    // now in screen space, we can ignore the Z-coordinate
-
-    // convert into NDC
-    // normally this would map to [-1, 1], such as below:
-    // x = 2 * screen.x / ( r - l) - ( r + l ) / ( r - l )
-    // y = 2 * screen.y / ( t - b) - ( t + b ) / ( t - b )
-    // but we aren't a GPU, so we can take some liberty and normalize the coordinates to [0, 1]:
-    // x = (x - l) / (r - l)
-    // y = (y - b) / (t - b)
-    let c = camera.canvas;
-
-    let x = matrix.get(0, 3)
-    let NDCX = (x - c.left) / (c.right - c.left);
-
-    let y = matrix.get(1, 3)
-    let NDCY = (y - c.bottom) / (c.top - c.bottom);
-
-    // convert into raster space
-    let rasterX = NDCX * camera.image.width;
-    let rasterY = (1 - NDCY) * camera.image.height; // Y axis in reverse
-    matrix.set(0, 3, rasterX);
-    matrix.set(1, 3, rasterY);
-
-}
-
-export { Pane, Camera, Render, World, Drawable }
+export { Pane, Camera, Render, World, Drawable, Entity }

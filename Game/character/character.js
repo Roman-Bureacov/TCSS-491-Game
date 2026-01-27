@@ -10,16 +10,10 @@ import {Entity} from "../entity.js";
 export class Character extends Entity {
 
     /**
-     * The scale of this character in the X and Y
-     * @type {{x: number, y: number}}
-     */
-    scale = {x: 1, y: 1};
-
-    /**
      * The state of this character
      * @type {Object.<string, string>}
      */
-    states = {};
+    states = { };
 
     /**
      * The map of animations for this character.
@@ -66,9 +60,11 @@ export class Character extends Entity {
      * Creates a basic character
      * @param {GameEngine} game the game engine
      * @param {Spritesheet} spritesheet the spritesheet for this character
+     * @param {number} [dimX=1] the positive x dimension of this entity
+     * @param {number} [dimY=1] the positive y dimension of this entity
      */
-    constructor(game, spritesheet) {
-        super(spritesheet);
+    constructor(game, spritesheet, dimX = 1, dimY = 1) {
+        super(spritesheet, dimX, dimY);
         Object.assign(this, { game });
 
     }
@@ -80,23 +76,6 @@ export class Character extends Entity {
         // this.animations = { [name] : new Animator(...), ... }
 
         this.currentAnimation = this.animations[this.animationName()];
-    }
-
-    /**
-     * Draws this character
-     * @param context the drawing context
-     */
-    draw(context) {
-        let anim = this.animations[this.animationName()];
-
-        // are we switching animations?
-        if (anim !== this.currentAnimation) this.currentAnimation.reset();
-
-        (this.currentAnimation = anim).draw(
-            this.game.clockTick,
-            context,
-            this.position.x, this.position.y,
-            this.scale.x, this.scale.y);
     }
 
     /**

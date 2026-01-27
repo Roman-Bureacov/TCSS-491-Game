@@ -47,12 +47,13 @@ ASSET_MANAGER.downloadAll(() => {
 	ASSET_MANAGER.getAudio("sfx/swing.wav").volume = 0.25
 
 	let background = new StaticEntity(
-		new Spritesheet(ASSET_MANAGER.getAsset("img/background.png"), 1, 1)
+		new Spritesheet(ASSET_MANAGER.getAsset("img/background.png"), 1, 1),
+		5, 1
 	);
 
 	let img = ASSET_MANAGER.getAsset(imgName);
 	let spritesheet = new Spritesheet(img, 3, 14)
-	let c  = new AwesomeCharacter(gameEngine, spritesheet);
+	let c  = new AwesomeCharacter(gameEngine, spritesheet, 1, 2);
 
 	// camera render testing
 	const world = new World();
@@ -80,7 +81,8 @@ ASSET_MANAGER.downloadAll(() => {
 				await new Promise(requestAnimationFrame);
 				console.log("Frame time: " + (Date.now() - time) + " ms");
 			}
-			},
+		},
+		context : ctx,
 	}
 
 	gameEngine.init(ctx);

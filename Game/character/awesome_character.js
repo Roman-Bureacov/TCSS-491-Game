@@ -8,10 +8,12 @@ export class AwesomeCharacter extends Character {
     /**
      * Constructs a new awesome character
      * @param {GameEngine} game the game engine
-     * @param {Spritesheet} spritesheet the spritesheet representing this character
+     * @param {Spritesheet} spritesheet the spritesheet
+     * @param {number} [dimX=1] the positive x dimension of this entity
+     * @param {number} [dimY=1] the positive y dimension of this entity
      */
-    constructor(game, spritesheet) {
-        super(game, spritesheet);
+    constructor(game, spritesheet, dimX = 1, dimY = 1) {
+        super(game, spritesheet, dimX, dimY);
 
         this.states = Object.freeze({
             MOVE : "move ",
