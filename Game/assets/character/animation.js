@@ -2,7 +2,8 @@
 This code manages animation.
  */
 
-import {Matrix} from "../../../../Matrix/Matrix.js";
+import {Matrix} from "../../../Matrix/Matrix.js";
+import {getCharacter} from "../../characterData.js";
 
 /**
  * Object that represents a simple animator object
@@ -13,6 +14,8 @@ export class Animator {
     /**
      * Creates an animator for handling animations
      * @param spritesheet the spritesheet object
+     * @param yPadding
+     * @param scale
      * @param {Array<[Number, Number]>} frames the frames that this animator is responsible for, where
      * the first entry is the row and the second is the column in the spritesheet matrix; the frames should
      * be sorted from the start of the animation to the end of the animation
@@ -21,8 +24,8 @@ export class Animator {
      * @param [callback=undefined] if the animation does not loop, this no-argument callback
      * is called once the animation has completed
      */
-    constructor(spritesheet, frames, duration, isLooping = true, callback = undefined) {
-        Object.assign(this, { spritesheet, frames, duration, isLooping, callback });
+    constructor(spritesheet, yPadding, scale ,frames, duration, isLooping = true, callback = undefined) {
+        Object.assign(this, { spritesheet,yPadding, scale ,frames, duration, isLooping, callback});
 
         this.frameDelay = this.duration / frames.length;
         this.elapsedTime = 0;
@@ -42,8 +45,8 @@ export class Animator {
         context.drawImage(this.spritesheet.image,
             frameCoord.x, frameCoord.y,
             this.spritesheet.frameWidth, this.spritesheet.frameHeight,
-            x, y,
-            this.spritesheet.frameWidth * scaleX, this.spritesheet.frameHeight * scaleY
+            x, y + this.yPadding,
+            this.spritesheet.frameWidth * scaleX * this.scale, this.spritesheet.frameHeight * scaleY * this.scale
             );
 
     }
@@ -80,7 +83,7 @@ export class Spritesheet extends Matrix {
 
     constructor(image, rows, columns) {
         super(rows, columns);
-        Object.assign(this, { image, rows, columns });
+        Object.assign(this, { image, rows, columns});
 
         this.frameWidth = image.width/ columns;
         this.frameHeight = image.height / rows;

@@ -5,17 +5,21 @@ A concrete implementation of the character class
 import {Character} from "./character.js"
 import {Spritesheet} from "./animation.js";
 import {Animator} from "./animation.js";
-import {KeyMapper} from "../../../keymapper.js";
-import {global} from "../../../main.js";
+import {KeyMapper} from "../../keymapper.js";
+import {global} from "../../main.js";
+import {characterFactory} from "../../characterFactory.js";
 
-export class AwesomeCharacter extends Character {
-    constructor(game, image, startPosX, startPosY) {
-        super(game, image);
+export class PlayerOne extends Character {
+    constructor(game, assetManager ,characterName, startPosX, startPosY) {
+        super(game, characterName);
+
+        this.character = new characterFactory(characterName, assetManager);
 
         this.position.x  = startPosX;
         this.position.y = startPosY;
-
-        this.spritesheet = new Spritesheet(image, 3, 14);
+        
+        console.log("Getting sprite sheet")
+        this.spritesheet = this.character.getCharacterSpriteSheet();
 
         this.states = Object.freeze({
             MOVE: "move ",
@@ -23,8 +27,8 @@ export class AwesomeCharacter extends Character {
             IDLE: "idle ",
         });
         
-        this.position.x = 120;
-        this.position.y = 13;
+        this.position.x = startPosX;
+        this.position.y = startPosY;
 
         this.state = this.states.IDLE;
         this.facing = Character.DIRECTION.RIGHT;
@@ -42,30 +46,54 @@ export class AwesomeCharacter extends Character {
     }
 
     setupAnimation() {
+        const moveR = this.character.getCharacter().moveR;
+        const moveL = this.character.getCharacter().moveL;
+        const movePad = this.character.getCharacter().movePadY;
+        const idleR = this.character.getCharacter().idleR;
+        const idleL = this.character.getCharacter().idleL;
+        const idlePad = this.character.getCharacter().idlePadY;
+        const attackR = this.character.getCharacter().attackR;
+        const attackL = this.character.getCharacter().attackL;
+        const attackPad = this.character.getCharacter().attackPadY;
+        const idleDur = this.character.getCharacter().idleDur;
+        const attackDur = this.character.getCharacter().attackDur;
+        const moveDur = this.character.getCharacter().moveDur;
+        const scale = this.character.getCharacter().scale;
+        console.log(idlePad)
         this.animations = {
             [this.states.MOVE + Character.DIRECTION.RIGHT]: new Animator(
                 this.spritesheet,
-                [[1, 0], [1, 1], [1, 2], [1, 3], [1, 4], [1, 5]],
-                1),
+                movePad,
+                scale,
+                moveR, 
+                moveDur),
             [this.states.MOVE + Character.DIRECTION.LEFT]: new Animator(
                 this.spritesheet,
-                [[1, 13], [1, 12], [1, 11], [1, 10], [1, 9], [1, 8]],
-                1
-            ),
+                movePad,
+                scale,
+                moveL,
+                moveDur),
+
             [this.states.IDLE + Character.DIRECTION.RIGHT]: new Animator(
                 this.spritesheet,
-                [[0, 0]],
-                1
+                idlePad,
+                scale,
+                idleR,
+                idleDur
             ),
             [this.states.IDLE + Character.DIRECTION.LEFT]: new Animator(
                 this.spritesheet,
-                [[0, 13]],
-                1
+                idlePad,
+                scale,
+                idleL,
+                idleDur
             ),
             [this.states.ATTACK + Character.DIRECTION.RIGHT]: new Animator(
                 this.spritesheet,
-                [[2, 0], [2, 1], [2, 2], [2, 3], [2, 4], [2, 5], [2, 6]],
-                0.5,
+                attackPad,
+                scale,
+                attackR,
+                attackDur,
                 false,
                 () => {
                     this.stateLock = false;
@@ -75,8 +103,10 @@ export class AwesomeCharacter extends Character {
             ),
             [this.states.ATTACK + Character.DIRECTION.LEFT]: new Animator(
                 this.spritesheet,
-                [[2, 13], [2, 12], [2, 11], [2, 10], [2, 9], [2, 8], [2, 7]],
-                0.5,
+                attackPad,
+                scale,
+                attackL,
+                attackDur,
                 false,
                 () => {
                     this.stateLock = false;
@@ -179,6 +209,10 @@ export class AwesomeCharacter extends Character {
 
         }
 
+    }
+    
+    getImageAsset() {
+        return this.character.getImageAsset();
     }
 
 }

@@ -17,6 +17,8 @@ This code manages animation.
 //     return m;
 // }
 
+import {Matrix} from "../Matrix/Matrix.js";
+
 class Animator {
     /**
      * Creates an animator for handling animations

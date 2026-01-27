@@ -70,11 +70,11 @@ export class Character extends PhysicsEntity {
     /**
      * Creates a basic character
      * @param game the game engine
-     * @param image the spritesheet image for this character
+     * @param characterName the spritesheet image for this character
      */
-    constructor(game, image) {
+    constructor(game, characterName) {
         super();
-        Object.assign(this, { game, image });
+        Object.assign(this, { game, characterName });
 
     }
 
