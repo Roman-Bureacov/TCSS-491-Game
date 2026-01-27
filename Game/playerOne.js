@@ -5,9 +5,9 @@ A concrete implementation of the character class
 import {Character} from "./character.js"
 import {Spritesheet} from "./animation.js";
 import {Animator} from "./animation.js";
-import {KeyMapper} from "../../keymapper.js";
-import {global} from "../../main.js";
-import {characterFactory} from "../../characterFactory.js";
+import {KeyMapper} from "./keymapper.js";
+import {global} from "./main.js";
+import {characterFactory} from "./characterFactory.js";
 
 export class PlayerOne extends Character {
     constructor(game, assetManager ,characterName, startPosX, startPosY) {
@@ -59,7 +59,6 @@ export class PlayerOne extends Character {
         const attackDur = this.character.getCharacter().attackDur;
         const moveDur = this.character.getCharacter().moveDur;
         const scale = this.character.getCharacter().scale;
-        console.log(idlePad)
         this.animations = {
             [this.states.MOVE + Character.DIRECTION.RIGHT]: new Animator(
                 this.spritesheet,
@@ -208,11 +207,9 @@ export class PlayerOne extends Character {
             case this.states.ATTACK:
 
         }
+        
+        
 
-    }
-    
-    getImageAsset() {
-        return this.character.getImageAsset();
     }
 
 }

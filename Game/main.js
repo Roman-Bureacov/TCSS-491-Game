@@ -5,8 +5,8 @@ import {ArenaFactory} from "./arenaFactory.js";
 import {loadArenaTxt} from "./arenaFactory.js";
 import {parseTxtToMap} from "./arenaFactory.js";
 import {TileMap} from "./arenaFactory.js";
-import {PlayerOne} from "./assets/character/playerOne.js";
-import {PlayerTwo} from "./assets/character/playerTwo.js";
+import {PlayerOne} from "./playerOne.js";
+import {PlayerTwo} from "./playerTwo.js";
 import {getCharacter} from "./characterData.js";
 
 const gameEngine = new GameEngine();

@@ -2,7 +2,7 @@
 
 import {getCharacter} from "./characterData.js";
 
-import {Spritesheet} from "./assets/character/animation.js";
+import {Spritesheet} from "./animation.js";
 
 
 export class characterFactory {

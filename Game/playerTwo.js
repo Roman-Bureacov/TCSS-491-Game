@@ -4,9 +4,9 @@ A concrete implementation of the character class
 
 import {Character} from "./character.js"
 import {Animator} from "./animation.js";
-import {KeyMapper} from "../../keymapper.js";
-import {global} from "../../main.js";
-import {characterFactory} from "../../characterFactory.js";
+import {KeyMapper} from "./keymapper.js";
+import {global} from "./main.js";
+import {characterFactory} from "./characterFactory.js";
 
 export class PlayerTwo extends Character {
     constructor(game, assetManager, characterName, startPosX, startPosY) {
