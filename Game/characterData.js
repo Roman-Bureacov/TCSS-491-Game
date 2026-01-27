@@ -17,6 +17,8 @@ const CHARACTER_DATA = {
         moveDur: 1,
         attackDur: 0.5,
         scale:1,
+        swordSound: "quickSwordSwoosh2",
+
     },
     
     guy2: {
@@ -36,6 +38,8 @@ const CHARACTER_DATA = {
         moveDur: 1,
         attackDur: 0.5,
         scale:1,
+        swordSound: "quickSwordSwoosh2",
+
     },
     
     warriorWoman: {
@@ -55,6 +59,7 @@ const CHARACTER_DATA = {
         moveDur: 1,
         attackDur: 0.5,
         scale:2.5,
+        swordSound: "heavySwordSwoosh1",
     }
     
     

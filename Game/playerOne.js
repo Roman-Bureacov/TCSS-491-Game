@@ -8,6 +8,7 @@ import {Animator} from "./animation.js";
 import {KeyMapper} from "./keymapper.js";
 import {global} from "./main.js";
 import {characterFactory} from "./characterFactory.js";
+import {SoundFX} from "./soundFX.js";
 
 export class PlayerOne extends Character {
     constructor(game, assetManager ,characterName, startPosX, startPosY) {
@@ -43,6 +44,8 @@ export class PlayerOne extends Character {
 
         this.setupAnimation();
         this.setupKeymap();
+        
+        this.playSound = new SoundFX({masterVolume: 0.8});
     }
 
     setupAnimation() {
@@ -171,6 +174,7 @@ export class PlayerOne extends Character {
             this.lastState = this.state;
             this.state = this.states.ATTACK;
             this.stateLock = true;
+            this.playSound.play(this.character.getCharacter().swordSound)
         }
     }
 

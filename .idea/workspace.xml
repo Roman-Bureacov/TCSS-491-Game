@@ -5,10 +5,12 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="a08718b8-ac73-4cb8-b286-185a0b662aef" name="Changes" comment="added warrior woman animation character&#10;&#10;finished implementing a character factory&#10;&#10;created a global character object">
+      <change afterPath="$PROJECT_DIR$/Game/soundFX.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Game/arenaFactory.js" beforeDir="false" afterPath="$PROJECT_DIR$/Game/arenaFactory.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Game/backgroundFactory.js" beforeDir="false" afterPath="$PROJECT_DIR$/Game/backgroundFactory.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Game/characterData.js" beforeDir="false" afterPath="$PROJECT_DIR$/Game/characterData.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Game/main.js" beforeDir="false" afterPath="$PROJECT_DIR$/Game/main.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Game/playerOne.js" beforeDir="false" afterPath="$PROJECT_DIR$/Game/playerOne.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Game/playerTwo.js" beforeDir="false" afterPath="$PROJECT_DIR$/Game/playerTwo.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -118,7 +120,7 @@
       <workItem from="1769037237923" duration="16388000" />
       <workItem from="1769155658563" duration="3452000" />
       <workItem from="1769453776203" duration="4839000" />
-      <workItem from="1769459092903" duration="24502000" />
+      <workItem from="1769459092903" duration="26940000" />
     </task>
     <task id="LOCAL-00001" summary="Added a sample arena, background music, character sound fx, sword sound fx, background images">
       <option name="closed" value="true" />
@@ -192,7 +194,15 @@
       <option name="project" value="LOCAL" />
       <updated>1769480266486</updated>
     </task>
-    <option name="localTasksCounter" value="10" />
+    <task id="LOCAL-00010" summary="added warrior woman animation character&#10;&#10;finished implementing a character factory&#10;&#10;created a global character object">
+      <option name="closed" value="true" />
+      <created>1769486484561</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1769486484561</updated>
+    </task>
+    <option name="localTasksCounter" value="11" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">

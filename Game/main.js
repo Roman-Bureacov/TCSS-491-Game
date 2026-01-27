@@ -102,6 +102,7 @@ ASSET_MANAGER.queueDownload(character2Img);
 ASSET_MANAGER.downloadAll(async () => {
     const canvas = document.getElementById("gameWorld");
     const ctx = canvas.getContext("2d");
+    ctx.imageSmoothingEnabled = false;
     canvas.tabIndex = 1;
     canvas.focus();
 
@@ -116,7 +117,7 @@ ASSET_MANAGER.downloadAll(async () => {
 
     //Add new Arenas/sprite entities.
     gameEngine.addEntity(arena1TileMap);
-    
+
     //Add new Player Entity
     gameEngine.addEntity(playerOne);
     gameEngine.addEntity(playerTwo)
@@ -154,7 +155,7 @@ function setPromiseAndLoadArenaText(tileset, map) {
 
 /**
  * Sets the tileMap Object
- * 
+ *
  * @param theTileSheet The arenas tileSheet
  * @param theArenasBackground The path to the arenas background.
  * @param theArenaName the Arenas String name
