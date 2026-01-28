@@ -4,15 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="a08718b8-ac73-4cb8-b286-185a0b662aef" name="Changes" comment="workspace">
-      <change afterPath="$PROJECT_DIR$/Game/assets/music/backgroundMusic1.mp3" afterDir="false" />
+    <list default="true" id="a08718b8-ac73-4cb8-b286-185a0b662aef" name="Changes" comment="Moved files to the main folder">
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_1_21_2026_3_10_PM__Changes_1.xml" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Game/PhysicsEntity.js" beforeDir="false" afterPath="$PROJECT_DIR$/Game/PhysicsEntity.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Game/assets/music/background_Music_1.mp3" beforeDir="false" afterPath="$PROJECT_DIR$/Game/assets/music/backgroundMusic2.mp3" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Game/assets/music/time_for_adventure.mp3" beforeDir="false" afterPath="$PROJECT_DIR$/Game/assets/music/timeForAdventure.mp3" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Game/main.js" beforeDir="false" afterPath="$PROJECT_DIR$/Game/main.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Game/playerOne.js" beforeDir="false" afterPath="$PROJECT_DIR$/Game/playerOne.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Game/soundFX.js" beforeDir="false" afterPath="$PROJECT_DIR$/Game/soundFX.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -74,6 +69,7 @@
   </component>
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
+    "Node.js.main.js.executor": "Run",
     "RunOnceActivity.git.unshallow": "true",
     "RunOnceActivity.typescript.service.memoryLimit.init": "true",
     "disable.download.node.interpreter.editor.notification": "true",
@@ -86,7 +82,7 @@
     "node.js.selected.package.eslint": "(autodetect)",
     "node.js.selected.package.tslint": "(autodetect)",
     "nodejs_package_manager_path": "npm",
-    "settings.editor.selected.configurable": "org.jetbrains.plugins.github.ui.GithubSettingsConfigurable",
+    "settings.editor.selected.configurable": "preferences.pluginManager",
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
@@ -123,6 +119,10 @@
       <workItem from="1769155658563" duration="3452000" />
       <workItem from="1769453776203" duration="4839000" />
       <workItem from="1769459092903" duration="26940000" />
+      <workItem from="1769549146114" duration="649000" />
+      <workItem from="1769561704157" duration="647000" />
+      <workItem from="1769562755431" duration="1348000" />
+      <workItem from="1769626306938" duration="2291000" />
     </task>
     <task id="LOCAL-00001" summary="Added a sample arena, background music, character sound fx, sword sound fx, background images">
       <option name="closed" value="true" />
@@ -204,7 +204,15 @@
       <option name="project" value="LOCAL" />
       <updated>1769486484561</updated>
     </task>
-    <option name="localTasksCounter" value="11" />
+    <task id="LOCAL-00011" summary="Moved files to the main folder">
+      <option name="closed" value="true" />
+      <created>1769549200024</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1769549200024</updated>
+    </task>
+    <option name="localTasksCounter" value="12" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -217,7 +225,8 @@
     <MESSAGE value="awesome guy spawned in to save the day!" />
     <MESSAGE value="added second arena" />
     <MESSAGE value="added warrior woman animation character&#10;&#10;finished implementing a character factory&#10;&#10;created a global character object" />
-    <option name="LAST_COMMIT_MESSAGE" value="added warrior woman animation character&#10;&#10;finished implementing a character factory&#10;&#10;created a global character object" />
+    <MESSAGE value="Moved files to the main folder" />
+    <option name="LAST_COMMIT_MESSAGE" value="Moved files to the main folder" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />

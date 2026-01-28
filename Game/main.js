@@ -20,8 +20,8 @@ const CANVAS = document.querySelector('#gameWorld');
  */
 export const arenas = {
     arena1: {
-        tileSet: "./assets/tileset/Industrial Tileset/1_Industrial_Tileset_1B.png",
-        background: "./assets/background/background02.jpeg",
+        tileSet: "./assets/tileset/Industrial Tileset/1_Industrial_Tileset_1c.png",
+        background: "./assets/background/background03.jpeg",
         backgroundSound: "backgroundMusic1",
         map: "./assets/maps/arena01.txt",
         name: "arena01",
@@ -50,7 +50,7 @@ export const arenas = {
     },
     // Add more arenas assets here
     arena2: {
-        tileSet: "./assets/tileset/Industrial Tileset/1_Industrial_Tileset_1C.png",
+        tileSet: "./assets/tileset/Industrial Tileset/1_Industrial_Tileset_1b.png",
         background: "./assets/background/background01.jpeg",
         backgroundSound: "backgroundMusic2",
         map: "./assets/maps/arena02.txt",
@@ -77,6 +77,7 @@ export const arenas = {
         floor: 737, // The y-value of the floor.
         playerOnePos: [120, 13],
         playerTwoPos: [760, 13],
+
     }
 }
 //-------------------------------------------End of module---------------------------------------------------//
@@ -89,11 +90,11 @@ export const global = {
 
 
 // The output of the character name for each player.
-const character1 = "warriorWoman"; //CHARACTER_SELECTOR.getPlayerCharacter()[0] //player 1 character
+const character1 = "guy1"; //CHARACTER_SELECTOR.getPlayerCharacter()[0] //player 1 character
 const character2 = "guy2"; //CHARACTER_SELECTOR.getPlayerCharacter()[1] //player 2 character
 
 // The output of the arena object for the game.
-const arena = arenas.arena2; //ARENA_SELECTOR.getArena()
+const arena = arenas.arena1; //ARENA_SELECTOR.getArena()
 
 const character1Img = getCharacter(character1).img;
 const character2Img = getCharacter(character2).img;
