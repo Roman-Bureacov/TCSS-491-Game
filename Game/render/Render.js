@@ -51,7 +51,7 @@ class Entity extends SpaceObject {
      * The scale is represented at a point with respect to this object's origin.
      * @type {Matrix}
      */
-    dimension = new Matrix(4, 1);
+    _dimension = new Matrix(4, 1);
 
     /**
      * Constructs an entity of the dimension
@@ -61,7 +61,7 @@ class Entity extends SpaceObject {
     constructor(dimX = 1, dimY = 1) {
         super();
         this.matrix.set(1, 1, -1); // for drawing and scaling, invert Y
-        this.dimension.set(0, 3, 1); // homogenous coordinates
+        this._dimension.set(0, 3, 1); // homogenous coordinates
         this.setDimension(dimX, dimY);
     }
 
@@ -71,8 +71,8 @@ class Entity extends SpaceObject {
      * @param {number} [dimY=1] the positive y dimension of this entity
      */
     setDimension(dimX= 1, dimY = 1) {
-        this.dimension.set(0, 0, dimX);
-        this.dimension.set(1, 0, dimY);
+        this._dimension.set(0, 0, dimX);
+        this._dimension.set(1, 0, dimY);
     }
 
     /**
@@ -182,7 +182,7 @@ class Camera extends SpaceObject {
     /**
      * The focal length for this camera, defined in millimeters.
      *
-     * Use function instead to mutate focal length.
+     * The focal length may be modified using `setFocalLength`.
      *
      * @type {number}
      */
@@ -190,15 +190,19 @@ class Camera extends SpaceObject {
 
     /**
      * The image for this camera, defined in pixels
-     * @type {{width: number, height: number, aspect: 0}}
-     */
-    image = {width: 0, height: 0, aspect: 0}
-
-    /**
-     * The aperture for this camera, defined in millimeters
+     *
+     * The image may be modified using `setImage`
      * @type {{width: number, height: number, aspect: number}}
      */
-    aperture = {width: 0, height: 0, aspect: 0}
+    image;
+
+    /**
+     * The aperture for this camera, defined in millimeters.
+     *
+     * The aperture may be modified using `setAperture`
+     * @type {{width: number, height: number, aspect: number}}
+     */
+    aperture;
 
     /**
      * The canvas which this camera sees.
@@ -220,8 +224,7 @@ class Camera extends SpaceObject {
      * @type {boolean} true if a property (other than position) has been changed, false otherwise
      */
     #modified;
-    
-    
+
     /**
      * Constructs the camera with necessary parameters
      * @param imageWidth the image width
@@ -229,13 +232,15 @@ class Camera extends SpaceObject {
      */
     constructor(imageWidth, imageHeight) {
         super();
-        this.image.width = imageWidth;
-        this.image.height = imageHeight;
+        this.image = Object.freeze({
+            width: imageWidth,
+            height: imageHeight,
+            aspect: imageWidth / imageHeight,
+        });
 
         // for simplicity, both have the same aspect ratio in this project's context
-        this.aperture.aspect = this.image.aspect = imageWidth / imageHeight;
-        this.aperture.width = 22;
-        this.aperture.height = this.aperture.width * this.aperture.aspect;
+        this.setAperture(22, this.image.aspect, undefined);
+
         
         this.#modified = true;
     }
@@ -259,6 +264,35 @@ class Camera extends SpaceObject {
     setFocalLength(focalLength) {
         this.focalLength = focalLength;
         this.#modified = true;
+    }
+
+    /**
+     * Sets the aperture for this camera.
+     *
+     * If the aspect ratio is omitted (undefined) but the height is defined,
+     * the aspect ratio will be inferred.
+     *
+     * If the height is omitted (undefined) but the aspect ratio is defined,
+     * the height will be inferred.
+     *
+     * @param {number} width the width of the aperture in millimeters
+     * @param {number} [aspect=undefined] the aspect ratio of the aperture
+     * @param {number} [height=undefined] the height of the aperture
+     */
+    setAperture(width, aspect=undefined, height=undefined) {
+        if (!aspect) {
+            if (!height) throw new Error("aspect and height undefined when setting aperture");
+
+            aspect = width/height;
+        } else if (!height) {
+            height = width * (1.0/aspect);
+        }
+
+        this.aperture = Object.freeze({
+            width: width,
+            height: height,
+            aspect: aspect,
+        })
     }
 
     /**
@@ -327,15 +361,13 @@ class Render {
             let paneToCamera = MatrixOp.multiply(worldToCamera, pane.matrix);
             
             for (let drawable of pane.drawables) {
-                                                                let entityMatrix = MatrixOp.multiply(paneToCamera, drawable.matrix);
-                
+                let entityMatrix = MatrixOp.multiply(paneToCamera, drawable.matrix);
+
                 // if on or behind camera...
                 if (entityMatrix.get(2, 3) >= 0) continue;
 
-                let endpoint = MatrixOp.multiply(entityMatrix, drawable.dimension);
+                let endpoint = MatrixOp.multiply(entityMatrix, drawable._dimension);
 
-                                
-                                                                
                 // position is given by C1 and C2, ignore C3
                 Render.#toRasterMatrix(entityMatrix, this.camera);
                 Render.#toRasterPoint(endpoint, this.camera);
