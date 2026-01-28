@@ -396,6 +396,10 @@ class Render {
                     || endpoint.get(1, 0) < 0
                 ) continue;
 
+                // note that the bounds check is valid even for reversed entities:
+                // even if it were reversed, it would be testing the same dimensions
+                // at the same point
+
                 let x = entityMatrix.get(0, 3);
                 let y = entityMatrix.get(1, 3);
                 let width = endpoint.get(0, 0) - x;
