@@ -151,10 +151,10 @@ class Pane extends SpaceObject {
 
     /**
      * Appends drawable entities to this pane
-     * @param {Drawable} drawable the drawable entity
+     * @param {...Drawable} drawables the drawable(s)
      */
-    addDrawable(drawable) {
-        this.drawables.push(drawable);
+    addDrawable(...drawables) {
+        drawables.map(drawable => this.drawables.push(drawable))
     }
 
 }
@@ -423,14 +423,11 @@ class Render {
         let y = matrix.get(1, 0)
         let NDCY = (y - c.bottom) / (c.top - c.bottom);
 
-                                
         // convert into raster space
         let rasterX = NDCX * camera.image.width;
         let rasterY = (1 - NDCY) * camera.image.height; // Y axis in reverse
         matrix.set(0, 0, rasterX);
         matrix.set(1, 0, rasterY);
-
-                                
     }
 
     /**
@@ -472,7 +469,6 @@ class Render {
         let rasterY = (1 - NDCY) * camera.image.height; // Y axis in reverse
         matrix.set(0, 3, rasterX);
         matrix.set(1, 3, rasterY);
-
     }
 }
 
@@ -496,11 +492,11 @@ class World {
     }
 
     /**
-     * Adds a pane to this world
-     * @param {Pane} pane the pane to be added
+     * Adds panes to this world
+     * @param {...Pane} panes the pane(s) to add
      */
-    addPane(pane) {
-        this.panes.push(pane);
+    addPane(... panes) {
+        panes.map(pane => this.panes.push(pane));
     }
 
 }
