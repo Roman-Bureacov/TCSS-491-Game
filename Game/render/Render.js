@@ -91,6 +91,7 @@ class Entity extends SpaceObject {
  * @property {Spritesheet} spritesheet the spritesheet representing the drawable object
  * @property {number} row the row in the spritesheet to look at
  * @property {number} col the column in the spritesheet to look at
+ * @property {boolean} isReversed if the drawing should be in reverse
  */
 
 /**
@@ -115,6 +116,7 @@ class Drawable extends Entity {
         spritesheet : undefined,
         row: 0,
         col: 0,
+        isReversed: false,
     }
 
     /**
@@ -363,8 +365,8 @@ class Render {
         // clear raster
         context.clearRect(0, 0, context.canvas.width, context.canvas.height);
 
-                        let worldToCamera = MatrixOp.inverse(this.camera.matrix);
-                for (let pane of this.world.panes) {
+        let worldToCamera = MatrixOp.inverse(this.camera.matrix);
+        for (let pane of this.world.panes) {
             // panes are defined with respect to the world
             
             let paneToCamera = MatrixOp.multiply(worldToCamera, pane.matrix);
@@ -377,18 +379,18 @@ class Render {
 
                 let endpoint = MatrixOp.multiply(entityMatrix, drawable.dimension);
 
-                // position is given by C1 and C2, ignore C3
+                // position is given by C1 and C2 in the entity's matrix, ignore C3
                 Render.#toRasterMatrix(entityMatrix, this.camera);
                 Render.#toRasterPoint(endpoint, this.camera);
 
-                // is the entity minimum in bounds?
+                // is the entity x y minimum in bounds?
                 let img = this.camera.image;
                 if (
                     img.width < entityMatrix.get(0, 3)
                     || img.height < entityMatrix.get(1, 3)
                 ) continue;
 
-                // is the entity maximum in bounds?
+                // is the entity x y maximum in bounds?
                 if (
                     endpoint.get(0, 0) < 0
                     || endpoint.get(1, 0) < 0
@@ -396,20 +398,36 @@ class Render {
 
                 let x = entityMatrix.get(0, 3);
                 let y = entityMatrix.get(1, 3);
-                let endX = endpoint.get(0, 0);
-                let endY = endpoint.get(1, 0);
+                let width = endpoint.get(0, 0) - x;
+                let height = endpoint.get(1, 0) - y;
 
-                
                 let p = drawable.drawingProperties;
                 let position = p.spritesheet.get(p.row, p.col);
 
-                context.drawImage(
-                    p.spritesheet.image,
-                    position.x, position.y,
-                    p.spritesheet.width, p.spritesheet.height,
-                    x, y,
-                    endX - x, endY - y
-                );
+                if (drawable.drawingProperties.isReversed) {
+                    context.save();
+
+                    context.scale(-1, 1);
+
+                    context.drawImage(
+                        p.spritesheet.image,
+                        position.x, position.y,
+                        p.spritesheet.width, p.spritesheet.height,
+                        -x - width, y,
+                        width, height
+                    );
+
+                    context.restore();
+                } else {
+                    context.drawImage(
+                        p.spritesheet.image,
+                        position.x, position.y,
+                        p.spritesheet.width, p.spritesheet.height,
+                        x, y,
+                        width, height
+                    );
+                }
+
             }
         }
     }

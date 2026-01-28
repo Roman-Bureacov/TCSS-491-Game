@@ -107,6 +107,7 @@ export class Character extends Entity {
         this.currentAnimation.update(tick);
         this.drawingProperties.row = this.currentAnimation.currentFrame.row;
         this.drawingProperties.col = this.currentAnimation.currentFrame.col;
+        this.drawingProperties.isReversed = this.currentAnimation.reversed;
     }
 
     /**
