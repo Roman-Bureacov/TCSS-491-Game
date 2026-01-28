@@ -160,6 +160,14 @@ class Pane extends SpaceObject {
 }
 
 /**
+ * @typedef CameraCanvas the coordinates of the camera canvas
+ * @property {number} left the left coordinate of the camera canvas
+ * @property {number} right the right coordinate of the camera canvas
+ * @property {number} top the top coordinate of the camera canvas
+ * @property {number} bottom the bottom coordinate of the camera canvas
+ */
+
+/**
  * Class that represents a camera in 3D space.
  *
  * Note that this camera does not represent near and far planes.
@@ -198,10 +206,22 @@ class Camera extends SpaceObject {
      * If the camera's aperture parameters, or focal length, change, reassign this canvas
      * using the static method for computing the canvas coordinates.
      *
-     * @typedef {Readonly<{left: number, right: number, top: number, bottom: number}>} canvas
+     * @type CameraCanvas
      */
-    canvas = undefined;
+    #canvas = {
+        left: 0,
+        right: 0,
+        top: 0,
+        bottom: 0,
+    }
 
+    /**
+     * If the camera properties have been modified.
+     * @type {boolean} true if a property (other than position) has been changed, false otherwise
+     */
+    #modified;
+    
+    
     /**
      * Constructs the camera with necessary parameters
      * @param imageWidth the image width
@@ -216,8 +236,8 @@ class Camera extends SpaceObject {
         this.aperture.aspect = this.image.aspect = imageWidth / imageHeight;
         this.aperture.width = 22;
         this.aperture.height = this.aperture.width * this.aperture.aspect;
-
-        this.canvas = Camera.getCanvas(this);
+        
+        this.#modified = true;
     }
 
     /**
@@ -238,33 +258,28 @@ class Camera extends SpaceObject {
      */
     setFocalLength(focalLength) {
         this.focalLength = focalLength;
-        this.canvas = Camera.getCanvas(this);
+        this.#modified = true;
     }
 
     /**
      * Calculates the camera's canvas coordinates
-     * @param {Camera} camera the camera
-     * @returns {Readonly<{left: number, right: number, top: number, bottom: number}>}
-     *      the immutable canvas coordinates
+     * @returns {CameraCanvas} the immutable canvas coordinates
      */
-    static getCanvas(camera) {
+    getCanvas() {
 
-        const canvas = {
-            left: 0,
-            right: 0,
-            top: 0,
-            bottom: 0,
+        if (this.#modified) {
+            // for simplicity, near plane is 1: aperatureWidth / focal * nearPlaneZ
+            const canvasWidth =  this.aperture.width / this.focalLength;
+
+            this.#canvas.left = -canvasWidth / 2;
+            this.#canvas.right = -this.#canvas.left;
+            this.#canvas.top = canvasWidth / 2 * this.aperture.aspect;
+            this.#canvas.bottom = -this.#canvas.top;
+            
+            this.#modified = false;
         }
-
-        // for simplicity, near plane is 1: aperatureWidth / focal * nearPlaneZ
-        const canvasWidth =   camera.aperture.width / camera.focalLength;
-
-        canvas.left = -canvasWidth / 2;
-        canvas.right = -canvas.left;
-        canvas.top = canvasWidth / 2 * camera.aperture.aspect;
-        canvas.bottom = -canvas.top;
-
-        return Object.freeze(canvas);
+        
+        return this.#canvas;
     }
 }
 
@@ -359,7 +374,7 @@ class Render {
 
                                 
         // convert to NDC
-        let c = camera.canvas;
+        let c = camera.getCanvas();
 
         let x = matrix.get(0, 0)
         let NDCX = (x - c.left) / (c.right - c.left);
@@ -403,7 +418,7 @@ class Render {
         // but we aren't a GPU, so we can take some liberty and normalize the coordinates to [0, 1]:
         // x = (x - l) / (r - l)
         // y = (y - b) / (t - b)
-        let c = camera.canvas;
+        let c = camera.getCanvas();
 
         let x = matrix.get(0, 3)
         let NDCX = (x - c.left) / (c.right - c.left);
