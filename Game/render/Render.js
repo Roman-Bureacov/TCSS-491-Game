@@ -381,6 +381,19 @@ class Render {
                 Render.#toRasterMatrix(entityMatrix, this.camera);
                 Render.#toRasterPoint(endpoint, this.camera);
 
+                // is the entity minimum in bounds?
+                let img = this.camera.image;
+                if (
+                    img.width < entityMatrix.get(0, 3)
+                    || img.height < entityMatrix.get(1, 3)
+                ) continue;
+
+                // is the entity maximum in bounds?
+                if (
+                    endpoint.get(0, 0) < 0
+                    || endpoint.get(1, 0) < 0
+                ) continue;
+
                 let x = entityMatrix.get(0, 3);
                 let y = entityMatrix.get(1, 3);
                 let endX = endpoint.get(0, 0);
