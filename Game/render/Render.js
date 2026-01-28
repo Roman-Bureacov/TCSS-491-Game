@@ -249,12 +249,21 @@ class Camera extends SpaceObject {
      * Tells the camera to look at the specific coordinate with respect to
      * the world origin
      *
-     * @param x the x coordinate with respect to the world origin
-     * @param y the y coordiante with respect to the world origin
+     * @param {number} x the x coordinate with respect to the world origin
+     * @param {number} y the y coordinate with respect to the world origin
      */
     lookAt(x, y) {
         this.matrix.set(0, 3, x);
         this.matrix.set(1, 3, y);
+    }
+
+    /**
+     * Sets the depth of this camera in the world.
+     *
+     * @param {number} z the depth of this camera
+     */
+    setDepth(z) {
+        this.matrix.set(2, 3, z);
     }
 
     /**
