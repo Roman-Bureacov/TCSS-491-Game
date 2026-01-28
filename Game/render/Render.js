@@ -51,7 +51,7 @@ class Entity extends SpaceObject {
      * The scale is represented at a point with respect to this object's origin.
      * @type {Matrix}
      */
-    _dimension = new Matrix(4, 1);
+    dimension = new Matrix(4, 1);
 
     /**
      * Constructs an entity of the dimension
@@ -61,7 +61,7 @@ class Entity extends SpaceObject {
     constructor(dimX = 1, dimY = 1) {
         super();
         this.matrix.set(1, 1, -1); // for drawing and scaling, invert Y
-        this._dimension.set(0, 3, 1); // homogenous coordinates
+        this.dimension.set(0, 3, 1); // homogenous coordinates
         this.setDimension(dimX, dimY);
     }
 
@@ -71,8 +71,8 @@ class Entity extends SpaceObject {
      * @param {number} [dimY=1] the positive y dimension of this entity
      */
     setDimension(dimX= 1, dimY = 1) {
-        this._dimension.set(0, 0, dimX);
-        this._dimension.set(1, 0, dimY);
+        this.dimension.set(0, 0, dimX);
+        this.dimension.set(1, 0, dimY);
     }
 
     /**
@@ -366,7 +366,7 @@ class Render {
                 // if on or behind camera...
                 if (entityMatrix.get(2, 3) >= 0) continue;
 
-                let endpoint = MatrixOp.multiply(entityMatrix, drawable._dimension);
+                let endpoint = MatrixOp.multiply(entityMatrix, drawable.dimension);
 
                 // position is given by C1 and C2, ignore C3
                 Render.#toRasterMatrix(entityMatrix, this.camera);
