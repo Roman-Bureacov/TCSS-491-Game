@@ -3,7 +3,7 @@ This code manages animation.
  */
 
 import {Matrix} from "../Matrix/Matrix.js";
-import {getCharacter} from "./characterData.js";
+import {getCharacterData} from "./characterData.js";
 
 /**
  * Object that represents a simple animator object

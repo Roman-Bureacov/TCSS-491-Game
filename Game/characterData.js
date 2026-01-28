@@ -65,6 +65,6 @@ const CHARACTER_DATA = {
     
 }
 
-export function getCharacter(theCharacter) {
+export function getCharacterData(theCharacter) {
     return CHARACTER_DATA[theCharacter];
 }

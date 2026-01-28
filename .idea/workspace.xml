@@ -4,10 +4,15 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="a08718b8-ac73-4cb8-b286-185a0b662aef" name="Changes" comment="Moved files to the main folder">
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_1_21_2026_3_10_PM__Changes_1.xml" beforeDir="false" />
+    <list default="true" id="a08718b8-ac73-4cb8-b286-185a0b662aef" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/Game/drawable.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Game/entity.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Game/animation.js" beforeDir="false" afterPath="$PROJECT_DIR$/Game/animation.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Game/characterData.js" beforeDir="false" afterPath="$PROJECT_DIR$/Game/characterData.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Game/characterFactory.js" beforeDir="false" afterPath="$PROJECT_DIR$/Game/characterFactory.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Game/main.js" beforeDir="false" afterPath="$PROJECT_DIR$/Game/main.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Game/playerOne.js" beforeDir="false" afterPath="$PROJECT_DIR$/Game/playerOne.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -67,25 +72,25 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "Node.js.main.js.executor": "Run",
-    "RunOnceActivity.git.unshallow": "true",
-    "RunOnceActivity.typescript.service.memoryLimit.init": "true",
-    "disable.download.node.interpreter.editor.notification": "true",
-    "git-widget-placeholder": "main",
-    "ignore.virus.scanning.warn.message": "true",
-    "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "C:/Users/Kassi/OneDrive/Computer/Documents/GitHub/TCSS-491-Game/Game/assets/music",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "settings.editor.selected.configurable": "preferences.pluginManager",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Node.js.main.js.executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.typescript.service.memoryLimit.init&quot;: &quot;true&quot;,
+    &quot;disable.download.node.interpreter.editor.notification&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/Kassi/OneDrive/Computer/Documents/GitHub/TCSS-491-Game/Game/assets/music&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="C:\Users\Kassi\OneDrive\Computer\Documents\GitHub\TCSS-491-Game\Game\assets\music" />

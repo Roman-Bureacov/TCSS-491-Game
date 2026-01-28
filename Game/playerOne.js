@@ -3,7 +3,6 @@ A concrete implementation of the character class
  */
 
 import {Character} from "./character.js"
-import {Spritesheet} from "./animation.js";
 import {Animator} from "./animation.js";
 import {KeyMapper} from "./keymapper.js";
 import {global} from "./main.js";
@@ -62,6 +61,7 @@ export class PlayerOne extends Character {
         const attackDur = this.character.getCharacter().attackDur;
         const moveDur = this.character.getCharacter().moveDur;
         const scale = this.character.getCharacter().scale;
+
         this.animations = {
             [this.states.MOVE + Character.DIRECTION.RIGHT]: new Animator(
                 this.spritesheet,

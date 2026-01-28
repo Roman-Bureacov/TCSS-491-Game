@@ -7,7 +7,7 @@ import {parseTxtToMap} from "./arenaFactory.js";
 import {TileMap} from "./arenaFactory.js";
 import {PlayerOne} from "./playerOne.js";
 import {PlayerTwo} from "./playerTwo.js";
-import {getCharacter} from "./characterData.js";
+import {getCharacterData} from "./characterData.js";
 import {SoundFX} from "./soundFX.js";
 
 const gameEngine = new GameEngine();
@@ -96,8 +96,8 @@ const character2 = "guy2"; //CHARACTER_SELECTOR.getPlayerCharacter()[1] //player
 // The output of the arena object for the game.
 const arena = arenas.arena1; //ARENA_SELECTOR.getArena()
 
-const character1Img = getCharacter(character1).img;
-const character2Img = getCharacter(character2).img;
+const character1Img = getCharacterData(character1).img;
+const character2Img = getCharacterData(character2).img;
 
 // queue the image path for download.
 ASSET_MANAGER.queueDownload(character1Img);
