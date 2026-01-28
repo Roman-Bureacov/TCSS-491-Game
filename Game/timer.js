@@ -16,4 +16,6 @@ class Timer {
         this.gameTime += gameDelta;
         return gameDelta;
     };
-};
+}
+
+export { Timer }
