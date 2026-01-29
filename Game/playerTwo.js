@@ -2,6 +2,10 @@
 A concrete implementation of the character class
  */
 
+/*
+A concrete implementation of the character class
+ */
+
 import {Character} from "./character.js"
 import {Animator, Spritesheet} from "./animation.js";
 import {KeyMapper} from "./keymapper.js";
@@ -24,12 +28,15 @@ export class PlayerTwo extends Character {
             ATTACK: "attack ",
             IDLE: "idle ",
         });
+        
+        this.matrix.set(1,2, startPosX);
+        this.matrix.set(2,2, startPosY);
 
         this.physics.position.x = startPosX;
         this.physics.position.y = startPosY;
 
         this.state = this.states.IDLE;
-        this.facing = Character.DIRECTION.RIGHT;
+        this.facing = Character.DIRECTION.LEFT;
 
          this.physics.velocityMax.x = 100;
 
@@ -95,6 +102,8 @@ export class PlayerTwo extends Character {
                 attackR,
                 attackDur,
                 false,
+                false,
+                
                 () => {
                     this.stateLock = false;
                     this.state = this.lastState;
@@ -108,11 +117,11 @@ export class PlayerTwo extends Character {
                 attackL,
                 attackDur,
                 false,
+                false,
                 () => {
                     this.stateLock = false;
                     this.state = this.lastState;
                     this.facing = Character.DIRECTION.LEFT;
-                    console.log("is looping")
                 }
             ),
         };
@@ -123,7 +132,7 @@ export class PlayerTwo extends Character {
     setupKeymap() {
         this.keymapper = new KeyMapper();
 
-        this.keymapper.inputMap = {
+       this.keymapper.inputMap = {
             [KeyMapper.getName("ArrowRight", true)]: "move right",
             [KeyMapper.getName("ArrowLeft", true)]: "move left",
             [KeyMapper.getName("ArrowDown", true)]: "attack",
@@ -164,11 +173,13 @@ export class PlayerTwo extends Character {
     stopMoving(facing) {
         this.constantAcceleration[facing] = 0;
     }
+    num = 0;
     /**
      * Initiates an attack
      */
     swing() {
         if (!this.stateLock) {
+            console.log("swing");
             this.lastState = this.state;
             this.state = this.states.ATTACK;
             this.stateLock = true;
@@ -181,8 +192,10 @@ export class PlayerTwo extends Character {
 
     update() {
         super.update();
+        
         this.physics.acceleration.x = 0;
         this.physics.acceleration.y = 0;
+        
         for (let key in this.game.keys) this.keymapper.sendKeyEvent(this.game.keys[key]);
 
         // hard-coded gobbledegook
@@ -216,3 +229,7 @@ export class PlayerTwo extends Character {
     }
 
 }
+
+
+
+

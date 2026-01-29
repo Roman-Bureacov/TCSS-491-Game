@@ -4,22 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="a08718b8-ac73-4cb8-b286-185a0b662aef" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/Game/entity.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Game/render/Render.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Game/animation.js" beforeDir="false" afterPath="$PROJECT_DIR$/Game/animation.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Game/arenaFactory.js" beforeDir="false" afterPath="$PROJECT_DIR$/Game/arenaFactory.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Game/assetmanager.js" beforeDir="false" afterPath="$PROJECT_DIR$/Game/assetmanager.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Game/backgroundFactory.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Game/character.js" beforeDir="false" afterPath="$PROJECT_DIR$/Game/character.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Game/characterData.js" beforeDir="false" afterPath="$PROJECT_DIR$/Game/characterData.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Game/characterFactory.js" beforeDir="false" afterPath="$PROJECT_DIR$/Game/characterFactory.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Game/gameengine.js" beforeDir="false" afterPath="$PROJECT_DIR$/Game/gameengine.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Game/main.js" beforeDir="false" afterPath="$PROJECT_DIR$/Game/main.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Game/playerOne.js" beforeDir="false" afterPath="$PROJECT_DIR$/Game/playerOne.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Game/playerTwo.js" beforeDir="false" afterPath="$PROJECT_DIR$/Game/playerTwo.js" afterDir="false" />
-    </list>
+    <list default="true" id="a08718b8-ac73-4cb8-b286-185a0b662aef" name="Changes" comment="merged camera with main, just need to refactor some arenaFactory.js to make each block a static entity object. Maybe draw directly on the tilepane instead of a canvas dom?" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -78,25 +63,26 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;Node.js.main.js.executor&quot;: &quot;Run&quot;,
-    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.typescript.service.memoryLimit.init&quot;: &quot;true&quot;,
-    &quot;disable.download.node.interpreter.editor.notification&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;Merge__Camera__With__Main&quot;,
-    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
-    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Users/Kassi/OneDrive/Computer/Documents/GitHub/TCSS-491-Game/Game/render&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Node.js.arenaFactory.js.executor": "Run",
+    "Node.js.main.js.executor": "Run",
+    "RunOnceActivity.git.unshallow": "true",
+    "RunOnceActivity.typescript.service.memoryLimit.init": "true",
+    "disable.download.node.interpreter.editor.notification": "true",
+    "git-widget-placeholder": "Merge__Camera__With__Main",
+    "ignore.virus.scanning.warn.message": "true",
+    "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "C:/Users/Kassi/OneDrive/Computer/Documents/GitHub/TCSS-491-Game/Game/render",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "settings.editor.selected.configurable": "preferences.pluginManager",
+    "vue.rearranger.settings.migration": "true"
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="C:\Users\Kassi\OneDrive\Computer\Documents\GitHub\TCSS-491-Game\Game\render" />
@@ -139,6 +125,7 @@
       <workItem from="1769637671263" duration="16151000" />
       <workItem from="1769654228887" duration="1776000" />
       <workItem from="1769658035515" duration="2248000" />
+      <workItem from="1769661010414" duration="99000" />
     </task>
     <task id="LOCAL-00001" summary="Added a sample arena, background music, character sound fx, sword sound fx, background images">
       <option name="closed" value="true" />
@@ -228,7 +215,15 @@
       <option name="project" value="LOCAL" />
       <updated>1769549200024</updated>
     </task>
-    <option name="localTasksCounter" value="12" />
+    <task id="LOCAL-00012" summary="merged camera with main, just need to refactor some arenaFactory.js to make each block a static entity object. Maybe draw directly on the tilepane instead of a canvas dom?">
+      <option name="closed" value="true" />
+      <created>1769671719410</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1769671719410</updated>
+    </task>
+    <option name="localTasksCounter" value="13" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -242,7 +237,8 @@
     <MESSAGE value="added second arena" />
     <MESSAGE value="added warrior woman animation character&#10;&#10;finished implementing a character factory&#10;&#10;created a global character object" />
     <MESSAGE value="Moved files to the main folder" />
-    <option name="LAST_COMMIT_MESSAGE" value="Moved files to the main folder" />
+    <MESSAGE value="merged camera with main, just need to refactor some arenaFactory.js to make each block a static entity object. Maybe draw directly on the tilepane instead of a canvas dom?" />
+    <option name="LAST_COMMIT_MESSAGE" value="merged camera with main, just need to refactor some arenaFactory.js to make each block a static entity object. Maybe draw directly on the tilepane instead of a canvas dom?" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />
