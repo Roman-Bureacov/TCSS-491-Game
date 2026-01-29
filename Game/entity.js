@@ -12,7 +12,7 @@ import {PhysicsEntity} from "./PhysicsEntity.js";
  *
  * @author Roman Bureacov
  */
-export class Entity extends Drawable {
+export class DynamicEntity extends Drawable {
 
     /**
      * Represents the physics for this entity
@@ -23,15 +23,15 @@ export class Entity extends Drawable {
     /**
      * Constructs a new drawable physics entity
      * @param {Spritesheet} spritesheet the spritesheet
-     * @param {number} startPosX The sprites starting x position
-     * @param {number} startPosY The sprites starting y position
      * @param {number} [dimX=1] the positive x dimension of this entity
      * @param {number} [dimY=1] the positive y dimension of this entity
+     * @param {number} [startX=0] The sprites starting x position
+     * @param {number} [startY=0] The sprites starting y position
      */
-    constructor(spritesheet,startPosX, startPosY, dimX = 1, dimY = 1) {
+    constructor(spritesheet, dimX = 1, dimY = 1, startX=0, startY=0) {
         super(spritesheet, dimX, dimY);
-        this.physics.position.x = startPosX;
-        this.physics.position.y = startPosY;
+        this.physics.position.x = startX;
+        this.physics.position.y = startY;
     }
 
     /**

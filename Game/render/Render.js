@@ -8,7 +8,6 @@ on where to draw themselves as well as.
  */
 
 import { Matrix, MatrixOp } from "../../Matrix/Matrix.js";
-/** @typedef {import("../animation.js").Spritesheet} Spritesheet */
 
 /**
  * An object in space representing
@@ -44,7 +43,7 @@ class SpaceObject {
  *
  * @author Roman Bureacov
  */
-class Entity extends SpaceObject {
+class SpaceEntity extends SpaceObject {
 
     /**
      * A 4x1 column vector representing the scale of this space object.
@@ -60,13 +59,10 @@ class Entity extends SpaceObject {
      * @param {number} [dimY=1] the positive y dimension of this entity
      */
     constructor(dimX = 1, dimY = 1) {
-    super();
-
-    this.matrix.set(1, 1, -1); 
-
-    this.dimension.set(3, 0, 1); 
-    this.setDimension(dimX, dimY);
-
+        super();
+        this.matrix.set(1, 1, -1); // for drawing and scaling, invert Y
+        this.dimension.set(3, 0, 1); // homogenous coordinates
+        this.setDimension(dimX, dimY);
     }
 
     /**
@@ -77,8 +73,6 @@ class Entity extends SpaceObject {
     setDimension(dimX = 1, dimY = 1) {
         this.dimension.set(0, 0, dimX);
         this.dimension.set(1, 0, dimY);
-        this.dimension.set(2, 0, 0);  
-        this.dimension.set(3, 0, 1);
     }
 
     /**
@@ -105,13 +99,13 @@ class Entity extends SpaceObject {
  *
  * @author Roman Bureacov
  */
-class Drawable extends Entity {
+class Drawable extends SpaceEntity {
 
     /**
      * The spritesheet representing this drawable object.
      * @type {Spritesheet}
      */
-    character;
+    spritesheet;
 
     /**
      * The drawing properties of this drawable object used for rendering.
@@ -131,7 +125,7 @@ class Drawable extends Entity {
      * @param {number} [dimX=1] the positive x dimension of this entity
      * @param {number} [dimY=1] the positive y dimension of this entity
      */
-    constructor(spritesheet, dimX = 32, dimY = 32) {
+    constructor(spritesheet, dimX = 1, dimY = 1) {
         super(dimX, dimY);
         Object.assign(this, { spritesheet });
         this.drawingProperties.spritesheet = spritesheet;
@@ -422,7 +416,7 @@ class Render {
                     context.drawImage(
                         p.spritesheet.image,
                         position.x, position.y,
-                        p.spritesheet.frameWidth, p.spritesheet.frameHeight,
+                        p.spritesheet.frameWidth, p.spritesheet.frameHeight, // TODO: validate this
                         -x - width, y,
                         width, height
                     );
@@ -432,7 +426,7 @@ class Render {
                     context.drawImage(
                         p.spritesheet.image,
                         position.x, position.y,
-                        p.spritesheet.frameWidth, p.spritesheet.frameHeight,
+                        p.spritesheet.frameWidth, p.spritesheet.frameHeight, // TODO: validate this
                         x, y,
                         width, height
                     );
@@ -542,4 +536,4 @@ class World {
 
 }
 
-export { Pane, Camera, Render, World, Drawable, Entity }
+export { Pane, Camera, Render, World, Drawable, SpaceEntity }

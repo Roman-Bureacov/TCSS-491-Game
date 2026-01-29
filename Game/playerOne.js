@@ -6,13 +6,13 @@ import {Character} from "./character.js"
 import {Animator, Spritesheet} from "./animation.js";
 import {KeyMapper} from "./keymapper.js";
 import {global} from "./main.js";
-import {characterFactory} from "./characterFactory.js";
+import {CharacterFactory} from "./characterFactory.js";
 import {SoundFX} from "./soundFX.js";
 
 export class PlayerOne extends Character {
     constructor(game, assetManager, characterName, startPosX, startPosY) {
 
-        const character = new characterFactory(characterName, assetManager);
+        const character = new CharacterFactory(characterName, assetManager);
         const sprite = character.getCharacterSpriteSheet();
         super(game, sprite, 200,400 , startPosX, startPosY);
 

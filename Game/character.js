@@ -1,5 +1,5 @@
 import {Animator, Spritesheet} from "./animation.js";
-import {Entity} from "./entity.js";
+import {DynamicEntity} from "./entity.js";
 
 /** @typedef {import("./animation.js").Spritesheet} Spritesheet */
 
@@ -8,7 +8,7 @@ import {Entity} from "./entity.js";
  *
  * @author Roman Bureacov
  */
-export class Character extends Entity {
+export class Character extends DynamicEntity {
 
     /**
      * The scale of this character in the X and Y
@@ -70,11 +70,13 @@ export class Character extends Entity {
      * @param  {Spritesheet} spritesheet the character spritesheet
      * @param {number} [dimX=1] the positive x dimension of this entity
      * @param {number} [dimY=1] the positive y dimension of this entity
-     * @param startPosX
-     * @param startPosY
+     * @param {number} [startX=0] the start x position
+     * @param {number} [startY=0] the start y position
      */
-    constructor(game, spritesheet, dimX = 1, dimY = 1, startPosX, startPosY) {
-        super(spritesheet, startPosX ,startPosY,dimX, dimY);
+    constructor(game, spritesheet,
+                dimX = 1, dimY = 1,
+                startX = 0, startY = 0) {
+        super(spritesheet, dimX, dimY, startX, startY);
         Object.assign(this, {game});
 
     }

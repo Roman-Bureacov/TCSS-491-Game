@@ -1,24 +1,24 @@
 import {Matrix, MatrixOp} from "../Matrix/Matrix.js";
 import {GameEngine} from "./gameengine.js"
-import {AssetManager} from "./assetmanager.js";
-import {ArenaFactory, TileMapDrawable} from "./arenaFactory.js";
-import {loadArenaTxt} from "./arenaFactory.js";
-import {parseTxtToMap} from "./arenaFactory.js";
-import {TileMap} from "./arenaFactory.js";
-import {PlayerOne} from "./playerOne.js";
-import {PlayerTwo} from "./playerTwo.js";
+import {AssetManager} from "./assets/assetmanager.js";
+// import {ArenaFactory, TileMapDrawable} from "./arenaFactory.js";
+// import {loadArenaTxt} from "./arenaFactory.js";
+// import {parseTxtToMap} from "./arenaFactory.js";
+// import {TileMap} from "./arenaFactory.js";
+// import {PlayerOne} from "./playerOne.js";
+// import {PlayerTwo} from "./playerTwo.js";
 import {getCharacterData} from "./characterData.js";
 import {SoundFX} from "./soundFX.js";
 import {StaticEntity} from "./entity.js";
 import {Spritesheet} from "./animation.js";
 import {Camera, Pane, Render, World} from "./render/Render.js";
+import {CharacterFactory as CharacterFactory} from "./characterFactory.js";
 
-const gameEngine = new GameEngine();
-const ASSET_MANAGER = new AssetManager();
+const gameEngine = new GameEngine(undefined, undefined);
 const CANVAS = document.querySelector('#gameWorld');
 window.DEBUG = {
     engine: gameEngine,
-    assets: ASSET_MANAGER,
+    assets: AssetManager,
 }
 
 //-------------------------------------------Place in modules for final-------------------------------------------//
@@ -97,22 +97,23 @@ export const global = {
 
 
 // The output of the character name for each player.
-const character1 = "guy1"; //CHARACTER_SELECTOR.getPlayerCharacter()[0] //player 1 character
-const character2 = "guy2"; //CHARACTER_SELECTOR.getPlayerCharacter()[1] //player 2 character
+const character1 = CharacterFactory.names.guy; //CHARACTER_SELECTOR.getPlayerCharacter()[0] //player 1 character
+// const character2 = "guy2"; //CHARACTER_SELECTOR.getPlayerCharacter()[1] //player 2 character
 
 // The output of the arena object for the game.
 const arena = arenas.arena1; //ARENA_SELECTOR.getArena()
 
-const character1Img = getCharacterData(character1).img;
-const character2Img = getCharacterData(character2).img;
+// const character1Img = getCharacterData(character1).img;
+// const character2Img = getCharacterData(character2).img;
 
 // queue the image path for download.
-ASSET_MANAGER.queueDownload(character1Img);
-ASSET_MANAGER.queueDownload(character2Img);
-ASSET_MANAGER.queueDownload(arena.background);
+// AssetManager.queueDownload(character1Img);
+AssetManager.queueDownload("character/guy1/Guy.png");
+// AssetManager.queueDownload(character2Img);
+AssetManager.queueDownload(arena.background);
 
 
-ASSET_MANAGER.downloadAll(async () => {
+AssetManager.downloadAll(async () => {
     const canvas = document.getElementById("gameWorld");
     const ctx = canvas.getContext("2d");
     ctx.imageSmoothingEnabled = false;
@@ -124,18 +125,20 @@ ASSET_MANAGER.downloadAll(async () => {
     const tilePane = new Pane();
     const forePane = new Pane();
 
-    const playerOne = new PlayerOne(gameEngine, ASSET_MANAGER, character1, arena.playerOnePos[0], arena.playerOnePos[1]);
-    const playerTwo = new PlayerTwo(gameEngine, ASSET_MANAGER, character2, arena.playerTwoPos[0], arena.playerTwoPos[1]);
-    const backgroundAsset = ASSET_MANAGER.getAsset("./assets/" + arena.background);
-    const arenaTileMap = await setArenaAssets(arena, tilePane);
+    const playerOne = CharacterFactory.make(character1, gameEngine);
+    // const playerTwo = CharacterFactory.make(character2);
+    // const playerOne = new PlayerOne(gameEngine, ASSET_MANAGER, character1, arena.playerOnePos[0], arena.playerOnePos[1]);
+    // const playerTwo = new PlayerTwo(gameEngine, ASSET_MANAGER, character2, arena.playerTwoPos[0], arena.playerTwoPos[1]);
+    const backgroundAsset = AssetManager.getAsset(arena.background);
+    // const arenaTileMap = await setArenaAssets(arena, tilePane);
 
 
-    const tileDrawable = new TileMapDrawable(arenaTileMap, global.CANVAS_W, global.CANVAS_H);
+    // const tileDrawable = new TileMapDrawable(arenaTileMap, global.CANVAS_W, global.CANVAS_H);
     const backgroundDrawable = new StaticEntity(new Spritesheet(backgroundAsset, 1, 1), 2250, 2975);
-    tileDrawable.position.x = -1105;
-    tileDrawable.position.y = 1000;
-    tileDrawable.setDimension(2210, 2465)
-    tileDrawable.updateStatic();
+    // tileDrawable.position.x = -1105;
+    // tileDrawable.position.y = 1000;
+    // tileDrawable.setDimension(2210, 2465)
+    // tileDrawable.updateStatic();
     
 
     
@@ -146,8 +149,8 @@ ASSET_MANAGER.downloadAll(async () => {
     playerOne.physics.position.x = 0;
     playerOne.physics.position.y = 0;
     
-    playerTwo.physics.position.x = 500;
-    playerTwo.physics.position.y = 0;
+    // playerTwo.physics.position.x = 500;
+    // playerTwo.physics.position.y = 0;
 
     const camera = new Camera(canvas.width, canvas.height);
     camera.setDepth(1000);
@@ -179,9 +182,9 @@ ASSET_MANAGER.downloadAll(async () => {
     gameEngine.init(ctx);
 
     backgroundPane.addDrawable(backgroundDrawable);
-    tilePane.addDrawable(tileDrawable);
+    // tilePane.addDrawable(tileDrawable);
     forePane.addDrawable(playerOne);
-    forePane.addDrawable(playerTwo);
+    // forePane.addDrawable(playerTwo);
 
     window.DEBUG.char = playerOne;
 
@@ -190,7 +193,7 @@ ASSET_MANAGER.downloadAll(async () => {
 
     //Add new Player Entity
     gameEngine.addEntity(playerOne);
-    gameEngine.addEntity(playerTwo)
+    // gameEngine.addEntity(playerTwo)
 
     gameEngine.render = renderer;
     world.addPane(backgroundPane);
@@ -202,64 +205,66 @@ ASSET_MANAGER.downloadAll(async () => {
     new SoundFX().play(arena.backgroundSound);
 });
 
-/**
- * Sets a new promise to resolve the tileSetImg path
- *
- * @param theTileSetPath The path to the tile sheet
- * @param theTileSetImg a new TileSetImage
- * @returns {Promise<String>} the path of the tile sheet.
- */
-function setTileSetPromise(theTileSetPath, theTileSetImg) {
-    return new Promise((resolve, reject) => {
-        theTileSetImg.onload = () => resolve(theTileSetImg);
-        theTileSetImg.onerror = () => reject(new Error("Tileset failed to load: " + theTileSetPath));
-        theTileSetImg.src = theTileSetPath;
-    });
-}
-
-/**
- * Sets the promise and map text
- * Used to keep the assetManager clutter-free
- *
- * @param tileset The tileset path
- * @param map The mapText file path
- * @returns {(Promise<String>|Promise<*>)[]} A List with the promise and map text path.
- */
-function setPromiseAndLoadArenaText(tileset, map) {
-    return [setTileSetPromise(tileset, new Image()), loadArenaTxt(map)]
-}
-
-/**
- * Sets the tileMap Object
- *
- * @param theTileSheet The arenas tileSheet
- * @param theArenasBackground The path to the arenas background.
- * @param theArenaName the Arenas String name
- * @param theMapText the Map Text Path
- * @param theTileWidth
- * @param theTileHeight
- * @param theArenaLegend the arenas Legend Object
- * @param backgroundPane
- * @returns {TileMap} a new TileMap Object.
- */
-function setTileMap(theTileSheet, theMapText, theArenasBackground, theArenaName, theTileWidth, theTileHeight, theArenaLegend, backgroundPane) {
-    const col = global.CANVAS_W / theTileWidth;
-    const row = global.CANVAS_H / theTileHeight;
-    const factory = new ArenaFactory(theTileSheet, theArenasBackground, theArenaName, theTileWidth, theTileHeight, ASSET_MANAGER, gameEngine, global.CANVAS_W, global.CANVAS_H, backgroundPane);
-    const buildMap = parseTxtToMap(theMapText, col, row, theArenaLegend);
-    return new TileMap(factory, buildMap);
-}
-
-/**
- * Builds the arena
- *
- * @param arenaObj The arena object
- * @param backgroundPane
- * @returns {Promise<TileMap>} a returned promise of the tiled map of the arena.
- */
-async function setArenaAssets(arenaObj, backgroundPane) {
-    let arenaTilesetSheet, arenaMapTxt;
-    [arenaTilesetSheet, arenaMapTxt] = await Promise.all(setPromiseAndLoadArenaText(arenaObj.tileSet, arenaObj.map));
-
-    return setTileMap(arenaTilesetSheet, arenaMapTxt, arenaObj.background, arenaObj.name, arenaObj.tileWidth, arenaObj.tileHeight, arenaObj.legend, backgroundPane)
-}
+//
+//
+// /**
+//  * Sets a new promise to resolve the tileSetImg path
+//  *
+//  * @param theTileSetPath The path to the tile sheet
+//  * @param theTileSetImg a new TileSetImage
+//  * @returns {Promise<String>} the path of the tile sheet.
+//  */
+// function setTileSetPromise(theTileSetPath, theTileSetImg) {
+//     return new Promise((resolve, reject) => {
+//         theTileSetImg.onload = () => resolve(theTileSetImg);
+//         theTileSetImg.onerror = () => reject(new Error("Tileset failed to load: " + theTileSetPath));
+//         theTileSetImg.src = theTileSetPath;
+//     });
+// }
+//
+// /**
+//  * Sets the promise and map text
+//  * Used to keep the assetManager clutter-free
+//  *
+//  * @param tileset The tileset path
+//  * @param map The mapText file path
+//  * @returns {(Promise<String>|Promise<*>)[]} A List with the promise and map text path.
+//  */
+// function setPromiseAndLoadArenaText(tileset, map) {
+//     return [setTileSetPromise(tileset, new Image()), loadArenaTxt(map)]
+// }
+//
+// /**
+//  * Sets the tileMap Object
+//  *
+//  * @param theTileSheet The arenas tileSheet
+//  * @param theArenasBackground The path to the arenas background.
+//  * @param theArenaName the Arenas String name
+//  * @param theMapText the Map Text Path
+//  * @param theTileWidth
+//  * @param theTileHeight
+//  * @param theArenaLegend the arenas Legend Object
+//  * @param backgroundPane
+//  * @returns {TileMap} a new TileMap Object.
+//  */
+// function setTileMap(theTileSheet, theMapText, theArenasBackground, theArenaName, theTileWidth, theTileHeight, theArenaLegend, backgroundPane) {
+//     const col = global.CANVAS_W / theTileWidth;
+//     const row = global.CANVAS_H / theTileHeight;
+//     const factory = new ArenaFactory(theTileSheet, theArenasBackground, theArenaName, theTileWidth, theTileHeight, AssetManager, gameEngine, global.CANVAS_W, global.CANVAS_H, backgroundPane);
+//     const buildMap = parseTxtToMap(theMapText, col, row, theArenaLegend);
+//     return new TileMap(factory, buildMap);
+// }
+//
+// /**
+//  * Builds the arena
+//  *
+//  * @param arenaObj The arena object
+//  * @param backgroundPane
+//  * @returns {Promise<TileMap>} a returned promise of the tiled map of the arena.
+//  */
+// async function setArenaAssets(arenaObj, backgroundPane) {
+//     let arenaTilesetSheet, arenaMapTxt;
+//     [arenaTilesetSheet, arenaMapTxt] = await Promise.all(setPromiseAndLoadArenaText(arenaObj.tileSet, arenaObj.map));
+//
+//     return setTileMap(arenaTilesetSheet, arenaMapTxt, arenaObj.background, arenaObj.name, arenaObj.tileWidth, arenaObj.tileHeight, arenaObj.legend, backgroundPane)
+// }

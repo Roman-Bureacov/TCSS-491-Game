@@ -4,7 +4,20 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="a08718b8-ac73-4cb8-b286-185a0b662aef" name="Changes" comment="merged camera with main, just need to refactor some arenaFactory.js to make each block a static entity object. Maybe draw directly on the tilepane instead of a canvas dom?" />
+    <list default="true" id="a08718b8-ac73-4cb8-b286-185a0b662aef" name="Changes" comment="merged camera with main, just need to refactor some arenaFactory.js to make each block a static entity object. Maybe draw directly on the tilepane instead of a canvas dom?">
+      <change afterPath="$PROJECT_DIR$/Game/assets/assetmanager.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Game/player.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Camera/Render.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Game/animation.js" beforeDir="false" afterPath="$PROJECT_DIR$/Game/animation.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Game/assetmanager.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Game/character.js" beforeDir="false" afterPath="$PROJECT_DIR$/Game/character.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Game/characterFactory.js" beforeDir="false" afterPath="$PROJECT_DIR$/Game/characterFactory.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Game/entity.js" beforeDir="false" afterPath="$PROJECT_DIR$/Game/entity.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Game/main.js" beforeDir="false" afterPath="$PROJECT_DIR$/Game/main.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Game/playerOne.js" beforeDir="false" afterPath="$PROJECT_DIR$/Game/playerOne.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Game/playerTwo.js" beforeDir="false" afterPath="$PROJECT_DIR$/Game/playerTwo.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Game/render/Render.js" beforeDir="false" afterPath="$PROJECT_DIR$/Game/render/Render.js" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -73,23 +86,24 @@
     "git-widget-placeholder": "Merge__Camera__With__Main",
     "ignore.virus.scanning.warn.message": "true",
     "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "C:/Users/Kassi/OneDrive/Computer/Documents/GitHub/TCSS-491-Game/Game/render",
+    "last_opened_file_path": "C:/Users/iwant/IdeaProjects/TCSS-491-Game/Game",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
     "node.js.selected.package.tslint": "(autodetect)",
     "nodejs_package_manager_path": "npm",
     "settings.editor.selected.configurable": "preferences.pluginManager",
+    "two.files.diff.last.used.file": "C:/Users/iwant/IdeaProjects/TCSS-491-Game2/Game/character/animation.js",
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\iwant\IdeaProjects\TCSS-491-Game\Game" />
       <recent name="C:\Users\Kassi\OneDrive\Computer\Documents\GitHub\TCSS-491-Game\Game\render" />
       <recent name="C:\Users\Kassi\OneDrive\Computer\Documents\GitHub\TCSS-491-Game\Game" />
       <recent name="C:\Users\Kassi\OneDrive\Computer\Documents\GitHub\TCSS-491-Game\Game\assets\music" />
       <recent name="C:\Users\Kassi\OneDrive\Computer\Documents\GitHub\TCSS-491-Game\Game\assets\character\warriorWoman" />
-      <recent name="C:\Users\Kassi\OneDrive\Computer\Documents\GitHub\TCSS-491-Game\Game\assets\soundFx" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="C:\Users\Kassi\OneDrive\Computer\Documents\GitHub\TCSS-491-Game\Game\render" />
