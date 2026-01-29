@@ -5,14 +5,20 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="a08718b8-ac73-4cb8-b286-185a0b662aef" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/Game/drawable.js" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/Game/entity.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Game/render/Render.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Game/animation.js" beforeDir="false" afterPath="$PROJECT_DIR$/Game/animation.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Game/arenaFactory.js" beforeDir="false" afterPath="$PROJECT_DIR$/Game/arenaFactory.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Game/assetmanager.js" beforeDir="false" afterPath="$PROJECT_DIR$/Game/assetmanager.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Game/backgroundFactory.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Game/character.js" beforeDir="false" afterPath="$PROJECT_DIR$/Game/character.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Game/characterData.js" beforeDir="false" afterPath="$PROJECT_DIR$/Game/characterData.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Game/characterFactory.js" beforeDir="false" afterPath="$PROJECT_DIR$/Game/characterFactory.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Game/gameengine.js" beforeDir="false" afterPath="$PROJECT_DIR$/Game/gameengine.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Game/main.js" beforeDir="false" afterPath="$PROJECT_DIR$/Game/main.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Game/playerOne.js" beforeDir="false" afterPath="$PROJECT_DIR$/Game/playerOne.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Game/playerTwo.js" beforeDir="false" afterPath="$PROJECT_DIR$/Game/playerTwo.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -78,10 +84,10 @@
     &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.typescript.service.memoryLimit.init&quot;: &quot;true&quot;,
     &quot;disable.download.node.interpreter.editor.notification&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;Merge__Camera__With__Main&quot;,
     &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
     &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Users/Kassi/OneDrive/Computer/Documents/GitHub/TCSS-491-Game/Game/assets/music&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/Kassi/OneDrive/Computer/Documents/GitHub/TCSS-491-Game/Game/render&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
     &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
     &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
@@ -93,16 +99,18 @@
 }</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\Kassi\OneDrive\Computer\Documents\GitHub\TCSS-491-Game\Game\render" />
+      <recent name="C:\Users\Kassi\OneDrive\Computer\Documents\GitHub\TCSS-491-Game\Game" />
       <recent name="C:\Users\Kassi\OneDrive\Computer\Documents\GitHub\TCSS-491-Game\Game\assets\music" />
       <recent name="C:\Users\Kassi\OneDrive\Computer\Documents\GitHub\TCSS-491-Game\Game\assets\character\warriorWoman" />
       <recent name="C:\Users\Kassi\OneDrive\Computer\Documents\GitHub\TCSS-491-Game\Game\assets\soundFx" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\Kassi\OneDrive\Computer\Documents\GitHub\TCSS-491-Game\Game\render" />
       <recent name="C:\Users\Kassi\OneDrive\Computer\Documents\GitHub\TCSS-491-Game\Game" />
       <recent name="C:\Users\Kassi\OneDrive\Computer\Documents\GitHub\TCSS-491-Game\Game\assets\character\img" />
       <recent name="C:\Users\Kassi\OneDrive\Computer\Documents\GitHub\TCSS-491-Game\Game\assets" />
       <recent name="C:\Users\Kassi\OneDrive\Computer\Documents\GitHub\TCSS-491-Game\Game\assets\sprites" />
-      <recent name="C:\Users\Kassi\OneDrive\Computer\Documents\GitHub\TCSS-491-Game\Game\assets\tileset" />
     </key>
   </component>
   <component name="SharedIndexes">
@@ -128,6 +136,9 @@
       <workItem from="1769561704157" duration="647000" />
       <workItem from="1769562755431" duration="1348000" />
       <workItem from="1769626306938" duration="2291000" />
+      <workItem from="1769637671263" duration="16151000" />
+      <workItem from="1769654228887" duration="1776000" />
+      <workItem from="1769658035515" duration="2248000" />
     </task>
     <task id="LOCAL-00001" summary="Added a sample arena, background music, character sound fx, sword sound fx, background images">
       <option name="closed" value="true" />

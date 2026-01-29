@@ -3,7 +3,7 @@ A concrete implementation of the character class
  */
 
 import {Character} from "./character.js"
-import {Animator} from "./animation.js";
+import {Animator, Spritesheet} from "./animation.js";
 import {KeyMapper} from "./keymapper.js";
 import {global} from "./main.js";
 import {characterFactory} from "./characterFactory.js";
@@ -11,29 +11,30 @@ import {SoundFX} from "./soundFX.js";
 
 export class PlayerOne extends Character {
     constructor(game, assetManager, characterName, startPosX, startPosY) {
-        super(game, characterName);
 
-        this.character = new characterFactory(characterName, assetManager);
+        const character = new characterFactory(characterName, assetManager);
+        const sprite = character.getCharacterSpriteSheet();
+        super(game, sprite, 200,400 , startPosX, startPosY);
 
-        this.position.x = startPosX;
-        this.position.y = startPosY;
-
-        console.log("Getting sprite sheet")
-        this.spritesheet = this.character.getCharacterSpriteSheet();
+        this.character = character.getCharacter();
+        this.sprite = character.getCharacterSpriteSheet();
 
         this.states = Object.freeze({
             MOVE: "move ",
             ATTACK: "attack ",
             IDLE: "idle ",
         });
+        
+        this.matrix.set(1,2, startPosX);
+        this.matrix.set(2,2, startPosY);
 
-        this.position.x = startPosX;
-        this.position.y = startPosY;
+        this.physics.position.x = startPosX;
+        this.physics.position.y = startPosY;
 
         this.state = this.states.IDLE;
         this.facing = Character.DIRECTION.RIGHT;
 
-        this.velocityMax.x = 100;
+         this.physics.velocityMax.x = 100;
 
         this.constantAcceleration = {
             [Character.DIRECTION.LEFT]: 0,
@@ -48,55 +49,57 @@ export class PlayerOne extends Character {
     }
 
     setupAnimation() {
-        const moveR = this.character.getCharacter().moveR;
-        const moveL = this.character.getCharacter().moveL;
-        const movePad = this.character.getCharacter().movePadY;
-        const idleR = this.character.getCharacter().idleR;
-        const idleL = this.character.getCharacter().idleL;
-        const idlePad = this.character.getCharacter().idlePadY;
-        const attackR = this.character.getCharacter().attackR;
-        const attackL = this.character.getCharacter().attackL;
-        const attackPad = this.character.getCharacter().attackPadY;
-        const idleDur = this.character.getCharacter().idleDur;
-        const attackDur = this.character.getCharacter().attackDur;
-        const moveDur = this.character.getCharacter().moveDur;
-        const scale = this.character.getCharacter().scale;
+        const moveR = this.character.moveR;
+        const moveL = this.character.moveL;
+        const movePad = this.character.movePadY;
+        const idleR = this.character.idleR;
+        const idleL = this.character.idleL;
+        const idlePad = this.character.idlePadY;
+        const attackR = this.character.attackR;
+        const attackL = this.character.attackL;
+        const attackPad = this.character.attackPadY;
+        const idleDur = this.character.idleDur;
+        const attackDur = this.character.attackDur;
+        const moveDur = this.character.moveDur;
+        const scale = this.character.scale;
 
         this.animations = {
             [this.states.MOVE + Character.DIRECTION.RIGHT]: new Animator(
-                this.spritesheet,
+                this.sprite,
                 movePad,
                 scale,
                 moveR,
                 moveDur),
             [this.states.MOVE + Character.DIRECTION.LEFT]: new Animator(
-                this.spritesheet,
+                this.sprite,
                 movePad,
                 scale,
                 moveL,
                 moveDur),
 
             [this.states.IDLE + Character.DIRECTION.RIGHT]: new Animator(
-                this.spritesheet,
+                this.sprite,
                 idlePad,
                 scale,
                 idleR,
                 idleDur
             ),
             [this.states.IDLE + Character.DIRECTION.LEFT]: new Animator(
-                this.spritesheet,
+                this.sprite,
                 idlePad,
                 scale,
                 idleL,
                 idleDur
             ),
             [this.states.ATTACK + Character.DIRECTION.RIGHT]: new Animator(
-                this.spritesheet,
+                this.sprite,
                 attackPad,
                 scale,
                 attackR,
                 attackDur,
                 false,
+                false,
+                
                 () => {
                     this.stateLock = false;
                     this.state = this.lastState;
@@ -104,11 +107,12 @@ export class PlayerOne extends Character {
                 }
             ),
             [this.states.ATTACK + Character.DIRECTION.LEFT]: new Animator(
-                this.spritesheet,
+                this.sprite,
                 attackPad,
                 scale,
                 attackL,
                 attackDur,
+                false,
                 false,
                 () => {
                     this.stateLock = false;
@@ -149,7 +153,7 @@ export class PlayerOne extends Character {
         if (!this.setState(this.states.MOVE)) {
             const newFacing = acceleration < 0 ? Character.DIRECTION.LEFT : Character.DIRECTION.RIGHT;
             if (newFacing !== this.facing) {
-                this.velocity.x = 0;
+                 this.physics.velocity.x = 0;
                 this.facing = newFacing;
             }
 
@@ -165,16 +169,17 @@ export class PlayerOne extends Character {
     stopMoving(facing) {
         this.constantAcceleration[facing] = 0;
     }
-
+    num = 0;
     /**
      * Initiates an attack
      */
     swing() {
         if (!this.stateLock) {
+            console.log("swing");
             this.lastState = this.state;
             this.state = this.states.ATTACK;
             this.stateLock = true;
-            this.playSound.play(this.character.getCharacter().swordSound)
+            this.playSound.play(this.character.swordSound)
 
         }
 
@@ -183,29 +188,31 @@ export class PlayerOne extends Character {
 
     update() {
         super.update();
-        this.acceleration.x = 0;
-        this.acceleration.y = 0;
+        
+        this.physics.acceleration.x = 0;
+        this.physics.acceleration.y = 0;
+        
         for (let key in this.game.keys) this.keymapper.sendKeyEvent(this.game.keys[key]);
 
         // hard-coded gobbledegook
-        if (this.position.x > global.CANVAS_W - 20) this.position.x = -75;
-        else if (this.position.x < -75) this.position.x = global.CANVAS_W - 20;
+        if ( this.physics.position.x > global.CANVAS_W - 20)  this.physics.position.x = -75;
+        else if ( this.physics.position.x < -75)  this.physics.position.x = global.CANVAS_W - 20;
 
         ({
             [this.states.ATTACK]: () => {
-                this.velocity.x = 0;
+                 this.physics.velocity.x = 0;
             },
             [this.states.MOVE]: () => {
-                this.acceleration.x =
+                 this.physics.acceleration.x =
                     this.constantAcceleration[Character.DIRECTION.LEFT]
                     + this.constantAcceleration[Character.DIRECTION.RIGHT];
 
-                if (this.acceleration.x === 0) {
+                if ( this.physics.acceleration.x === 0) {
                     this.setState(this.states.IDLE);
                 } else this.setState(this.states.MOVE);
             },
             [this.states.IDLE]: () => {
-                this.velocity.x = 0;
+                this.physics.velocity.x = 0;
             }
         })[this.state]?.();
 

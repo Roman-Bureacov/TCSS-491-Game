@@ -1,7 +1,7 @@
 'use strict';
 const CHARACTER_DATA = {
     guy1: {
-        img: "./assets/character/guy1/Guy.png",
+        img: "character/guy1/Guy.png",
         numRow: 3,
         numCol: 14,
         moveR: [[1, 0], [1, 1], [1, 2], [1, 3], [1, 4], [1, 5]],
@@ -22,7 +22,7 @@ const CHARACTER_DATA = {
     },
     
     guy2: {
-        img: "./assets/character/guy2/Guy2.png",
+        img: "character/guy2/Guy2.png",
         numRow: 3,
         numCol: 14,
         moveR: [[1, 0], [1, 1], [1, 2], [1, 3], [1, 4], [1, 5]],
@@ -43,7 +43,7 @@ const CHARACTER_DATA = {
     },
     
     warriorWoman: {
-        img: "./assets/character/warriorWoman/warriorWoman.png",
+        img: "./character/warriorWoman/warriorWoman.png",
         numRow: 5,
         numCol: 24,
         moveR: [[1,0],[1,1],[1,2],[1,3],[1,4],[1,5],[1,6],[1,7]],

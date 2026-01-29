@@ -3,7 +3,7 @@ A concrete implementation of the character class
  */
 
 import {Character} from "./character.js"
-import {Animator} from "./animation.js";
+import {Animator, Spritesheet} from "./animation.js";
 import {KeyMapper} from "./keymapper.js";
 import {global} from "./main.js";
 import {characterFactory} from "./characterFactory.js";
@@ -11,12 +11,13 @@ import {SoundFX} from "./soundFX.js";
 
 export class PlayerTwo extends Character {
     constructor(game, assetManager, characterName, startPosX, startPosY) {
-        super(game, characterName);
+
         const character = new characterFactory(characterName, assetManager);
-        this.position.x = startPosX;
-        this.position.y = startPosY;
-        this.character = new characterFactory(characterName, assetManager);
-        this.spritesheet = character.getCharacterSpriteSheet();
+        const sprite = character.getCharacterSpriteSheet();
+        super(game, sprite, 200,400 , startPosX, startPosY);
+
+        this.character = character.getCharacter();
+        this.sprite = character.getCharacterSpriteSheet();
 
         this.states = Object.freeze({
             MOVE: "move ",
@@ -24,10 +25,13 @@ export class PlayerTwo extends Character {
             IDLE: "idle ",
         });
 
-        this.state = this.states.IDLE;
-        this.facing = Character.DIRECTION.LEFT;
+        this.physics.position.x = startPosX;
+        this.physics.position.y = startPosY;
 
-        this.velocityMax.x = 100;
+        this.state = this.states.IDLE;
+        this.facing = Character.DIRECTION.RIGHT;
+
+         this.physics.velocityMax.x = 100;
 
         this.constantAcceleration = {
             [Character.DIRECTION.LEFT]: 0,
@@ -37,54 +41,55 @@ export class PlayerTwo extends Character {
 
         this.setupAnimation();
         this.setupKeymap();
-        this.sound = new SoundFX({masterVolume:0.8});
+
+        this.playSound = new SoundFX({masterVolume: 0.8});
     }
 
     setupAnimation() {
-      const moveR = this.character.getCharacter().moveR;
-        const moveL = this.character.getCharacter().moveL;
-        const movePad = this.character.getCharacter().movePadY;
-        const idleR = this.character.getCharacter().idleR;
-        const idleL = this.character.getCharacter().idleL;
-        const idlePad = this.character.getCharacter().idlePadY;
-        const attackR = this.character.getCharacter().attackR;
-        const attackL = this.character.getCharacter().attackL;
-        const attackPad = this.character.getCharacter().attackPadY;
-        const idleDur = this.character.getCharacter().idleDur;
-        const attackDur = this.character.getCharacter().attackDur;
-        const moveDur = this.character.getCharacter().moveDur;
-               const scale = this.character.getCharacter().scale;
-        console.log(idlePad)
+        const moveR = this.character.moveR;
+        const moveL = this.character.moveL;
+        const movePad = this.character.movePadY;
+        const idleR = this.character.idleR;
+        const idleL = this.character.idleL;
+        const idlePad = this.character.idlePadY;
+        const attackR = this.character.attackR;
+        const attackL = this.character.attackL;
+        const attackPad = this.character.attackPadY;
+        const idleDur = this.character.idleDur;
+        const attackDur = this.character.attackDur;
+        const moveDur = this.character.moveDur;
+        const scale = this.character.scale;
+
         this.animations = {
             [this.states.MOVE + Character.DIRECTION.RIGHT]: new Animator(
-                this.spritesheet,
+                this.sprite,
                 movePad,
                 scale,
-                moveR, 
+                moveR,
                 moveDur),
             [this.states.MOVE + Character.DIRECTION.LEFT]: new Animator(
-                this.spritesheet,
+                this.sprite,
                 movePad,
                 scale,
                 moveL,
                 moveDur),
 
             [this.states.IDLE + Character.DIRECTION.RIGHT]: new Animator(
-                this.spritesheet,
+                this.sprite,
                 idlePad,
                 scale,
                 idleR,
                 idleDur
             ),
             [this.states.IDLE + Character.DIRECTION.LEFT]: new Animator(
-                this.spritesheet,
+                this.sprite,
                 idlePad,
                 scale,
                 idleL,
                 idleDur
             ),
             [this.states.ATTACK + Character.DIRECTION.RIGHT]: new Animator(
-                this.spritesheet,
+                this.sprite,
                 attackPad,
                 scale,
                 attackR,
@@ -97,7 +102,7 @@ export class PlayerTwo extends Character {
                 }
             ),
             [this.states.ATTACK + Character.DIRECTION.LEFT]: new Animator(
-                this.spritesheet,
+                this.sprite,
                 attackPad,
                 scale,
                 attackL,
@@ -107,6 +112,7 @@ export class PlayerTwo extends Character {
                     this.stateLock = false;
                     this.state = this.lastState;
                     this.facing = Character.DIRECTION.LEFT;
+                    console.log("is looping")
                 }
             ),
         };
@@ -142,7 +148,7 @@ export class PlayerTwo extends Character {
         if (!this.setState(this.states.MOVE)) {
             const newFacing = acceleration < 0 ? Character.DIRECTION.LEFT : Character.DIRECTION.RIGHT;
             if (newFacing !== this.facing) {
-                this.velocity.x /= 2;
+                 this.physics.velocity.x = 0;
                 this.facing = newFacing;
             }
 
@@ -158,7 +164,6 @@ export class PlayerTwo extends Character {
     stopMoving(facing) {
         this.constantAcceleration[facing] = 0;
     }
-
     /**
      * Initiates an attack
      */
@@ -167,36 +172,38 @@ export class PlayerTwo extends Character {
             this.lastState = this.state;
             this.state = this.states.ATTACK;
             this.stateLock = true;
-            this.sound.play(this.character.getCharacter().swordSound)
+            this.playSound.play(this.character.swordSound)
+
         }
+
     }
 
 
-   update() {
+    update() {
         super.update();
-        this.acceleration.x = 0;
-        this.acceleration.y = 0;
+        this.physics.acceleration.x = 0;
+        this.physics.acceleration.y = 0;
         for (let key in this.game.keys) this.keymapper.sendKeyEvent(this.game.keys[key]);
 
         // hard-coded gobbledegook
-        if (this.position.x > global.CANVAS_W - 20) this.position.x = -75;
-        else if (this.position.x < -75) this.position.x = global.CANVAS_W - 20;
+        if ( this.physics.position.x > global.CANVAS_W - 20)  this.physics.position.x = -75;
+        else if ( this.physics.position.x < -75)  this.physics.position.x = global.CANVAS_W - 20;
 
         ({
             [this.states.ATTACK]: () => {
-                this.velocity.x = 0;
+                 this.physics.velocity.x = 0;
             },
             [this.states.MOVE]: () => {
-                this.acceleration.x =
+                 this.physics.acceleration.x =
                     this.constantAcceleration[Character.DIRECTION.LEFT]
                     + this.constantAcceleration[Character.DIRECTION.RIGHT];
 
-                if (this.acceleration.x === 0) {
+                if ( this.physics.acceleration.x === 0) {
                     this.setState(this.states.IDLE);
                 } else this.setState(this.states.MOVE);
             },
             [this.states.IDLE]: () => {
-                this.velocity.x = 0;
+                this.physics.velocity.x = 0;
             }
         })[this.state]?.();
 
@@ -204,6 +211,7 @@ export class PlayerTwo extends Character {
             case this.states.ATTACK:
 
         }
+
 
     }
 

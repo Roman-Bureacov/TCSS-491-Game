@@ -1,7 +1,7 @@
-import {Matrix} from "../Matrix/Matrix.js";
+import {Matrix, MatrixOp} from "../Matrix/Matrix.js";
 import {GameEngine} from "./gameengine.js"
 import {AssetManager} from "./assetmanager.js";
-import {ArenaFactory} from "./arenaFactory.js";
+import {ArenaFactory, TileMapDrawable} from "./arenaFactory.js";
 import {loadArenaTxt} from "./arenaFactory.js";
 import {parseTxtToMap} from "./arenaFactory.js";
 import {TileMap} from "./arenaFactory.js";
@@ -9,10 +9,17 @@ import {PlayerOne} from "./playerOne.js";
 import {PlayerTwo} from "./playerTwo.js";
 import {getCharacterData} from "./characterData.js";
 import {SoundFX} from "./soundFX.js";
+import {StaticEntity} from "./entity.js";
+import {Spritesheet} from "./animation.js";
+import {Camera, Pane, Render, World} from "./render/Render.js";
 
 const gameEngine = new GameEngine();
 const ASSET_MANAGER = new AssetManager();
 const CANVAS = document.querySelector('#gameWorld');
+window.DEBUG = {
+    engine: gameEngine,
+    assets: ASSET_MANAGER,
+}
 
 //-------------------------------------------Place in modules for final-------------------------------------------//
 /**
@@ -21,7 +28,7 @@ const CANVAS = document.querySelector('#gameWorld');
 export const arenas = {
     arena1: {
         tileSet: "./assets/tileset/Industrial Tileset/1_Industrial_Tileset_1c.png",
-        background: "./assets/background/background03.jpeg",
+        background: "background/background03.jpeg",
         backgroundSound: "backgroundMusic1",
         map: "./assets/maps/arena01.txt",
         name: "arena01",
@@ -51,7 +58,7 @@ export const arenas = {
     // Add more arenas assets here
     arena2: {
         tileSet: "./assets/tileset/Industrial Tileset/1_Industrial_Tileset_1b.png",
-        background: "./assets/background/background01.jpeg",
+        background: "background/background01.jpeg",
         backgroundSound: "backgroundMusic2",
         map: "./assets/maps/arena02.txt",
         name: "arena02",
@@ -102,6 +109,8 @@ const character2Img = getCharacterData(character2).img;
 // queue the image path for download.
 ASSET_MANAGER.queueDownload(character1Img);
 ASSET_MANAGER.queueDownload(character2Img);
+ASSET_MANAGER.queueDownload(arena.background);
+
 
 ASSET_MANAGER.downloadAll(async () => {
     const canvas = document.getElementById("gameWorld");
@@ -110,21 +119,83 @@ ASSET_MANAGER.downloadAll(async () => {
     canvas.tabIndex = 1;
     canvas.focus();
 
+    const world = new World();
+    const backgroundPane = new Pane();
+    const tilePane = new Pane();
+    const forePane = new Pane();
 
     const playerOne = new PlayerOne(gameEngine, ASSET_MANAGER, character1, arena.playerOnePos[0], arena.playerOnePos[1]);
     const playerTwo = new PlayerTwo(gameEngine, ASSET_MANAGER, character2, arena.playerTwoPos[0], arena.playerTwoPos[1]);
+    const backgroundAsset = ASSET_MANAGER.getAsset("./assets/" + arena.background);
+    const arenaTileMap = await setArenaAssets(arena, tilePane);
 
 
-    const arena1TileMap = await setArenaAssets(arena);
+    const tileDrawable = new TileMapDrawable(arenaTileMap, global.CANVAS_W, global.CANVAS_H);
+    const backgroundDrawable = new StaticEntity(new Spritesheet(backgroundAsset, 1, 1), 2250, 2975);
+    tileDrawable.position.x = -1105;
+    tileDrawable.position.y = 1000;
+    tileDrawable.setDimension(2210, 2465)
+    tileDrawable.updateStatic();
+    
+
+    
+    backgroundDrawable.position.x = -1105
+    backgroundDrawable.position.y = 1500// y dimension
+    backgroundDrawable.updateStatic();
+    
+    playerOne.physics.position.x = 0;
+    playerOne.physics.position.y = 0;
+    
+    playerTwo.physics.position.x = 500;
+    playerTwo.physics.position.y = 0;
+
+    const camera = new Camera(canvas.width, canvas.height);
+    camera.setDepth(1000);
+    const renderer = new Render(camera, world);
+
+    let transform = MatrixOp.identity(4);
+    transform.set(2, 3, 3);
+    camera.transform(transform);
+
+    window.DEBUG.render = {
+        world: world,
+        renderer: renderer,
+        pane: forePane,
+        // entity : entity,
+        renderLoop: true,
+        date: new Date(),
+        loop: async function () {
+            while (window.DEBUG.render.renderLoop) {
+                let time = Date.now();
+                window.DEBUG.render.renderer.render(ctx);
+                await new Promise(requestAnimationFrame);
+                console.log("Frame time: " + (Date.now() - time) + " ms");
+            }
+        },
+        context: ctx,
+    }
+
 
     gameEngine.init(ctx);
 
+    backgroundPane.addDrawable(backgroundDrawable);
+    tilePane.addDrawable(tileDrawable);
+    forePane.addDrawable(playerOne);
+    forePane.addDrawable(playerTwo);
+
+    window.DEBUG.char = playerOne;
+
     //Add new Arenas/sprite entities.
-    gameEngine.addEntity(arena1TileMap);
+    // gameEngine.addEntity(arena1TileMap);
 
     //Add new Player Entity
     gameEngine.addEntity(playerOne);
     gameEngine.addEntity(playerTwo)
+
+    gameEngine.render = renderer;
+    world.addPane(backgroundPane);
+    world.addPane(tilePane);
+    world.addPane(forePane);
 
     // Start the gameEngine
     gameEngine.start();
@@ -168,12 +239,13 @@ function setPromiseAndLoadArenaText(tileset, map) {
  * @param theTileWidth
  * @param theTileHeight
  * @param theArenaLegend the arenas Legend Object
+ * @param backgroundPane
  * @returns {TileMap} a new TileMap Object.
  */
-function setTileMap(theTileSheet, theMapText, theArenasBackground, theArenaName, theTileWidth, theTileHeight, theArenaLegend) {
+function setTileMap(theTileSheet, theMapText, theArenasBackground, theArenaName, theTileWidth, theTileHeight, theArenaLegend, backgroundPane) {
     const col = global.CANVAS_W / theTileWidth;
     const row = global.CANVAS_H / theTileHeight;
-    const factory = new ArenaFactory(theTileSheet, theArenasBackground, theArenaName, theTileWidth, theTileHeight, ASSET_MANAGER, gameEngine, global.CANVAS_W, global.CANVAS_H);
+    const factory = new ArenaFactory(theTileSheet, theArenasBackground, theArenaName, theTileWidth, theTileHeight, ASSET_MANAGER, gameEngine, global.CANVAS_W, global.CANVAS_H, backgroundPane);
     const buildMap = parseTxtToMap(theMapText, col, row, theArenaLegend);
     return new TileMap(factory, buildMap);
 }
@@ -182,11 +254,12 @@ function setTileMap(theTileSheet, theMapText, theArenasBackground, theArenaName,
  * Builds the arena
  *
  * @param arenaObj The arena object
+ * @param backgroundPane
  * @returns {Promise<TileMap>} a returned promise of the tiled map of the arena.
  */
-async function setArenaAssets(arenaObj) {
+async function setArenaAssets(arenaObj, backgroundPane) {
     let arenaTilesetSheet, arenaMapTxt;
     [arenaTilesetSheet, arenaMapTxt] = await Promise.all(setPromiseAndLoadArenaText(arenaObj.tileSet, arenaObj.map));
 
-    return setTileMap(arenaTilesetSheet, arenaMapTxt, arenaObj.background, arenaObj.name, arenaObj.tileWidth, arenaObj.tileHeight, arenaObj.legend)
+    return setTileMap(arenaTilesetSheet, arenaMapTxt, arenaObj.background, arenaObj.name, arenaObj.tileWidth, arenaObj.tileHeight, arenaObj.legend, backgroundPane)
 }

@@ -1,12 +1,14 @@
-import { PhysicsEntity } from "./PhysicsEntity.js";
-import { Animator } from "./animation.js";
+import {Animator, Spritesheet} from "./animation.js";
+import {Entity} from "./entity.js";
+
+/** @typedef {import("./animation.js").Spritesheet} Spritesheet */
 
 /**
  * Creates a basic character
  *
  * @author Roman Bureacov
  */
-export class Character extends PhysicsEntity {
+export class Character extends Entity {
 
     /**
      * The scale of this character in the X and Y
@@ -24,7 +26,7 @@ export class Character extends PhysicsEntity {
      * The map of animations for this character.
      * @type {{[p: string]: Animator}} the mapping of an animation name to its corresponding animator object
      */
-    animations = { };
+    animations = {};
 
     /**
      * The current animator this character is using
@@ -43,10 +45,10 @@ export class Character extends PhysicsEntity {
      * @type {Readonly<{UP: string, DOWN: string, LEFT: string, RIGHT: string}>}
      */
     static DIRECTION = Object.freeze({
-        UP : "up ",
-        DOWN : "down ",
-        LEFT : "left ",
-        RIGHT : "right ",
+        UP: "up ",
+        DOWN: "down ",
+        LEFT: "left ",
+        RIGHT: "right ",
     });
 
     /**
@@ -61,20 +63,19 @@ export class Character extends PhysicsEntity {
      */
     facing = Character.DIRECTION.RIGHT;
 
-    /**
-     * The spritesheet object for this character
-     * @type {Spritesheet}
-     */
-    Spritesheet = null;
 
     /**
      * Creates a basic character
-     * @param game the game engine
-     * @param characterName the spritesheet image for this character
+     * @param {GameEngine} game the game engine
+     * @param  {Spritesheet} spritesheet the character spritesheet
+     * @param {number} [dimX=1] the positive x dimension of this entity
+     * @param {number} [dimY=1] the positive y dimension of this entity
+     * @param startPosX
+     * @param startPosY
      */
-    constructor(game, characterName) {
-        super();
-        Object.assign(this, { game, characterName });
+    constructor(game, spritesheet, dimX = 1, dimY = 1, startPosX, startPosY) {
+        super(spritesheet, startPosX ,startPosY,dimX, dimY);
+        Object.assign(this, {game});
 
     }
 
@@ -87,21 +88,36 @@ export class Character extends PhysicsEntity {
         this.currentAnimation = this.animations[this.animationName()];
     }
 
+
     /**
-     * Draws this character
-     * @param context the drawing context
+     * updates this character
      */
-    draw(context) {
+    update() {
+        // let anim = this.animations[this.animationName()];
+        //
+        // // are we switching animations?
+        // if (anim !== this.currentAnimation) this.currentAnimation.reset();
+        //
+        // (this.currentAnimation = anim).update(
+        //     this.game.clockTick)
+
+        let tick = this.game.clockTick
+        this.updatePhysics(tick);
+
         let anim = this.animations[this.animationName()];
-
         // are we switching animations?
-        if (anim !== this.currentAnimation) this.currentAnimation.reset();
+        if (!anim) return; // no animation for this state+facing
 
-        (this.currentAnimation = anim).draw(
-            this.game.clockTick,
-            context,
-            this.position.x, this.position.y,
-            this.scale.x, this.scale.y);
+        if (anim !== this.currentAnimation) {
+            if (this.currentAnimation) this.currentAnimation.reset();
+            this.currentAnimation = anim;
+            if (this.currentAnimation) this.currentAnimation.reset();
+
+        }
+        this.currentAnimation.update(tick);
+        this.drawingProperties.row = this.currentAnimation.currentFrame.row;
+        this.drawingProperties.col = this.currentAnimation.currentFrame.col;
+        this.drawingProperties.isReversed = this.currentAnimation.reversed;
     }
 
     /**
@@ -112,16 +128,6 @@ export class Character extends PhysicsEntity {
         return this.state + this.facing;
     }
 
-    /**
-     * Updates this character
-     */
-    update() {
-        this.updatePhysics(this.game.clockTick);
-        // if dealing with acceleration, it may be useful to
-        // always begin with an acceleration vector of 0
-
-        // state checking here...
-    }
 
     /**
      * Sets the state of this character if there is no state lock

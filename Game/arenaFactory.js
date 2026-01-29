@@ -1,5 +1,10 @@
 'use strict';
-import {BackgroundFactory} from "./backgroundFactory.js";
+
+import {Spritesheet} from "./animation.js";
+
+import {Drawable} from "./render/Render.js";
+import {StaticEntity} from "./entity.js";
+
 
 /**
  * @author Kassie Whitney
@@ -18,8 +23,11 @@ export class ArenaFactory {
      * @param gameEngine
      * @param canvasH
      * @param canvasW
+     * @param backgroundPane
      */
-    constructor(theTileSheet, arenaBackgroundPath, arenaName, tileWidth, tileHeight, assetManager, gameEngine, canvasW, canvasH) {
+
+    constructor(theTileSheet, arenaBackgroundPath, arenaName, tileWidth, tileHeight,
+                assetManager, gameEngine, canvasW, canvasH, backgroundPane) {
 
         Object.assign(this, {
             theTileSheet,
@@ -29,32 +37,20 @@ export class ArenaFactory {
             assetManager,
             gameEngine,
             canvasH,
-            canvasW
+            canvasW,
+            backgroundPane
         });
-
 
         this.tileCols = canvasW / this.tileWidth;
         this.tileRows = canvasH / this.tileHeight;
 
-
-        // In ArenaFactory constructor (remove the assetManager.downloadAll(...) wrapper)
-
-        const bgImg = new Image();
-        bgImg.onload = () => {
-            this.bgImg = bgImg;
-            // IMPORTANT: add background FIRST so it draws behind everything
-            this.gameEngine.addEntity(new BackgroundFactory(bgImg))
-        };
-
-        bgImg.onerror = () => console.error("Background failed to load:", arenaBackgroundPath);
-        bgImg.src = arenaBackgroundPath;
-
-
+        
     }
+
 
     /**
      * Gets the grid coordinate of the tiles position based on index
-     * 
+     *
      * @param theTileID The tile index value.
      * @returns {{sx: number, sy: number, sw, sh}}
      */
@@ -70,7 +66,7 @@ export class ArenaFactory {
 
     /**
      * Draws the tile onto the canvas based on the data in the map
-     * 
+     *
      * @param ctx The canvas context object.
      * @param map The mapping of the tile blocks.
      */
@@ -80,7 +76,7 @@ export class ArenaFactory {
                 const tileId = map[y * this.tileCols + x];
                 if (tileId < 0) continue;
                 const {sx, sy, sw, sh} = this.srcRect(tileId);
-                
+
                 ctx.drawImage(
                     this.theTileSheet,
                     sx, sy, sw, sh,
@@ -89,11 +85,16 @@ export class ArenaFactory {
             }
         }
     }
+
+    update() {
+    }
+
 }
+
 
 /**
  * Parses the arena map text file into tiles given the passed legend and the map text.
- * 
+ *
  * @param txt The path to the map text file
  * @param cols The number of columns in the tile set
  * @param rows The number of rows in the tile set
@@ -118,7 +119,7 @@ export function parseTxtToMap(txt, cols, rows, legend) {
 
 /**
  * Loads the arena map text file
- * 
+ *
  * @param path The path to the map file
  * @returns {Promise<string>} returns the map file.
  */
@@ -137,14 +138,50 @@ export class TileMap {
         this.map = map;
         this.removeFromWorld = false;
     }
+}
+
+/**
+ * Turns the tilemap into a drawable
+ */
+
+export class TileMapDrawable extends StaticEntity {
+    /**
+     * @param {TileMap} tileMap - your TileMap(factory, map)
+     * @param {number} pixelW - canvas width in pixels
+     * @param {number} pixelH - canvas height in pixels
+     * @param scaleX
+     * @param scaleY
+     */
+    constructor(tileMap, pixelW, pixelH) {
+        // 1) draw the entire map into an offscreen canvas
+        const offScreenCanvas = document.createElement("canvas");
+        offScreenCanvas.width = pixelW;
+        offScreenCanvas.height = pixelH;
+
+        const offScreenCtx = offScreenCanvas.getContext("2d");
+        offScreenCtx.imageSmoothingEnabled = false;
+
+        // use existing tile renderer
+        tileMap.factory.draw(offScreenCtx, tileMap.map);
+
+        // 2) turn that canvas into a 1x1 spritesheet
+        const spritesheet = new Spritesheet(offScreenCanvas, 1, 1);
+
+        // 3) make it a Drawable with the same pixel dimensions as the canvas
+        super(spritesheet, pixelW, pixelH);
+
+
+        // 4) choose the only frame
+        this.drawingProperties.row = 0;
+        this.drawingProperties.col = 0;
+
+    }
+
+
 
     update() {
-        // no-op (static background)
-    }
-
-    draw(ctx) {
-        this.factory.draw(ctx, this.map);
-
+        // static background; no-op
     }
 }
+
 

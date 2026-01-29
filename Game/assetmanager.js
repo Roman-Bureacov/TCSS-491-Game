@@ -1,5 +1,6 @@
 export class AssetManager {
     constructor() {
+        this.root = "./assets/";
         this.successCount = 0;
         this.errorCount = 0;
         this.cache = [];
@@ -7,6 +8,7 @@ export class AssetManager {
     };
 
     queueDownload(path) {
+        path = this.root + path;
         console.log("Queueing " + path);
         this.downloadQueue.push(path);
     };
@@ -17,6 +19,7 @@ export class AssetManager {
 
     downloadAll(callback) {
         if (this.downloadQueue.length === 0) setTimeout(callback, 10);
+
         for (let i = 0; i < this.downloadQueue.length; i++) {
             const img = new Image();
 
@@ -36,6 +39,7 @@ export class AssetManager {
             });
 
             img.src = path;
+
             this.cache[path] = img;
         }
     };

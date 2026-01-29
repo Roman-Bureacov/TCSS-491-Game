@@ -1,7 +1,6 @@
 'use strict';
 
 import {getCharacterData} from "./characterData.js";
-
 import {Spritesheet} from "./animation.js";
 
 /**
@@ -9,22 +8,28 @@ import {Spritesheet} from "./animation.js";
  */
 export class characterFactory {
 
-    constructor(theCharacterName, assetManager) {
+    constructor(characterName, assetManager) {
+    this.data = getCharacterData(characterName);
+    
+    const path = "./assets/" + this.data.img;
+    
+    console.log(path);
 
-        Object.assign(this, {character: theCharacterName, assetManager});
-        this.sprite = getCharacterData(this.character);
+    const img = assetManager.getAsset(path);
+    console.log(img);
+    this.spritesheet = new Spritesheet(img, this.data.numRow, this.data.numCol);
 
-        if (!this.sprite) throw new Error(`Unknown character: ${theCharacterName}`);
-        console.log("Creating spriteSheet");
+  }
 
-    }
+
+
 
     /**
      * Retrieves the characters spritesheet component as a new spritesheet object.
      * @returns {Spritesheet}
      */
     getCharacterSpriteSheet() {
-        return new Spritesheet(this.assetManager.getAsset(this.sprite.img), this.sprite.numRow, this.sprite.numCol);
+        return this.spritesheet;
     }
 
     /**
@@ -32,11 +37,8 @@ export class characterFactory {
      * @returns {*}
      */
     getCharacter() {
-        return this.sprite;
+        return this.data;
     }
 
-    getImageAsset() {
-        return this.sprite.img;
-    }
 
 }

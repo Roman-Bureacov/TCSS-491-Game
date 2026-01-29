@@ -3,14 +3,23 @@ This code manages animation.
  */
 
 import {Matrix} from "../Matrix/Matrix.js";
-import {getCharacterData} from "./characterData.js";
 
 /**
- * Object that represents a simple animator object
- *
- * @author Roman Bureacov
+ * @typedef Frame
+ * @property {number} row the frame row in the spritesheet
+ * @property {number} col the frame column in the spritesheet
  */
 export class Animator {
+
+    /**
+     * This animator's current frame
+     * @type {Frame}
+     */
+    currentFrame = {
+        row: 0,
+        col: 0,
+    }
+
     /**
      * Creates an animator for handling animations
      * @param spritesheet the spritesheet object
@@ -20,45 +29,56 @@ export class Animator {
      * the first entry is the row and the second is the column in the spritesheet matrix; the frames should
      * be sorted from the start of the animation to the end of the animation
      * @param duration the total duration of this animation
+     * @param [reversed = false] if the animation should reverse the individual frames
      * @param [isLooping=true] if the animation should loop
      * @param [callback=undefined] if the animation does not loop, this no-argument callback
      * is called once the animation has completed
      */
-    constructor(spritesheet, yPadding, scale ,frames, duration, isLooping = true, callback = undefined) {
-        Object.assign(this, { spritesheet,yPadding, scale ,frames, duration, isLooping, callback});
+    constructor(spritesheet, yPadding, scale, frames, duration, reversed = false, isLooping = false, callback = undefined) {
+        Object.assign(this, {spritesheet, yPadding, scale, frames, duration, reversed, isLooping, callback});
+
+        this.lastFrame = -1;
 
         this.frameDelay = this.duration / frames.length;
         this.elapsedTime = 0;
     }
 
-    draw(timeStep, context, x, y, scaleX, scaleY) {
+    /**
+     * Tells this animator to update
+     */
+    update(timeStep) {
         this.elapsedTime += timeStep;
 
-        let frameNumber = this.currentFrame();
+        let frameNumber = Math.floor(this.elapsedTime / this.frameDelay);
 
-        // if at the last frame...
-        if (frameNumber === this.frames.length - 1) this.isLooping ? this.elapsedTime = 0 : this.callback?.();
+        if (frameNumber >= this.frames.length) {
+            if (this.isLooping) {
+                this.elapsedTime = 0;
+                frameNumber = 0;
+            } else {
+                frameNumber = this.frames.length - 1;
+                this.callback?.();
+                console.log("Call back called.")
+            }
+        }
 
-        let frame = this.frames[frameNumber];
-        let frameCoord = this.spritesheet.get(frame[0], frame[1]);
+        if (this.lastFrame !== frameNumber) {
+            this.lastFrame = frameNumber;
+        }
 
-        context.drawImage(this.spritesheet.image,
-            frameCoord.x, frameCoord.y,
-            this.spritesheet.frameWidth, this.spritesheet.frameHeight,
-            x, y + this.yPadding,
-            this.spritesheet.frameWidth * scaleX * this.scale, this.spritesheet.frameHeight * scaleY * this.scale
-            );
-        
-
+        const frame = this.frames[frameNumber];
+        this.currentFrame.row = frame[0];
+        this.currentFrame.col = frame[1];
     }
 
-    currentFrame() {
-        
+
+    currentFrameNumber() {
         return Math.floor(this.elapsedTime / this.frameDelay);
     }
 
     reset() {
         this.elapsedTime = 0;
+        this.lastFrame = -1;
     }
 }
 
@@ -69,48 +89,17 @@ export class Animator {
  * @author Roman Bureacov
  */
 export class Spritesheet extends Matrix {
-
-    /**
-     * The width of the individual sprite frames in pixels
-     * @type {number}
-     */
-    frameWidth = 0;
-
-    /**
-     * The height of the individual sprite frames in pixels
-     * @type {number}
-     */
-    frameHeight = 0;
-
-
-    constructor(image, rows, columns) {
+    constructor(imagePath, rows, columns) {
         super(rows, columns);
-        Object.assign(this, { image, rows, columns});
-
-        this.frameWidth = image.width/ columns;
-        this.frameHeight = image.height / rows;
+        Object.assign(this, {image: imagePath, rows, columns});
+        this.frameWidth = imagePath.width / columns;
+        this.frameHeight = imagePath.height / rows;
 
         for (let r = 0; r < rows; r++) {
             for (let c = 0; c < columns; c++) {
                 super.set(r, c, {x: c * this.frameWidth, y: r * this.frameHeight});
             }
         }
-    }
-
-    /**
-     * Does nothing (cannot set values in a spritesheet
-     */
-    set(row, col, value) {
-
-    }
-
-    /**
-     * Gets the coordinates for a specific frame in the sprite sheet
-     * @param row the row to look at, 0-indexed
-     * @param col the column to look at, 0-indexed
-     * @returns {x: Number, y: Number} the frame x and y coordinate on the spritesheet
-     */
-    get(row, col) {
-        return super.get(row, col);
+        this.matrix = Object.freeze(this.matrix);
     }
 }
