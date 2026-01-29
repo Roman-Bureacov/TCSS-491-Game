@@ -1,6 +1,16 @@
 // This game shell was happily modified from Googler Seth Ladd's "Bad Aliens" game and his Google IO talk in 2011
 
-class GameEngine {
+import {Timer} from "./timer.js";
+
+export class GameEngine {
+
+    /**
+     * The map of key codes registered before the loop iteration
+     * @type {{string : KeyboardEvent}} the map of key codes to their event details
+     */
+    keys = {};
+
+
     constructor(options) {
         // What you will use to draw
         // Documentation: https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D
@@ -13,11 +23,10 @@ class GameEngine {
         this.click = null;
         this.mouse = null;
         this.wheel = null;
-        this.keys = {};
 
         // Options and the Details
         this.options = options || {
-            debugging: false,
+            debugging: true,
         };
     };
 
@@ -37,17 +46,18 @@ class GameEngine {
     };
 
     startInput() {
+
         const getXandY = e => ({
             x: e.clientX - this.ctx.canvas.getBoundingClientRect().left,
             y: e.clientY - this.ctx.canvas.getBoundingClientRect().top
         });
-        
-        this.ctx.canvas.addEventListener("mousemove", e => {
-            if (this.options.debugging) {
-                console.log("MOUSE_MOVE", getXandY(e));
-            }
-            this.mouse = getXandY(e);
-        });
+
+        // this.ctx.canvas.addEventListener("mousemove", e => {
+        //     if (this.options.debugging) {
+        //         console.log("MOUSE_MOVE", getXandY(e));
+        //     }
+        //     this.mouse = getXandY(e);
+        // });
 
         this.ctx.canvas.addEventListener("click", e => {
             if (this.options.debugging) {
@@ -72,8 +82,25 @@ class GameEngine {
             this.rightclick = getXandY(e);
         });
 
-        this.ctx.canvas.addEventListener("keydown", event => this.keys[event.key] = true);
+        this.ctx.canvas.addEventListener("keydown", event => {
+            this.keys[event.key] = true;
+            console.log(event.key);
+        });
         this.ctx.canvas.addEventListener("keyup", event => this.keys[event.key] = false);
+
+
+        const acknowledge = (event) => {
+
+            this.keys[event.code] = event;
+
+            if (this.options.debugging) {
+                console.log(event);
+            }
+
+        };
+
+        this.ctx.canvas.addEventListener("keydown", event => acknowledge(event));
+        this.ctx.canvas.addEventListener("keyup", event => acknowledge(event))
     };
 
     addEntity(entity) {
@@ -82,7 +109,7 @@ class GameEngine {
 
     draw() {
         // Clear the whole canvas with transparent color (rgba(0, 0, 0, 0))
-        this.ctx.clearRect(0, 0, this.ctx.canvas.width, this.ctx.canvas.height);
+        this.ctx.clearRect(0, 0, this.ctx.canvas.frameWidth, this.ctx.canvas.frameHeight);
 
         // Draw latest things first
         for (let i = this.entities.length - 1; i >= 0; i--) {
@@ -112,8 +139,28 @@ class GameEngine {
         this.clockTick = this.timer.tick();
         this.update();
         this.draw();
+        this.keys = {};
+
+        // TODO: entity should loop back around when off the screen bounds
     };
 
-};
+}
+
+/** Creates an alias for requestAnimationFrame for backwards compatibility */
+window.requestAnimFrame = (() => {
+    return window.requestAnimationFrame ||
+        window.webkitRequestAnimationFrame ||
+        window.mozRequestAnimationFrame ||
+        window.oRequestAnimationFrame ||
+        window.msRequestAnimationFrame ||
+        /**
+         * Compatibility for requesting animation frames in older browsers
+         * @param {Function} callback Function
+         * @param {DOM} element DOM ELEMENT
+         */
+        ((callback, element) => {
+            window.setTimeout(callback, 1000 / 60);
+        });
+})();
 
 // KV Le was here :)
