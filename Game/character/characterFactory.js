@@ -2,9 +2,9 @@
 
 import {getCharacterData} from "./characterData.js";
 import {Animator, Spritesheet} from "./animation.js";
-import {Player} from "./player.js";
+import {Player, PlayerStates} from "./player.js";
 import {AssetManager} from "../assets/assetmanager.js";
-import {Character} from "./character.js";
+import {Character, CharacterDirections} from "./character.js";
 
 /**
  * Factory class that makes characters.
@@ -51,8 +51,6 @@ export class CharacterFactory {
         let character;
         let spritesheet = undefined;
 
-        console.log(name, CharacterFactory.names.guy)
-
         switch (name) {
             case CharacterFactory.names.guy:
                 spritesheet = new Spritesheet(
@@ -97,9 +95,40 @@ export class CharacterFactory {
 
 }
 
-/// character classes
-/// below, only the animators are constructed, the setting of the animation is done up in the make
+/**
+ * @typedef {Object} AnimatorProp
+ * @property {string} state the player state of this animator property
+ * @property {string} facing the direction of this animator property
+ * @property {Array<[number, number]>} frames the frames for the animator
+ * @property {number} duration the total duration of the animation in seconds
+ * @property {boolean} [isReversed] if the animation frame should be reversed
+ * @property {{[key: number]: Audio}} [soundMap] the mapping of frame numbers to audio playback
+ * @property {boolean} [isLooping] if the animation should loop
+ * @property {(player: Character) => (() => void)} [callback] the callback if the animation is not looping and has finished
+ */
 
+/**
+ * Compiles and creates the animators for the character
+ * @param {Character} character the character to compile animators into
+ * @param {AnimatorProp[]} properties the properties of every animator for the character
+ */
+const compileAnimators = (character, properties) => {
+    for (let prop of properties) {
+        character.animations[Player.buildAnimationName(prop.state, prop.facing)] = new Animator(
+            prop.frames,
+            prop.duration,
+            prop.isReversed ?? false,
+            prop.soundMap,
+            prop.isLooping ?? false,
+            prop.callback?.(character)
+        );
+    }
+
+    character.currentAnimation = character.animations[character.animationName()];
+}
+
+
+/// character classes
 
 /**
  * Creates the guy
@@ -110,56 +139,59 @@ export class CharacterFactory {
  * @return {Player} the constructed player character
  */
 const makeGuy = (game, spritesheet, dimX, dimY) => {
+
+
     let guy = new Player(game, spritesheet, dimX, dimY);
 
-    guy.animations = {
-        [Player.states.MOVE + Character.DIRECTION.RIGHT]: new Animator(
-            spritesheet,
-            [[1, 0], [1, 1], [1, 2], [1, 3], [1, 4], [1, 5]],
-            1),
-        [Player.states.MOVE + Character.DIRECTION.LEFT]: new Animator(
-            spritesheet,
-            [[1, 13], [1, 12], [1, 11], [1, 10], [1, 9], [1, 8]],
-            1),
+    let animations = [
+        {
+            state: Player.states.MOVE,
+            facing: Character.DIRECTION.RIGHT,
+            frames: [[1, 0], [1, 1], [1, 2], [1, 3], [1, 4], [1, 5]],
+            duration: 1
+        },
+        {
+            state: Player.states.MOVE,
+            facing: Character.DIRECTION.LEFT,
+            frames: [[1, 13], [1, 12], [1, 11], [1, 10], [1, 9], [1, 8]],
+            duration: 1
+        },
+        {
+            state: Player.states.IDLE,
+            facing: Character.DIRECTION.RIGHT,
+            frames: [[0, 0]],
+            duration: 1
+        },
+        {
+            state: Player.states.IDLE,
+            facing: Character.DIRECTION.LEFT,
+            frames: [[0, 0]],
+            duration: 1,
+            isReversed: true
+        },
+        {
+            state: Player.states.ATTACK,
+            facing: Character.DIRECTION.RIGHT,
+            frames: [[2, 0], [2, 1], [2, 2], [2, 3], [2, 4], [2, 5], [2, 6]],
+            duration: 0.5,
+            callback : (player) => () => {
+                player.stateLock = false;
+                player.state = player.lastState;
+            },
+        },
+        {
+            state: Player.states.ATTACK,
+            facing: Character.DIRECTION.LEFT,
+            frames: [[2, 0], [2, 1], [2, 2], [2, 3], [2, 4], [2, 5], [2, 6]],
+            duration: 0.5,
+            isReversed: true,
+            callback : (player) => () => {
+                player.stateLock = false;
+                player.state = player.lastState;
+            },
+        }
+    ];
 
-        [Player.states.IDLE + Character.DIRECTION.RIGHT]: new Animator(
-            spritesheet,
-            [[0, 0]],
-            1
-        ),
-        [Player.states.IDLE + Character.DIRECTION.LEFT]: new Animator(
-            spritesheet,
-            [[0, 0]],
-            1,
-            true
-        ),
-        [Player.states.ATTACK + Character.DIRECTION.RIGHT]: new Animator(
-            spritesheet,
-            [[2, 0], [2, 1], [2, 2], [2, 3], [2, 4], [2, 5], [2, 6]],
-            0.5,
-            false,
-            undefined,
-            false,
-            () => {
-                guy.stateLock = false;
-                guy.state = guy.lastState;
-                guy.facing = Character.DIRECTION.RIGHT;
-            }
-        ),
-        [Player.states.ATTACK + Character.DIRECTION.LEFT]: new Animator(
-            spritesheet,
-            [[2, 0], [2, 1], [2, 2], [2, 3], [2, 4], [2, 5], [2, 6]],
-            0.5,
-            true,
-            undefined,
-            false,
-            () => {
-                guy.stateLock = false;
-                guy.state = guy.lastState;
-                guy.facing = Character.DIRECTION.LEFT;
-            }
-        ),
-    };
-
+    compileAnimators(guy, animations);
     return guy;
 }

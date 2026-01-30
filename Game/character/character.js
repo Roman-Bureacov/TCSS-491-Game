@@ -1,7 +1,18 @@
 import {Animator, Spritesheet} from "./animation.js";
 import {DynamicEntity} from "./entity.js";
 
-/** @typedef {import("./animation.js").Spritesheet} Spritesheet */
+
+/**
+ * The map of direction constants to their respective strings
+ * @readonly
+ * @enum {CharacterDirection}
+ */
+export const CharacterDirections = Object.freeze({
+    UP: "up ",
+    DOWN: "down ",
+    LEFT: "left ",
+    RIGHT: "right ",
+});
 
 /**
  * Creates a basic character
@@ -40,16 +51,7 @@ export class Character extends DynamicEntity {
      */
     stateLock = false;
 
-    /**
-     * The map of direction constants to their respective strings
-     * @type {Readonly<{UP: string, DOWN: string, LEFT: string, RIGHT: string}>}
-     */
-    static DIRECTION = Object.freeze({
-        UP: "up ",
-        DOWN: "down ",
-        LEFT: "left ",
-        RIGHT: "right ",
-    });
+    static DIRECTION = CharacterDirections;
 
     /**
      * The state of this character as per the states this character may exhibit.
@@ -123,13 +125,22 @@ export class Character extends DynamicEntity {
     }
 
     /**
-     * Builds the animation name to retrieve
-     * @returns {string}
+     * Builds the current animation name to retrieve
+     * @returns {string} the animation name
      */
     animationName() {
         return this.state + this.facing;
     }
 
+    /**
+     * Builds a valid animation name
+     * @param {string} state the state
+     * @param {string} facing the facing
+     * @return {string} the animation name
+     */
+    static buildAnimationName(state, facing) {
+        return state + facing;
+    }
 
     /**
      * Sets the state of this character if there is no state lock

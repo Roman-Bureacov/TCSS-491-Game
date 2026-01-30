@@ -23,22 +23,20 @@ export class Animator {
 
     /**
      * Creates an animator for handling animations
-     * @param spritesheet the spritesheet object
      * @param {Array<[Number, Number]>} frames the frames that this animator is responsible for, where
      * the first entry is the row and the second is the column in the spritesheet matrix; the frames should
      * be sorted from the start of the animation to the end of the animation
-     * @param duration the total duration of this animation
-     * @param [reversed=false] if the animation should reverse the individual frames
+     * @param {number} duration the total duration of this animation
+     * @param {boolean} [reversed=false] if the animation should reverse the individual frames
      * @param {{ [key: Number]: Audio}} [soundMap=undefined] the map of zero-indexed frame numbers to their audio object
      * @param [isLooping=true] if the animation should loop
      * @param [callback=undefined] if the animation does not loop, this no-argument callback
      * is called once the animation has completed
      */
-    constructor(spritesheet,
-                frames, duration, reversed = false,
+    constructor(frames, duration, reversed = false,
                 soundMap = undefined,
                 isLooping = true, callback = undefined) {
-        Object.assign(this, { spritesheet, frames, duration, reversed, soundMap, isLooping, callback });
+        Object.assign(this, { frames, duration, reversed, soundMap, isLooping, callback });
 
         this.lastFrame = -1;
 

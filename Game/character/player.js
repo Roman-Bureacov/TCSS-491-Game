@@ -9,12 +9,29 @@ import {global} from "../main.js";
 import {CharacterFactory} from "./characterFactory.js";
 import {SoundFX} from "../engine/soundFX.js";
 
+/**
+ * Enum representing the possible states of player characters
+ * @readonly
+ * @enum {string}
+ */
+export const PlayerStates = Object.freeze({
+    MOVE: "move ",
+    ATTACK: "attack ",
+    IDLE: "idle ",
+});
+
+/**
+ * Concrete implementation of the character.
+ *
+ * @author Roman Bureacov
+ */
 export class Player extends Character {
-    static states = Object.freeze({
-        MOVE: "move ",
-        ATTACK: "attack ",
-        IDLE: "idle ",
-    });
+
+    /**
+     * The states that this player may exhibit
+     * @type {Readonly<{MOVE: string, ATTACK: string, IDLE: string}>}
+     */
+    static states = PlayerStates;
 
     /**
      * The keymapper for this player
