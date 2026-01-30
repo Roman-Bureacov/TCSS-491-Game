@@ -200,7 +200,7 @@ class Pane extends SpaceObject {
 
     /**
      * The list of drawable entities in this world
-     * @type {[Drawable]}
+     * @type {Drawable[]}
      */
     drawables = []
 
@@ -573,7 +573,7 @@ class Render {
 class World {
     /**
      * The list of panes in the viewable world
-     * @type {[Pane]}
+     * @type {Pane[]}
      */
     panes = []
 
