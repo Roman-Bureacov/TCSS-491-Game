@@ -11,6 +11,7 @@ import { Matrix, MatrixOp } from "../../../Matrix/Matrix.js";
 
 /**
  * An object in space representing
+ * @author Roman Bureacov
  */
 class SpaceObject {
 
