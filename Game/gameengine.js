@@ -2,6 +2,7 @@
 
 import {Timer} from "./timer.js";
 import {Render} from "./render/Render.js";
+import {DynamicEntity} from "./entity.js";
 
 export class GameEngine {
 
@@ -142,7 +143,7 @@ export class GameEngine {
             let entity = this.entities[i];
 
             if (!entity.removeFromWorld) {
-                entity.update();
+                if (entity instanceof DynamicEntity) entity.update();
             }
         }
 

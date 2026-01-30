@@ -13,6 +13,7 @@ import {StaticEntity} from "./entity.js";
 import {Spritesheet} from "./animation.js";
 import {Camera, Pane, Render, World} from "./render/Render.js";
 import {CharacterFactory as CharacterFactory} from "./characterFactory.js";
+import {KeyMapper} from "./keymapper.js";
 
 const gameEngine = new GameEngine(undefined, undefined);
 const CANVAS = document.querySelector('#gameWorld');
@@ -125,7 +126,7 @@ AssetManager.downloadAll(async () => {
     const tilePane = new Pane();
     const forePane = new Pane();
 
-    const playerOne = CharacterFactory.make(character1, gameEngine);
+    const playerOne = CharacterFactory.makePlayer(character1, gameEngine);
     // const playerTwo = CharacterFactory.make(character2);
     // const playerOne = new PlayerOne(gameEngine, ASSET_MANAGER, character1, arena.playerOnePos[0], arena.playerOnePos[1]);
     // const playerTwo = new PlayerTwo(gameEngine, ASSET_MANAGER, character2, arena.playerTwoPos[0], arena.playerTwoPos[1]);
@@ -134,31 +135,41 @@ AssetManager.downloadAll(async () => {
 
 
     // const tileDrawable = new TileMapDrawable(arenaTileMap, global.CANVAS_W, global.CANVAS_H);
-    const backgroundDrawable = new StaticEntity(new Spritesheet(backgroundAsset, 1, 1), 2250, 2975);
+    const backgroundDrawable = new StaticEntity(new Spritesheet(backgroundAsset, 1, 1));
+    backgroundDrawable.setDimensionAspect(20, 2250/2975)
     // tileDrawable.position.x = -1105;
     // tileDrawable.position.y = 1000;
     // tileDrawable.setDimension(2210, 2465)
     // tileDrawable.updateStatic();
     
 
-    
-    backgroundDrawable.position.x = -1105
-    backgroundDrawable.position.y = 1500// y dimension
-    backgroundDrawable.updateStatic();
-    
-    playerOne.physics.position.x = 0;
-    playerOne.physics.position.y = 0;
-    
+
+    backgroundDrawable.setPosition(
+        -backgroundDrawable.dimX() / 2,
+        backgroundDrawable.dimY() /2,
+        0
+    );
+
+    // playerOne.setPosition(0, 0);
+
+    playerOne.keymapper.inputMap = {
+            [KeyMapper.getName("KeyD", true)]: "move right",
+            [KeyMapper.getName("KeyA", true)]: "move left",
+            [KeyMapper.getName("KeyS", true)]: "attack",
+            [KeyMapper.getName("KeyD", false)]: "stop right",
+            [KeyMapper.getName("KeyA", false)]: "stop left",
+        };
+
     // playerTwo.physics.position.x = 500;
     // playerTwo.physics.position.y = 0;
 
     const camera = new Camera(canvas.width, canvas.height);
-    camera.setDepth(1000);
+    camera.setDepth(5);
     const renderer = new Render(camera, world);
 
-    let transform = MatrixOp.identity(4);
-    transform.set(2, 3, 3);
-    camera.transform(transform);
+    // let transform = MatrixOp.identity(4);
+    // transform.set(2, 3, 3);
+    // camera.transform(transform);
 
     window.DEBUG.render = {
         world: world,

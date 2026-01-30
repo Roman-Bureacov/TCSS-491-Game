@@ -48,20 +48,23 @@ export class Animator {
 
     /**
      * Tells this animator to update
+     * @param {number} timeStep the time step in seconds
      */
     update(timeStep) {
         this.elapsedTime += timeStep;
 
-        let frameNumber = this.currentFrameNumber();
-
-        if (frameNumber >= this.frames.length) {
+        if (this.elapsedTime >= this.duration) {
             if (this.isLooping) {
                 this.reset();
             } else {
                 this.callback?.();
+                return;
             }
         }
 
+        let frameNumber = this.currentFrameNumber();
+
+        // if we're not trying to redraw the exact same frame, try playing sound
         if (this.lastFrame !== frameNumber) {
             this.lastFrame = frameNumber;
             this.soundMap?.[frameNumber]?.play();

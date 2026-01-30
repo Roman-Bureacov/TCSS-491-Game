@@ -44,14 +44,12 @@ export class CharacterFactory {
      * @param {string} name the character name
      * @param {GameEngine} [game=undefined] the game this character will live in.
      * If undefined the character constructed will have an undefined game.
-     * @return {Character} a build character fresh off the line
+     * @return {Player} a build character fresh off the line
      */
-    static make(name, game=undefined) {
+    static makePlayer(name, game=undefined) {
 
         let character;
         let spritesheet = undefined;
-        let dimX = 1;
-        let dimY = 1;
 
         console.log(name, CharacterFactory.names.guy)
 
@@ -61,7 +59,7 @@ export class CharacterFactory {
                     AssetManager.getAsset("character/guy1/Guy.png"),
                     3, 14
                 );
-                character = new Player(game, spritesheet, dimX, dimY)
+                character = makeGuy(game, spritesheet, 1, 2)
                 break;
             case CharacterFactory.names.guy2:
                 // TODO: make guy2
@@ -102,63 +100,66 @@ export class CharacterFactory {
 /// character classes
 /// below, only the animators are constructed, the setting of the animation is done up in the make
 
-class _Guy extends Player {
 
-    /**
-     * Creates the guy
-     * @param {GameEngine} game the game engine
-     * @param {Spritesheet} spritesheet the spritesheet
-     */
-    constructor(game, spritesheet) {
-        super(game, spritesheet);
+/**
+ * Creates the guy
+ * @param {GameEngine} game the game engine
+ * @param {Spritesheet} spritesheet the spritesheet
+ * @param {number} dimX the dimension in X
+ * @param {number} dimY the dimension in Y
+ * @return {Player} the constructed player character
+ */
+const makeGuy = (game, spritesheet, dimX, dimY) => {
+    let guy = new Player(game, spritesheet, dimX, dimY);
 
-        this.animations = {
-            [Player.states.MOVE + Character.DIRECTION.RIGHT]: new Animator(
-                spritesheet,
-                [[1, 0], [1, 1], [1, 2], [1, 3], [1, 4], [1, 5]],
-                1),
-            [Player.states.MOVE + Character.DIRECTION.LEFT]: new Animator(
-                spritesheet,
-                [[1, 13], [1, 12], [1, 11], [1, 10], [1, 9], [1, 8]],
-                1),
+    guy.animations = {
+        [Player.states.MOVE + Character.DIRECTION.RIGHT]: new Animator(
+            spritesheet,
+            [[1, 0], [1, 1], [1, 2], [1, 3], [1, 4], [1, 5]],
+            1),
+        [Player.states.MOVE + Character.DIRECTION.LEFT]: new Animator(
+            spritesheet,
+            [[1, 13], [1, 12], [1, 11], [1, 10], [1, 9], [1, 8]],
+            1),
 
-            [Player.states.IDLE + Character.DIRECTION.RIGHT]: new Animator(
-                spritesheet,
-                [[0, 0]],
-                1
-            ),
-            [Player.states.IDLE + Character.DIRECTION.LEFT]: new Animator(
-                spritesheet,
-                [[0, 0]],
-                1,
-                true
-            ),
-            [Player.states.ATTACK + Character.DIRECTION.RIGHT]: new Animator(
-                spritesheet,
-                [[2, 0], [2, 1], [2, 2], [2, 3], [2, 4], [2, 5], [2, 6]],
-                0.5,
-                false,
-                undefined,
-                false,
-                () => {
-                    this.stateLock = false;
-                    this.state = this.lastState;
-                    this.facing = Character.DIRECTION.RIGHT;
-                }
-            ),
-            [Player.states.ATTACK + Character.DIRECTION.LEFT]: new Animator(
-                spritesheet,
-                [[2, 0], [2, 1], [2, 2], [2, 3], [2, 4], [2, 5], [2, 6]],
-                0.5,
-                true,
-                undefined,
-                false,
-                () => {
-                    this.stateLock = false;
-                    this.state = this.lastState;
-                    this.facing = Character.DIRECTION.LEFT;
-                }
-            ),
-        };
-    }
+        [Player.states.IDLE + Character.DIRECTION.RIGHT]: new Animator(
+            spritesheet,
+            [[0, 0]],
+            1
+        ),
+        [Player.states.IDLE + Character.DIRECTION.LEFT]: new Animator(
+            spritesheet,
+            [[0, 0]],
+            1,
+            true
+        ),
+        [Player.states.ATTACK + Character.DIRECTION.RIGHT]: new Animator(
+            spritesheet,
+            [[2, 0], [2, 1], [2, 2], [2, 3], [2, 4], [2, 5], [2, 6]],
+            0.5,
+            false,
+            undefined,
+            false,
+            () => {
+                guy.stateLock = false;
+                guy.state = guy.lastState;
+                guy.facing = Character.DIRECTION.RIGHT;
+            }
+        ),
+        [Player.states.ATTACK + Character.DIRECTION.LEFT]: new Animator(
+            spritesheet,
+            [[2, 0], [2, 1], [2, 2], [2, 3], [2, 4], [2, 5], [2, 6]],
+            0.5,
+            true,
+            undefined,
+            false,
+            () => {
+                guy.stateLock = false;
+                guy.state = guy.lastState;
+                guy.facing = Character.DIRECTION.LEFT;
+            }
+        ),
+    };
+
+    return guy;
 }

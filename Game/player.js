@@ -15,6 +15,12 @@ export class Player extends Character {
         ATTACK: "attack ",
         IDLE: "idle ",
     });
+
+    /**
+     * The keymapper for this player
+     * @type {KeyMapper}
+     */
+    keymapper;
     
     /**
      * Constructs a new playable character with no animators and an empty input map.
@@ -31,12 +37,10 @@ export class Player extends Character {
                 startX=0, startY=0) {
         super(game, spritesheet, dimX, dimY, startX, startY);
 
-        
-        
         this.state = Player.states.IDLE;
         this.facing = Character.DIRECTION.RIGHT;
 
-        this.physics.velocityMax.x = 100;
+        this.physics.velocityMax.x = 10;
 
         this.constantAcceleration = {
             [Character.DIRECTION.LEFT]: 0,
@@ -46,7 +50,7 @@ export class Player extends Character {
 
         this.initKeymap();
 
-        this.playSound = new SoundFX({masterVolume: 0.8});
+        // this.playSound = new SoundFX({masterVolume: 0.8});
     }
 
     initKeymap() {
@@ -77,7 +81,7 @@ export class Player extends Character {
         if (!this.setState(Player.states.MOVE)) {
             const newFacing = acceleration < 0 ? Character.DIRECTION.LEFT : Character.DIRECTION.RIGHT;
             if (newFacing !== this.facing) {
-                 this.physics.velocity.x = 0;
+                this.physics.velocity.x = 0;
                 this.facing = newFacing;
             }
 
@@ -93,7 +97,7 @@ export class Player extends Character {
     stopMoving(facing) {
         this.constantAcceleration[facing] = 0;
     }
-    num = 0;
+
     /**
      * Initiates an attack
      */
@@ -103,49 +107,41 @@ export class Player extends Character {
             this.lastState = this.state;
             this.state = Player.states.ATTACK;
             this.stateLock = true;
-            this.playSound.play(this.character.swordSound)
-
+            // this.playSound.play(this.character.swordSound)
         }
 
     }
 
 
     update() {
-        super.update();
-        
         this.physics.acceleration.x = 0;
         this.physics.acceleration.y = 0;
         
         for (let key in this.game.keys) this.keymapper.sendKeyEvent(this.game.keys[key]);
 
         // hard-coded gobbledegook
-        if ( this.physics.position.x > global.CANVAS_W - 20)  this.physics.position.x = -75;
-        else if ( this.physics.position.x < -75)  this.physics.position.x = global.CANVAS_W - 20;
+        // if ( this.physics.position.x > global.CANVAS_W - 20)  this.physics.position.x = -75;
+        // else if ( this.physics.position.x < -75)  this.physics.position.x = global.CANVAS_W - 20;
 
-        ({
-            [Player.states.ATTACK]: () => {
-                 this.physics.velocity.x = 0;
-            },
-            [Player.states.MOVE]: () => {
-                 this.physics.acceleration.x =
+        switch (this.state) {
+            case Player.states.ATTACK :
+                this.physics.velocity.x = 0;
+                break;
+            case Player.states.MOVE :
+                this.physics.acceleration.x =
                     this.constantAcceleration[Character.DIRECTION.LEFT]
                     + this.constantAcceleration[Character.DIRECTION.RIGHT];
 
-                if ( this.physics.acceleration.x === 0) {
+                if (this.physics.acceleration.x === 0) {
                     this.setState(Player.states.IDLE);
                 } else this.setState(Player.states.MOVE);
-            },
-            [Player.states.IDLE]: () => {
+                break;
+            case Player.states.IDLE :
                 this.physics.velocity.x = 0;
-            }
-        })[this.state]?.();
-
-        switch (this.state) {
-            case Player.states.ATTACK:
-
+                break;
         }
 
-
+        super.update();
     }
 
 }

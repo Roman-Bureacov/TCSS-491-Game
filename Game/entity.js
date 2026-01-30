@@ -35,14 +35,28 @@ export class DynamicEntity extends Drawable {
     }
 
     /**
+     * Sets the position for this space object
+     * @param {number} x the x position
+     * @param {number} y the y position
+     * @param {number} [z=0] the z position
+     */
+    setPosition(x, y, z=0) {
+        this.physics.position.x = x;
+        this.physics.position.y = y;
+    }
+
+    /**
      * Updates this entity's physics
      * @param {number} timestep the time step in seconds
      */
     updatePhysics(timestep) {
         this.physics.updatePhysics(timestep);
 
-        this.matrix.set(0, 3, this.physics.position.x);
-        this.matrix.set(1, 3, this.physics.position.y);
+        super.setPosition(
+            this.physics.position.x,
+            this.physics.position.y,
+            0
+        );
     }
 }
 
@@ -56,32 +70,16 @@ export class DynamicEntity extends Drawable {
 export class StaticEntity extends Drawable {
 
     /**
-     * the position of this static entity
-     * @type {{x: number, y: number}} the position
-     */
-    position = {
-        x: 0, y: 0
-    }
-
-    /**
      * Constructs a new drawable static entity
      * @param {Spritesheet} spritesheet the spritesheet
      * @param {number} [dimX=1] the positive x dimension of this entity
      * @param {number} [dimY=1] the positive y dimension of this entity
-     * @param {boolean} isArena
      */
     constructor(spritesheet, dimX = 1, dimY = 1) {
         super(spritesheet, dimX, dimY);
     }
 
-    /**
-     * Updates this static entity for the renderer
-     */
-    updateStatic() {
-        this.matrix.set(0,3, this.position.x);
-        this.matrix.set(1,3, this.position.y);
-    }
-    
+
     
 }
 

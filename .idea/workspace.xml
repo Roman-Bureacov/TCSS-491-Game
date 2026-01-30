@@ -4,18 +4,18 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="a08718b8-ac73-4cb8-b286-185a0b662aef" name="Changes" comment="merged camera with main, just need to refactor some arenaFactory.js to make each block a static entity object. Maybe draw directly on the tilepane instead of a canvas dom?">
-      <change afterPath="$PROJECT_DIR$/Game/assets/assetmanager.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Game/player.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Camera/Render.js" beforeDir="false" />
+    <list default="true" id="a08718b8-ac73-4cb8-b286-185a0b662aef" name="Changes" comment="working fix of the asset manager becoming a static singleton and character factory adhering to the factory pattern">
+      <change afterPath="$PROJECT_DIR$/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/checkstyle-idea.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/checkstyle-idea.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Game/PhysicsEntity.js" beforeDir="false" afterPath="$PROJECT_DIR$/Game/PhysicsEntity.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Game/animation.js" beforeDir="false" afterPath="$PROJECT_DIR$/Game/animation.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Game/assetmanager.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Game/character.js" beforeDir="false" afterPath="$PROJECT_DIR$/Game/character.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Game/characterFactory.js" beforeDir="false" afterPath="$PROJECT_DIR$/Game/characterFactory.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Game/entity.js" beforeDir="false" afterPath="$PROJECT_DIR$/Game/entity.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Game/gameengine.js" beforeDir="false" afterPath="$PROJECT_DIR$/Game/gameengine.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Game/index.html" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/Game/main.js" beforeDir="false" afterPath="$PROJECT_DIR$/Game/main.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Game/playerOne.js" beforeDir="false" afterPath="$PROJECT_DIR$/Game/playerOne.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Game/playerTwo.js" beforeDir="false" afterPath="$PROJECT_DIR$/Game/playerTwo.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Game/player.js" beforeDir="false" afterPath="$PROJECT_DIR$/Game/player.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Game/render/Render.js" beforeDir="false" afterPath="$PROJECT_DIR$/Game/render/Render.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -86,7 +86,7 @@
     "git-widget-placeholder": "Merge__Camera__With__Main",
     "ignore.virus.scanning.warn.message": "true",
     "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "C:/Users/iwant/IdeaProjects/TCSS-491-Game/Game",
+    "last_opened_file_path": "C:/Users/iwant/IdeaProjects/TCSS-491-Game",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
@@ -99,11 +99,11 @@
 }]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\iwant\IdeaProjects\TCSS-491-Game" />
       <recent name="C:\Users\iwant\IdeaProjects\TCSS-491-Game\Game" />
       <recent name="C:\Users\Kassi\OneDrive\Computer\Documents\GitHub\TCSS-491-Game\Game\render" />
       <recent name="C:\Users\Kassi\OneDrive\Computer\Documents\GitHub\TCSS-491-Game\Game" />
       <recent name="C:\Users\Kassi\OneDrive\Computer\Documents\GitHub\TCSS-491-Game\Game\assets\music" />
-      <recent name="C:\Users\Kassi\OneDrive\Computer\Documents\GitHub\TCSS-491-Game\Game\assets\character\warriorWoman" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="C:\Users\Kassi\OneDrive\Computer\Documents\GitHub\TCSS-491-Game\Game\render" />
@@ -237,7 +237,15 @@
       <option name="project" value="LOCAL" />
       <updated>1769671719410</updated>
     </task>
-    <option name="localTasksCounter" value="13" />
+    <task id="LOCAL-00013" summary="working fix of the asset manager becoming a static singleton and character factory adhering to the factory pattern">
+      <option name="closed" value="true" />
+      <created>1769692223311</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1769692223312</updated>
+    </task>
+    <option name="localTasksCounter" value="14" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -252,7 +260,8 @@
     <MESSAGE value="added warrior woman animation character&#10;&#10;finished implementing a character factory&#10;&#10;created a global character object" />
     <MESSAGE value="Moved files to the main folder" />
     <MESSAGE value="merged camera with main, just need to refactor some arenaFactory.js to make each block a static entity object. Maybe draw directly on the tilepane instead of a canvas dom?" />
-    <option name="LAST_COMMIT_MESSAGE" value="merged camera with main, just need to refactor some arenaFactory.js to make each block a static entity object. Maybe draw directly on the tilepane instead of a canvas dom?" />
+    <MESSAGE value="working fix of the asset manager becoming a static singleton and character factory adhering to the factory pattern" />
+    <option name="LAST_COMMIT_MESSAGE" value="working fix of the asset manager becoming a static singleton and character factory adhering to the factory pattern" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />

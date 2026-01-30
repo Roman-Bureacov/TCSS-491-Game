@@ -31,7 +31,41 @@ class SpaceObject {
     transform = (transformation) =>
         this.matrix = MatrixOp.multiply(this.matrix, transformation) ;
 
+    /**
+     * Sets the position for this space object in the world
+     * @param {number} x the x position
+     * @param {number} y the y position
+     * @param {number} z the z position
+     */
+    setPosition(x, y, z) {
+        this.matrix.set(0, 3, x);
+        this.matrix.set(1, 3, y);
+        this.matrix.set(2, 3, z);
+    }
 
+    /**
+     * Gets the X position of this space object in the world
+     * @returns {number}
+     */
+    posX() {
+        return this.matrix.get(0, 3);
+    }
+
+    /**
+     * Gets the Y position of this object in the world
+     * @returns {number}
+     */
+    posY() {
+        return this.matrix.get(1, 3);
+    }
+
+    /**
+     * Gets the Z position of this object in the world
+     * @returns {number}
+     */
+    posZ() {
+        return this.matrix.get(3, 3);
+    }
 }
 
 /**
@@ -82,6 +116,30 @@ class SpaceEntity extends SpaceObject {
      */
     setDimensionAspect(dimX, aspect) {
         this.setDimension(dimX, dimX * aspect);
+    }
+
+    /**
+     * The X dimension of this entity
+     * @returns {number} the X dimension
+     */
+    dimX() {
+        return this.dimension.get(0, 0);
+    }
+
+    /**
+     * The Y dimension of this entity
+     * @returns {number} the Y dimension
+     */
+    dimY() {
+        return this.dimension.get(1, 0);
+    }
+
+    /**
+     * The Z dimension of this entity
+     * @returns {number} the Z dimension
+     */
+    dimZ() {
+        return this.dimension.get(2, 0);
     }
 }
 
@@ -405,8 +463,8 @@ class Render {
                 let width = endpoint.get(0, 0) - x;
                 let height = endpoint.get(1, 0) - y;
 
-                let p = drawable.drawingProperties;
-                let position = p.spritesheet.get(p.row, p.col);
+                let prop = drawable.drawingProperties;
+                let position = prop.spritesheet.get(prop.row, prop.col);
 
                 if (drawable.drawingProperties.isReversed) {
                     context.save();
@@ -414,9 +472,9 @@ class Render {
                     context.scale(-1, 1);
 
                     context.drawImage(
-                        p.spritesheet.image,
+                        prop.spritesheet.image,
                         position.x, position.y,
-                        p.spritesheet.frameWidth, p.spritesheet.frameHeight, // TODO: validate this
+                        prop.spritesheet.frameWidth, prop.spritesheet.frameHeight,
                         -x - width, y,
                         width, height
                     );
@@ -424,9 +482,9 @@ class Render {
                     context.restore();
                 } else {
                     context.drawImage(
-                        p.spritesheet.image,
+                        prop.spritesheet.image,
                         position.x, position.y,
-                        p.spritesheet.frameWidth, p.spritesheet.frameHeight, // TODO: validate this
+                        prop.spritesheet.frameWidth, prop.spritesheet.frameHeight,
                         x, y,
                         width, height
                     );
