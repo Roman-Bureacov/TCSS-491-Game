@@ -3,7 +3,7 @@
 import {getCharacterData} from "./characterData.js";
 import {Animator, Spritesheet} from "./animation.js";
 import {Player} from "./player.js";
-import {AssetManager} from "./assets/assetmanager.js";
+import {AssetManager} from "../assets/assetmanager.js";
 import {Character} from "./character.js";
 
 /**

@@ -4,10 +4,10 @@ A concrete implementation of the character class
 
 import {Character} from "./character.js"
 import {Animator, Spritesheet} from "./animation.js";
-import {KeyMapper} from "./keymapper.js";
-import {global} from "./main.js";
+import {KeyMapper} from "../engine/keymapper.js";
+import {global} from "../main.js";
 import {CharacterFactory} from "./characterFactory.js";
-import {SoundFX} from "./soundFX.js";
+import {SoundFX} from "../engine/soundFX.js";
 
 export class Player extends Character {
     static states = Object.freeze({

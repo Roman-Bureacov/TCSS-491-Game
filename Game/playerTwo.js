@@ -6,13 +6,16 @@ A concrete implementation of the character class
 A concrete implementation of the character class
  */
 
-import {Character} from "./character.js"
-import {Animator, Spritesheet} from "./animation.js";
-import {KeyMapper} from "./keymapper.js";
+import {Character} from "./character/character.js"
+import {Animator, Spritesheet} from "./character/animation.js";
+import {KeyMapper} from "./engine/keymapper.js";
 import {global} from "./main.js";
-import {CharacterFactory} from "./characterFactory.js";
-import {SoundFX} from "./soundFX.js";
+import {CharacterFactory} from "./character/characterFactory.js";
+import {SoundFX} from "./engine/soundFX.js";
 
+/**
+ * @deprecated
+ */
 export class PlayerTwo extends Character {
     constructor(game, assetManager, characterName, startPosX, startPosY) {
 

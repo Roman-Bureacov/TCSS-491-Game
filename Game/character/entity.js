@@ -2,7 +2,7 @@
 Represents an entity, which is drawable on the renderer
  */
 
-import {Drawable} from "./render/Render.js";
+import {Drawable} from "../engine/render/Render.js";
 import {PhysicsEntity} from "./PhysicsEntity.js";
 
 /**

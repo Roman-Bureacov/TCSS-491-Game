@@ -1,8 +1,8 @@
 // This game shell was happily modified from Googler Seth Ladd's "Bad Aliens" game and his Google IO talk in 2011
 
-import {Timer} from "./timer.js";
-import {Render} from "./render/Render.js";
-import {DynamicEntity} from "./entity.js";
+import {Timer} from "./engine/timer.js";
+import {Render} from "./engine/render/Render.js";
+import {DynamicEntity} from "./character/entity.js";
 
 export class GameEngine {
 
