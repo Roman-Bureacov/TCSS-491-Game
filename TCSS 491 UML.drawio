@@ -1,0 +1,171 @@
+<mxfile host="app.diagrams.net" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36" version="29.3.6">
+  <diagram name="Page-1" id="tB6j9XAO_e_q8-AAQTS1">
+    <mxGraphModel dx="2887" dy="2227" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="Ummweidv5-A-NqTgBxW1-1" parent="1" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;fontFamily=Lucida Console;" value="Render" vertex="1">
+          <mxGeometry height="160" width="440" x="160" y="480" as="geometry" />
+        </mxCell>
+        <mxCell id="Ummweidv5-A-NqTgBxW1-2" parent="Ummweidv5-A-NqTgBxW1-1" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;rounded=0;fontFamily=Lucida Console;" value="world: World&lt;div&gt;camera: Camera&lt;/div&gt;" vertex="1">
+          <mxGeometry height="40" width="440" y="26" as="geometry" />
+        </mxCell>
+        <mxCell id="Ummweidv5-A-NqTgBxW1-3" parent="Ummweidv5-A-NqTgBxW1-1" style="line;strokeWidth=1;fillColor=none;align=left;verticalAlign=middle;spacingTop=-1;spacingLeft=3;spacingRight=3;rotatable=0;labelPosition=right;points=[];portConstraint=eastwest;strokeColor=inherit;fontFamily=Lucida Console;" value="" vertex="1">
+          <mxGeometry height="8" width="440" y="66" as="geometry" />
+        </mxCell>
+        <mxCell id="Ummweidv5-A-NqTgBxW1-4" parent="Ummweidv5-A-NqTgBxW1-1" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;fontFamily=Lucida Console;" value="constructor(camera: Camera, world: World)&lt;div&gt;#toRasterPoint(matrix: Matrix, camera: Camera): void&lt;/div&gt;&lt;div&gt;#toRasterMatrix(matrix: Matrix, camera: Camera): void&lt;/div&gt;&lt;div&gt;render(context: HTML2dContext): void&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;" vertex="1">
+          <mxGeometry height="86" width="440" y="74" as="geometry" />
+        </mxCell>
+        <mxCell id="Ummweidv5-A-NqTgBxW1-6" parent="1" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;fontFamily=Lucida Console;" value="World" vertex="1">
+          <mxGeometry height="80" width="340" x="240" y="320" as="geometry" />
+        </mxCell>
+        <mxCell id="Ummweidv5-A-NqTgBxW1-7" parent="Ummweidv5-A-NqTgBxW1-6" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;rounded=0;fontFamily=Lucida Console;" value="panes: Pane[]" vertex="1">
+          <mxGeometry height="24" width="340" y="26" as="geometry" />
+        </mxCell>
+        <mxCell id="Ummweidv5-A-NqTgBxW1-8" parent="Ummweidv5-A-NqTgBxW1-6" style="line;strokeWidth=1;fillColor=none;align=left;verticalAlign=middle;spacingTop=-1;spacingLeft=3;spacingRight=3;rotatable=0;labelPosition=right;points=[];portConstraint=eastwest;strokeColor=inherit;fontFamily=Lucida Console;" value="" vertex="1">
+          <mxGeometry height="8" width="340" y="50" as="geometry" />
+        </mxCell>
+        <mxCell id="Ummweidv5-A-NqTgBxW1-9" parent="Ummweidv5-A-NqTgBxW1-6" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;fontFamily=Lucida Console;" value="addPane(...panes: Pane): void&lt;div&gt;&lt;br&gt;&lt;/div&gt;" vertex="1">
+          <mxGeometry height="22" width="340" y="58" as="geometry" />
+        </mxCell>
+        <mxCell id="Ummweidv5-A-NqTgBxW1-10" parent="1" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;fontFamily=Lucida Console;" value="Pane" vertex="1">
+          <mxGeometry height="80" width="340" x="200" y="160" as="geometry" />
+        </mxCell>
+        <mxCell id="Ummweidv5-A-NqTgBxW1-11" parent="Ummweidv5-A-NqTgBxW1-10" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;rounded=0;fontFamily=Lucida Console;" value="drawables: Drawable[]" vertex="1">
+          <mxGeometry height="24" width="340" y="26" as="geometry" />
+        </mxCell>
+        <mxCell id="Ummweidv5-A-NqTgBxW1-12" parent="Ummweidv5-A-NqTgBxW1-10" style="line;strokeWidth=1;fillColor=none;align=left;verticalAlign=middle;spacingTop=-1;spacingLeft=3;spacingRight=3;rotatable=0;labelPosition=right;points=[];portConstraint=eastwest;strokeColor=inherit;fontFamily=Lucida Console;" value="" vertex="1">
+          <mxGeometry height="8" width="340" y="50" as="geometry" />
+        </mxCell>
+        <mxCell id="Ummweidv5-A-NqTgBxW1-13" parent="Ummweidv5-A-NqTgBxW1-10" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;fontFamily=Lucida Console;" value="&lt;div&gt;addDrawable(...drawables: Drawable): void&lt;/div&gt;" vertex="1">
+          <mxGeometry height="22" width="340" y="58" as="geometry" />
+        </mxCell>
+        <mxCell id="Ummweidv5-A-NqTgBxW1-14" parent="1" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;fontFamily=Lucida Console;" value="Drawable" vertex="1">
+          <mxGeometry height="90" width="520" x="80" as="geometry" />
+        </mxCell>
+        <mxCell id="Ummweidv5-A-NqTgBxW1-15" parent="Ummweidv5-A-NqTgBxW1-14" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;rounded=0;fontFamily=Lucida Console;" value="drawingProperties: DrawingProperties" vertex="1">
+          <mxGeometry height="24" width="520" y="26" as="geometry" />
+        </mxCell>
+        <mxCell id="Ummweidv5-A-NqTgBxW1-16" parent="Ummweidv5-A-NqTgBxW1-14" style="line;strokeWidth=1;fillColor=none;align=left;verticalAlign=middle;spacingTop=-1;spacingLeft=3;spacingRight=3;rotatable=0;labelPosition=right;points=[];portConstraint=eastwest;strokeColor=inherit;fontFamily=Lucida Console;" value="" vertex="1">
+          <mxGeometry height="8" width="520" y="50" as="geometry" />
+        </mxCell>
+        <mxCell id="Ummweidv5-A-NqTgBxW1-17" parent="Ummweidv5-A-NqTgBxW1-14" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;fontFamily=Lucida Console;" value="&lt;div&gt;constructor(spritesheet: Spritesheet, dimX: number, dimY: number)&lt;/div&gt;" vertex="1">
+          <mxGeometry height="32" width="520" y="58" as="geometry" />
+        </mxCell>
+        <mxCell id="Ummweidv5-A-NqTgBxW1-18" edge="1" parent="1" source="Ummweidv5-A-NqTgBxW1-17" style="endArrow=open;html=1;endSize=12;startArrow=diamondThin;startSize=14;startFill=0;edgeStyle=elbowEdgeStyle;align=left;verticalAlign=bottom;rounded=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;elbow=vertical;fontFamily=Lucida Console;" target="Ummweidv5-A-NqTgBxW1-10" value="1...n">
+          <mxGeometry relative="1" x="-0.5947" y="10" as="geometry">
+            <mxPoint as="offset" />
+            <mxPoint x="380" y="120" as="sourcePoint" />
+            <mxPoint x="550" y="170" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="Ummweidv5-A-NqTgBxW1-22" edge="1" parent="1" source="Ummweidv5-A-NqTgBxW1-13" style="endArrow=open;html=1;endSize=12;startArrow=diamondThin;startSize=14;startFill=0;edgeStyle=elbowEdgeStyle;align=left;verticalAlign=bottom;rounded=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;elbow=vertical;fontFamily=Lucida Console;" target="Ummweidv5-A-NqTgBxW1-6" value="1...n">
+          <mxGeometry relative="1" x="-0.5947" y="10" as="geometry">
+            <mxPoint as="offset" />
+            <mxPoint x="329.65999999999997" y="260" as="sourcePoint" />
+            <mxPoint x="329.65999999999997" y="348" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="Ummweidv5-A-NqTgBxW1-24" edge="1" parent="1" source="Ummweidv5-A-NqTgBxW1-9" style="endArrow=open;endSize=12;dashed=1;html=1;rounded=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;edgeStyle=elbowEdgeStyle;elbow=vertical;fontFamily=Lucida Console;" target="Ummweidv5-A-NqTgBxW1-1" value="Use">
+          <mxGeometry relative="1" width="160" as="geometry">
+            <mxPoint x="430" y="350" as="sourcePoint" />
+            <mxPoint x="590" y="350" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="Ummweidv5-A-NqTgBxW1-25" parent="1" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;fontFamily=Lucida Console;" value="SpaceEntity" vertex="1">
+          <mxGeometry height="180" width="440" x="80" y="-260" as="geometry" />
+        </mxCell>
+        <mxCell id="Ummweidv5-A-NqTgBxW1-26" parent="Ummweidv5-A-NqTgBxW1-25" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;rounded=0;fontFamily=Lucida Console;" value="dimension: Matrix" vertex="1">
+          <mxGeometry height="24" width="440" y="26" as="geometry" />
+        </mxCell>
+        <mxCell id="Ummweidv5-A-NqTgBxW1-27" parent="Ummweidv5-A-NqTgBxW1-25" style="line;strokeWidth=1;fillColor=none;align=left;verticalAlign=middle;spacingTop=-1;spacingLeft=3;spacingRight=3;rotatable=0;labelPosition=right;points=[];portConstraint=eastwest;strokeColor=inherit;fontFamily=Lucida Console;" value="" vertex="1">
+          <mxGeometry height="8" width="440" y="50" as="geometry" />
+        </mxCell>
+        <mxCell id="Ummweidv5-A-NqTgBxW1-28" parent="Ummweidv5-A-NqTgBxW1-25" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;fontFamily=Lucida Console;" value="&lt;div&gt;constructor([dimX=1]: number, [dimY=1]: number)&lt;/div&gt;&lt;div&gt;setDimension([dimX=1]: number, [dimY=1]: number): void&lt;/div&gt;&lt;div&gt;setDimensionAspect(dimX: nujmber, aspect: number): void&lt;/div&gt;&lt;div&gt;dimX(): number&lt;/div&gt;&lt;div&gt;dimY(): number&lt;/div&gt;&lt;div&gt;dimZ(): number&lt;/div&gt;" vertex="1">
+          <mxGeometry height="122" width="440" y="58" as="geometry" />
+        </mxCell>
+        <mxCell id="Ummweidv5-A-NqTgBxW1-29" parent="1" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;fontFamily=Lucida Console;" value="SpaceObject" vertex="1">
+          <mxGeometry height="180" width="360" x="-360" y="160" as="geometry" />
+        </mxCell>
+        <mxCell id="Ummweidv5-A-NqTgBxW1-30" parent="Ummweidv5-A-NqTgBxW1-29" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;rounded=0;fontFamily=Lucida Console;" value="matrix: Matrix" vertex="1">
+          <mxGeometry height="24" width="360" y="26" as="geometry" />
+        </mxCell>
+        <mxCell id="Ummweidv5-A-NqTgBxW1-31" parent="Ummweidv5-A-NqTgBxW1-29" style="line;strokeWidth=1;fillColor=none;align=left;verticalAlign=middle;spacingTop=-1;spacingLeft=3;spacingRight=3;rotatable=0;labelPosition=right;points=[];portConstraint=eastwest;strokeColor=inherit;fontFamily=Lucida Console;" value="" vertex="1">
+          <mxGeometry height="8" width="360" y="50" as="geometry" />
+        </mxCell>
+        <mxCell id="Ummweidv5-A-NqTgBxW1-32" parent="Ummweidv5-A-NqTgBxW1-29" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;fontFamily=Lucida Console;" value="&lt;div&gt;constructor()&lt;/div&gt;&lt;div&gt;transform(transformation: Matrix): void&lt;/div&gt;&lt;div&gt;setPosition(x: number, y: number, z: number): void&lt;/div&gt;&lt;div&gt;posX(): number&lt;/div&gt;&lt;div&gt;posY(): number&lt;/div&gt;&lt;div&gt;posZ(): number&lt;/div&gt;" vertex="1">
+          <mxGeometry height="122" width="360" y="58" as="geometry" />
+        </mxCell>
+        <mxCell id="Ummweidv5-A-NqTgBxW1-33" edge="1" parent="1" source="Ummweidv5-A-NqTgBxW1-29" style="endArrow=block;endSize=16;endFill=0;html=1;rounded=0;edgeStyle=elbowEdgeStyle;exitX=1;exitY=0;exitDx=0;exitDy=0;entryX=0;entryY=0;entryDx=0;entryDy=0;" target="Ummweidv5-A-NqTgBxW1-25" value="Extends">
+          <mxGeometry relative="1" width="160" as="geometry">
+            <Array as="points">
+              <mxPoint y="-50" />
+            </Array>
+            <mxPoint x="-10" y="290" as="sourcePoint" />
+            <mxPoint x="-80" y="-180" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="Ummweidv5-A-NqTgBxW1-35" edge="1" parent="1" source="Ummweidv5-A-NqTgBxW1-28" style="endArrow=block;endSize=16;endFill=0;html=1;rounded=0;edgeStyle=elbowEdgeStyle;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0;entryDx=0;entryDy=0;" target="Ummweidv5-A-NqTgBxW1-14" value="Extends">
+          <mxGeometry relative="1" width="160" as="geometry">
+            <Array as="points">
+              <mxPoint x="40" y="-70" />
+            </Array>
+            <mxPoint x="20" y="470" as="sourcePoint" />
+            <mxPoint x="130" y="-10" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="Ummweidv5-A-NqTgBxW1-36" edge="1" parent="1" source="Ummweidv5-A-NqTgBxW1-29" style="endArrow=block;endSize=16;endFill=0;html=1;rounded=0;edgeStyle=elbowEdgeStyle;entryX=0;entryY=0;entryDx=0;entryDy=0;exitX=1;exitY=0;exitDx=0;exitDy=0;" target="Ummweidv5-A-NqTgBxW1-10" value="Extends">
+          <mxGeometry relative="1" width="160" as="geometry">
+            <Array as="points">
+              <mxPoint x="60" y="200" />
+            </Array>
+            <mxPoint x="-50" y="220" as="sourcePoint" />
+            <mxPoint x="60" y="120" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="Ummweidv5-A-NqTgBxW1-37" edge="1" parent="1" source="Ummweidv5-A-NqTgBxW1-29" style="endArrow=block;endSize=16;endFill=0;html=1;rounded=0;edgeStyle=elbowEdgeStyle;entryX=0;entryY=0;entryDx=0;entryDy=0;exitX=1;exitY=0;exitDx=0;exitDy=0;" target="Ummweidv5-A-NqTgBxW1-6" value="Extends">
+          <mxGeometry relative="1" width="160" as="geometry">
+            <Array as="points">
+              <mxPoint x="60" y="270" />
+            </Array>
+            <mxPoint x="30" y="330" as="sourcePoint" />
+            <mxPoint x="260" y="270" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="Ummweidv5-A-NqTgBxW1-40" parent="1" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;fontFamily=Lucida Console;" value="Camera" vertex="1">
+          <mxGeometry height="240" width="400" x="-400" y="440" as="geometry" />
+        </mxCell>
+        <mxCell id="Ummweidv5-A-NqTgBxW1-41" parent="Ummweidv5-A-NqTgBxW1-40" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;rounded=0;fontFamily=Lucida Console;" value="focalLength: number&lt;div&gt;image: Object&lt;/div&gt;&lt;div&gt;aperture: Object&lt;/div&gt;&lt;div&gt;#canvas: Object&lt;/div&gt;&lt;div&gt;#modified: boolean&lt;/div&gt;" vertex="1">
+          <mxGeometry height="84" width="400" y="26" as="geometry" />
+        </mxCell>
+        <mxCell id="Ummweidv5-A-NqTgBxW1-42" parent="Ummweidv5-A-NqTgBxW1-40" style="line;strokeWidth=1;fillColor=none;align=left;verticalAlign=middle;spacingTop=-1;spacingLeft=3;spacingRight=3;rotatable=0;labelPosition=right;points=[];portConstraint=eastwest;strokeColor=inherit;fontFamily=Lucida Console;" value="" vertex="1">
+          <mxGeometry height="8" width="400" y="110" as="geometry" />
+        </mxCell>
+        <mxCell id="Ummweidv5-A-NqTgBxW1-43" parent="Ummweidv5-A-NqTgBxW1-40" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;fontFamily=Lucida Console;" value="&lt;div&gt;constructor(imageWidth: number, imageHeight: number)&lt;/div&gt;&lt;div&gt;lookAt(x: number, y: number): void&lt;/div&gt;&lt;div&gt;setDepth(z: number): void&lt;/div&gt;&lt;div&gt;setFocalLength(focalLength: number): void&lt;/div&gt;&lt;div&gt;setAperture(width: number,&amp;nbsp;&lt;/div&gt;&lt;div&gt;&lt;span style=&quot;white-space: pre;&quot;&gt;&#x9;&lt;/span&gt;[aspect=undefined]: number,&amp;nbsp;&lt;/div&gt;&lt;div&gt;&lt;span style=&quot;white-space: pre;&quot;&gt;&#x9;&lt;/span&gt;[height=undefined]: number)&lt;/div&gt;&lt;div&gt;getCanvas(): void&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;" vertex="1">
+          <mxGeometry height="122" width="400" y="118" as="geometry" />
+        </mxCell>
+        <mxCell id="Ummweidv5-A-NqTgBxW1-44" edge="1" parent="1" source="Ummweidv5-A-NqTgBxW1-40" style="endArrow=open;endSize=12;dashed=1;html=1;rounded=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;edgeStyle=elbowEdgeStyle;elbow=vertical;fontFamily=Lucida Console;exitX=1;exitY=0;exitDx=0;exitDy=0;" target="Ummweidv5-A-NqTgBxW1-1" value="Use">
+          <mxGeometry relative="1" width="160" as="geometry">
+            <Array as="points">
+              <mxPoint x="170" y="420" />
+            </Array>
+            <mxPoint x="30" y="550" as="sourcePoint" />
+            <mxPoint y="630" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="Ummweidv5-A-NqTgBxW1-45" parent="1" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;fontFamily=Lucida Console;" value="Drawable" vertex="1">
+          <mxGeometry height="90" width="520" x="750" y="-30" as="geometry" />
+        </mxCell>
+        <mxCell id="Ummweidv5-A-NqTgBxW1-46" parent="Ummweidv5-A-NqTgBxW1-45" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;rounded=0;fontFamily=Lucida Console;" value="drawingProperties: DrawingProperties" vertex="1">
+          <mxGeometry height="24" width="520" y="26" as="geometry" />
+        </mxCell>
+        <mxCell id="Ummweidv5-A-NqTgBxW1-47" parent="Ummweidv5-A-NqTgBxW1-45" style="line;strokeWidth=1;fillColor=none;align=left;verticalAlign=middle;spacingTop=-1;spacingLeft=3;spacingRight=3;rotatable=0;labelPosition=right;points=[];portConstraint=eastwest;strokeColor=inherit;fontFamily=Lucida Console;" value="" vertex="1">
+          <mxGeometry height="8" width="520" y="50" as="geometry" />
+        </mxCell>
+        <mxCell id="Ummweidv5-A-NqTgBxW1-48" parent="Ummweidv5-A-NqTgBxW1-45" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;fontFamily=Lucida Console;" value="&lt;div&gt;constructor(spritesheet: Spritesheet, dimX: number, dimY: number)&lt;/div&gt;" vertex="1">
+          <mxGeometry height="32" width="520" y="58" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
