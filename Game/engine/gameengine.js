@@ -118,8 +118,8 @@ export class GameEngine {
         this.ctx.canvas.addEventListener("keyup", event => acknowledge(event))
     };
 
-    addEntity(entity) {
-        this.entities.push(entity);
+    addEntity(...entity) {
+        entity.map(e => this.entities.push(e));
     };
 
     draw() {
