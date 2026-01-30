@@ -1,5 +1,5 @@
 import {Matrix, MatrixOp} from "../Matrix/Matrix.js";
-import {GameEngine} from "./gameengine.js"
+import {GameEngine} from "./engine/gameengine.js"
 import {AssetManager} from "./assets/assetmanager.js";
 // import {ArenaFactory, TileMapDrawable} from "./arenaFactory.js";
 // import {loadArenaTxt} from "./arenaFactory.js";
