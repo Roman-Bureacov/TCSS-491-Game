@@ -127,7 +127,7 @@ AssetManager.downloadAll(async () => {
     const forePane = new Pane();
 
     const playerOne = CharacterFactory.makePlayer(character1, gameEngine);
-    // const playerTwo = CharacterFactory.make(character2);
+    const playerTwo = CharacterFactory.makePlayer(character1, gameEngine);
     // const playerOne = new PlayerOne(gameEngine, ASSET_MANAGER, character1, arena.playerOnePos[0], arena.playerOnePos[1]);
     // const playerTwo = new PlayerTwo(gameEngine, ASSET_MANAGER, character2, arena.playerTwoPos[0], arena.playerTwoPos[1]);
     const backgroundAsset = AssetManager.getAsset(arena.background);
@@ -159,6 +159,14 @@ AssetManager.downloadAll(async () => {
             [KeyMapper.getName("KeyD", false)]: "stop right",
             [KeyMapper.getName("KeyA", false)]: "stop left",
         };
+
+    playerTwo.keymapper.inputMap = {
+        [KeyMapper.getName("KeyL", true)]: "move right",
+        [KeyMapper.getName("KeyJ", true)]: "move left",
+        [KeyMapper.getName("KeyK", true)]: "attack",
+        [KeyMapper.getName("KeyL", false)]: "stop right",
+        [KeyMapper.getName("KeyJ", false)]: "stop left",
+    };
 
     // playerTwo.physics.position.x = 500;
     // playerTwo.physics.position.y = 0;
@@ -194,7 +202,7 @@ AssetManager.downloadAll(async () => {
 
     backgroundPane.addDrawable(backgroundDrawable);
     // tilePane.addDrawable(tileDrawable);
-    forePane.addDrawable(playerOne);
+    forePane.addDrawable(playerOne, playerTwo);
     // forePane.addDrawable(playerTwo);
 
     window.DEBUG.char = playerOne;
@@ -204,7 +212,7 @@ AssetManager.downloadAll(async () => {
 
     //Add new Player Entity
     gameEngine.addEntity(playerOne);
-    // gameEngine.addEntity(playerTwo)
+    gameEngine.addEntity(playerTwo)
 
     gameEngine.render = renderer;
     world.addPane(backgroundPane);
