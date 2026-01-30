@@ -4,8 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="a08718b8-ac73-4cb8-b286-185a0b662aef" name="Changes" comment="JSDoc">
-      <change beforePath="$PROJECT_DIR$/Game/engine/gameengine.js" beforeDir="false" afterPath="$PROJECT_DIR$/Game/engine/gameengine.js" afterDir="false" />
+    <list default="true" id="a08718b8-ac73-4cb8-b286-185a0b662aef" name="Changes" comment="addentity is now varargs">
+      <change beforePath="$PROJECT_DIR$/Game/character/character.js" beforeDir="false" afterPath="$PROJECT_DIR$/Game/character/character.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Game/character/characterFactory.js" beforeDir="false" afterPath="$PROJECT_DIR$/Game/character/characterFactory.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -27,7 +28,6 @@
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
     <option name="SWAP_SIDES_IN_COMPARE_BRANCHES" value="true" />
-    <option name="UPDATE_TYPE" value="REBASE" />
   </component>
   <component name="GitHubPullRequestSearchHistory">{
   &quot;lastFilter&quot;: {
@@ -299,7 +299,15 @@
       <option name="project" value="LOCAL" />
       <updated>1769752660460</updated>
     </task>
-    <option name="localTasksCounter" value="22" />
+    <task id="LOCAL-00022" summary="addentity is now varargs">
+      <option name="closed" value="true" />
+      <created>1769755061888</created>
+      <option name="number" value="00022" />
+      <option name="presentableId" value="LOCAL-00022" />
+      <option name="project" value="LOCAL" />
+      <updated>1769755061888</updated>
+    </task>
+    <option name="localTasksCounter" value="23" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -346,7 +354,8 @@
     <MESSAGE value="put player2 on the board" />
     <MESSAGE value="put player2 on the board as an example" />
     <MESSAGE value="JSDoc" />
-    <option name="LAST_COMMIT_MESSAGE" value="JSDoc" />
+    <MESSAGE value="addentity is now varargs" />
+    <option name="LAST_COMMIT_MESSAGE" value="addentity is now varargs" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />

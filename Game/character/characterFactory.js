@@ -25,17 +25,8 @@ export class CharacterFactory {
     })
 
 
-    constructor(characterName, assetManager) {
-        this.data = getCharacterData(characterName);
-
-        const path = "./assets/" + this.data.img;
-
-        console.log(path);
-
-        const img = assetManager.getAsset(path);
-        console.log(img);
-        this.spritesheet = new Spritesheet(img, this.data.numRow, this.data.numCol);
-
+    constructor() {
+        throw new Error("Cannot instantiate factory (anti-pattern)");
     }
 
     /**
