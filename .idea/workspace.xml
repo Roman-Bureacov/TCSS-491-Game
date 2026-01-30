@@ -4,9 +4,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="a08718b8-ac73-4cb8-b286-185a0b662aef" name="Changes" comment="reorganized file structure">
-      <change beforePath="$PROJECT_DIR$/Game/gameengine.js" beforeDir="false" afterPath="$PROJECT_DIR$/Game/engine/gameengine.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Game/main.js" beforeDir="false" afterPath="$PROJECT_DIR$/Game/main.js" afterDir="false" />
+    <list default="true" id="a08718b8-ac73-4cb8-b286-185a0b662aef" name="Changes" comment="moved game engine">
+      <change beforePath="$PROJECT_DIR$/Game/character/animation.js" beforeDir="false" afterPath="$PROJECT_DIR$/Game/character/animation.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Game/character/character.js" beforeDir="false" afterPath="$PROJECT_DIR$/Game/character/character.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Game/character/characterFactory.js" beforeDir="false" afterPath="$PROJECT_DIR$/Game/character/characterFactory.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Game/character/player.js" beforeDir="false" afterPath="$PROJECT_DIR$/Game/character/player.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -251,7 +253,15 @@
       <option name="project" value="LOCAL" />
       <updated>1769734912243</updated>
     </task>
-    <option name="localTasksCounter" value="16" />
+    <task id="LOCAL-00016" summary="moved game engine">
+      <option name="closed" value="true" />
+      <created>1769741989823</created>
+      <option name="number" value="00016" />
+      <option name="presentableId" value="LOCAL-00016" />
+      <option name="project" value="LOCAL" />
+      <updated>1769741989823</updated>
+    </task>
+    <option name="localTasksCounter" value="17" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -269,7 +279,8 @@
     <MESSAGE value="working fix of the asset manager becoming a static singleton and character factory adhering to the factory pattern" />
     <MESSAGE value="working revision of the character and its factory, moved index" />
     <MESSAGE value="reorganized file structure" />
-    <option name="LAST_COMMIT_MESSAGE" value="reorganized file structure" />
+    <MESSAGE value="moved game engine" />
+    <option name="LAST_COMMIT_MESSAGE" value="moved game engine" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />
