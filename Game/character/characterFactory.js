@@ -122,6 +122,26 @@ const compileAnimators = (character, properties) => {
 /// character classes
 
 /**
+ * collection of constants for characters to use in their animators
+ * @type {Object}
+ */
+const PlayerConstants = Object.freeze({
+    move: {
+        duration: 1
+    },
+    idle: {
+        duration: 1
+    },
+    attack: {
+        duration: 0.5,
+        callback : (player) => () => {
+            player.stateLock = false;
+            player.state = player.lastState;
+        }
+    },
+})
+
+/**
  * Creates the guy
  * @param {GameEngine} game the game engine
  * @param {Spritesheet} spritesheet the spritesheet
@@ -139,32 +159,32 @@ const makeGuy = (game, spritesheet, dimX, dimY) => {
             state: Player.states.MOVE,
             facing: Character.DIRECTION.RIGHT,
             frames: [[1, 0], [1, 1], [1, 2], [1, 3], [1, 4], [1, 5]],
-            duration: 1
+            duration: PlayerConstants.move.duration
         },
         {
             state: Player.states.MOVE,
             facing: Character.DIRECTION.LEFT,
             frames: [[1, 13], [1, 12], [1, 11], [1, 10], [1, 9], [1, 8]],
-            duration: 1
+            duration: PlayerConstants.move.duration
         },
         {
             state: Player.states.IDLE,
             facing: Character.DIRECTION.RIGHT,
             frames: [[0, 0]],
-            duration: 1
+            duration: PlayerConstants.idle.duration
         },
         {
             state: Player.states.IDLE,
             facing: Character.DIRECTION.LEFT,
             frames: [[0, 0]],
-            duration: 1,
+            duration: PlayerConstants.idle.duration,
             isReversed: true
         },
         {
             state: Player.states.ATTACK,
             facing: Character.DIRECTION.RIGHT,
             frames: [[2, 0], [2, 1], [2, 2], [2, 3], [2, 4], [2, 5], [2, 6]],
-            duration: 0.5,
+            duration: PlayerConstants.attack.duration,
             callback : (player) => () => {
                 player.stateLock = false;
                 player.state = player.lastState;
@@ -174,7 +194,7 @@ const makeGuy = (game, spritesheet, dimX, dimY) => {
             state: Player.states.ATTACK,
             facing: Character.DIRECTION.LEFT,
             frames: [[2, 0], [2, 1], [2, 2], [2, 3], [2, 4], [2, 5], [2, 6]],
-            duration: 0.5,
+            duration: PlayerConstants.attack.duration,
             isReversed: true,
             callback : (player) => () => {
                 player.stateLock = false;

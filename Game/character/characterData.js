@@ -1,4 +1,5 @@
 'use strict';
+/** @deprecated */
 const CHARACTER_DATA = {
     guy1: {
         img: "character/guy1/Guy.png",
@@ -65,6 +66,7 @@ const CHARACTER_DATA = {
     
 }
 
+/** @deprecated */
 export function getCharacterData(theCharacter) {
     return CHARACTER_DATA[theCharacter];
 }
