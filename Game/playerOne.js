@@ -10,6 +10,7 @@ import {characterFactory} from "./characterFactory.js";
 import {SoundFX} from "./soundFX.js";
 import {switchCharacters} from "./switchCharacters.js";
 
+
 export class PlayerOne extends Character {
     constructor(game, assetManager, characterName, startPosX, startPosY) {
         super(game, characterName);
@@ -145,6 +146,7 @@ export class PlayerOne extends Character {
             "stop right": () => this.stopMoving(Character.DIRECTION.RIGHT),
             "stop left": () => this.stopMoving(Character.DIRECTION.LEFT),
             "switch character": () => this.switchCharacter.switchCharacter(),
+            
         };
     }
 

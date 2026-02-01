@@ -97,7 +97,8 @@ const arena = arenas.arena1; //ARENA_SELECTOR.getArena()
 
 Object.values(getAllCharacterData()).forEach(character => {
     ASSET_MANAGER.queueDownload(character.img);
-})
+});
+
 
 ASSET_MANAGER.downloadAll(async () => {
     const canvas = document.getElementById("gameWorld");

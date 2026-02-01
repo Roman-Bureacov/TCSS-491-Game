@@ -14,9 +14,7 @@ export class characterFactory {
         Object.assign(this, {character: theCharacterName, assetManager});
         
         this.sprite = getCharacterData(theCharacterName);
-        if(!this.assetManager.getAsset(this.sprite.img)) {
-            this.assetManager.queueDownload(this.sprite.img);
-        }
+        
         if (!this.sprite) throw new Error(`Unknown character: ${theCharacterName}`);
         console.log("Creating spriteSheet");
 
