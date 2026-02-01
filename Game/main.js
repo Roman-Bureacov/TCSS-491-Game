@@ -1,4 +1,3 @@
-import {Matrix} from "../Matrix/Matrix.js";
 import {GameEngine} from "./gameengine.js"
 import {AssetManager} from "./assetmanager.js";
 import {ArenaFactory} from "./arenaFactory.js";
@@ -7,7 +6,7 @@ import {parseTxtToMap} from "./arenaFactory.js";
 import {TileMap} from "./arenaFactory.js";
 import {PlayerOne} from "./playerOne.js";
 import {PlayerTwo} from "./playerTwo.js";
-import {getCharacterData} from "./characterData.js";
+import {getAllCharacterData} from "./characterData.js";
 import {SoundFX} from "./soundFX.js";
 
 const gameEngine = new GameEngine();
@@ -96,12 +95,9 @@ const character2 = "guy2"; //CHARACTER_SELECTOR.getPlayerCharacter()[1] //player
 // The output of the arena object for the game.
 const arena = arenas.arena1; //ARENA_SELECTOR.getArena()
 
-const character1Img = getCharacterData(character1).img;
-const character2Img = getCharacterData(character2).img;
-
-// queue the image path for download.
-ASSET_MANAGER.queueDownload(character1Img);
-ASSET_MANAGER.queueDownload(character2Img);
+Object.values(getAllCharacterData()).forEach(character => {
+    ASSET_MANAGER.queueDownload(character.img);
+})
 
 ASSET_MANAGER.downloadAll(async () => {
     const canvas = document.getElementById("gameWorld");

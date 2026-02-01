@@ -8,12 +8,16 @@ import {KeyMapper} from "./keymapper.js";
 import {global} from "./main.js";
 import {characterFactory} from "./characterFactory.js";
 import {SoundFX} from "./soundFX.js";
+import {switchCharacters} from "./switchCharacters.js";
 
 export class PlayerOne extends Character {
     constructor(game, assetManager, characterName, startPosX, startPosY) {
         super(game, characterName);
 
+        this.assetManager = assetManager;
+
         this.character = new characterFactory(characterName, assetManager);
+        this.switchCharacter = new switchCharacters(this);
 
         this.position.x = startPosX;
         this.position.y = startPosY;
@@ -130,6 +134,8 @@ export class PlayerOne extends Character {
             [KeyMapper.getName("KeyS", true)]: "attack",
             [KeyMapper.getName("KeyD", false)]: "stop right",
             [KeyMapper.getName("KeyA", false)]: "stop left",
+            [KeyMapper.getName("Numpad1", true)]: "switch character",
+            [KeyMapper.getName("Digit1", true)]: "switch character",
         };
 
         this.keymapper.outputMap = {
@@ -138,6 +144,7 @@ export class PlayerOne extends Character {
             "attack": () => this.swing(),
             "stop right": () => this.stopMoving(Character.DIRECTION.RIGHT),
             "stop left": () => this.stopMoving(Character.DIRECTION.LEFT),
+            "switch character": () => this.switchCharacter.switchCharacter(),
         };
     }
 
@@ -216,5 +223,23 @@ export class PlayerOne extends Character {
 
 
     }
+
+    getCurrentCharacter() {
+        return this.character.getCharacter();
+    }
+
+    setNewCharacter(theNewCharacterData) {
+
+        this.character = new characterFactory(theNewCharacterData.name, this.assetManager, this.gameEngine);
+
+        this.spritesheet = this.character.getCharacterSpriteSheet();
+
+        this.setupAnimation();
+
+        this.currentAnimation = this.animations[this.animationName()];
+
+        console.log("Player One switched to:", this.character.getCharacter().name);
+    }
+
 
 }

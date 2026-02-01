@@ -8,6 +8,7 @@ import {KeyMapper} from "./keymapper.js";
 import {global} from "./main.js";
 import {characterFactory} from "./characterFactory.js";
 import {SoundFX} from "./soundFX.js";
+import {switchCharacters} from "./switchCharacters.js";
 
 export class PlayerTwo extends Character {
     constructor(game, assetManager, characterName, startPosX, startPosY) {
@@ -15,8 +16,14 @@ export class PlayerTwo extends Character {
         const character = new characterFactory(characterName, assetManager);
         this.position.x = startPosX;
         this.position.y = startPosY;
+
+
         this.character = new characterFactory(characterName, assetManager);
         this.spritesheet = character.getCharacterSpriteSheet();
+
+        this.assetManager = assetManager;
+
+        this.switchCharacter = new switchCharacters(this);
 
         this.states = Object.freeze({
             MOVE: "move ",
@@ -37,11 +44,11 @@ export class PlayerTwo extends Character {
 
         this.setupAnimation();
         this.setupKeymap();
-        this.sound = new SoundFX({masterVolume:0.8});
+        this.sound = new SoundFX({masterVolume: 0.8});
     }
 
     setupAnimation() {
-      const moveR = this.character.getCharacter().moveR;
+        const moveR = this.character.getCharacter().moveR;
         const moveL = this.character.getCharacter().moveL;
         const movePad = this.character.getCharacter().movePadY;
         const idleR = this.character.getCharacter().idleR;
@@ -53,14 +60,14 @@ export class PlayerTwo extends Character {
         const idleDur = this.character.getCharacter().idleDur;
         const attackDur = this.character.getCharacter().attackDur;
         const moveDur = this.character.getCharacter().moveDur;
-               const scale = this.character.getCharacter().scale;
+        const scale = this.character.getCharacter().scale;
         console.log(idlePad)
         this.animations = {
             [this.states.MOVE + Character.DIRECTION.RIGHT]: new Animator(
                 this.spritesheet,
                 movePad,
                 scale,
-                moveR, 
+                moveR,
                 moveDur),
             [this.states.MOVE + Character.DIRECTION.LEFT]: new Animator(
                 this.spritesheet,
@@ -123,6 +130,8 @@ export class PlayerTwo extends Character {
             [KeyMapper.getName("ArrowDown", true)]: "attack",
             [KeyMapper.getName("ArrowRight", false)]: "stop right",
             [KeyMapper.getName("ArrowLeft", false)]: "stop left",
+            [KeyMapper.getName("Numpad2", true)] : "switch character",
+            [KeyMapper.getName( "Digit2", true)] : "switch character",
         };
 
         this.keymapper.outputMap = {
@@ -131,6 +140,8 @@ export class PlayerTwo extends Character {
             "attack": () => this.swing(),
             "stop right": () => this.stopMoving(Character.DIRECTION.RIGHT),
             "stop left": () => this.stopMoving(Character.DIRECTION.LEFT),
+            "switch character": () => this.switchCharacter.switchCharacter(),
+
         };
     }
 
@@ -172,7 +183,7 @@ export class PlayerTwo extends Character {
     }
 
 
-   update() {
+    update() {
         super.update();
         this.acceleration.x = 0;
         this.acceleration.y = 0;
@@ -204,6 +215,26 @@ export class PlayerTwo extends Character {
             case this.states.ATTACK:
 
         }
+
+    }
+    
+    getCurrentCharacter() {
+        return this.character;
+    }
+
+    setNewCharacter(theNewCharacterData) {
+
+
+        this.character = new characterFactory(theNewCharacterData.name, this.assetManager);
+
+        this.spritesheet = this.character.getCharacterSpriteSheet();
+
+        this.setupAnimation();
+
+        this.currentAnimation = this.animations[this.animationName()];
+
+        console.log("Player Two switched to:", this.character.getCharacter().name);
+
 
     }
 

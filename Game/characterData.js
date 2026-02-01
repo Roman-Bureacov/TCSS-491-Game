@@ -2,6 +2,7 @@
 const CHARACTER_DATA = {
     guy1: {
         img: "./assets/character/guy1/Guy.png",
+        name: "guy1",
         numRow: 3,
         numCol: 14,
         moveR: [[1, 0], [1, 1], [1, 2], [1, 3], [1, 4], [1, 5]],
@@ -23,6 +24,7 @@ const CHARACTER_DATA = {
     
     guy2: {
         img: "./assets/character/guy2/Guy2.png",
+        name: "guy2",
         numRow: 3,
         numCol: 14,
         moveR: [[1, 0], [1, 1], [1, 2], [1, 3], [1, 4], [1, 5]],
@@ -44,6 +46,7 @@ const CHARACTER_DATA = {
     
     warriorWoman: {
         img: "./assets/character/warriorWoman/warriorWoman.png",
+        name: "warriorWoman",
         numRow: 5,
         numCol: 24,
         moveR: [[1,0],[1,1],[1,2],[1,3],[1,4],[1,5],[1,6],[1,7]],
@@ -67,4 +70,18 @@ const CHARACTER_DATA = {
 
 export function getCharacterData(theCharacter) {
     return CHARACTER_DATA[theCharacter];
+}
+
+export function getAllCharacterData() {
+    return CHARACTER_DATA;
+}
+
+export function switchCharacter(index) {
+   let characterMap = {
+       0 : getCharacterData("guy1"),
+       1 : getCharacterData("guy2"),
+       2: getCharacterData("warriorWoman"),
+   }
+
+   return characterMap[index];
 }
