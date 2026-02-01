@@ -1,50 +1,21 @@
 'use strict';
 
-import {Spritesheet} from "./character/animation.js";
+import {Spritesheet} from "../character/animation.js";
 
-import {Drawable} from "./engine/render/Render.js";
-import {StaticEntity} from "./character/entity.js";
+import {Drawable} from "../engine/render/Render.js";
+import {StaticEntity} from "../character/entity.js";
 
 
 /**
+ * Factory for building arenas
+ *
  * @author Kassie Whitney
+ * @author Roman Bureacov
  */
 export class ArenaFactory {
 
-    /**
-     * Constructs the arena factory object
-     *
-     * @param theTileSheet The tile asset sheet path
-     * @param arenaBackgroundPath The path to the arena background
-     * @param arenaName The name of the arena
-     * @param tileWidth The width of the tileSet
-     * @param tileHeight The height of the tileSet
-     * @param assetManager
-     * @param gameEngine
-     * @param canvasH
-     * @param canvasW
-     * @param backgroundPane
-     */
-
-    constructor(theTileSheet, arenaBackgroundPath, arenaName, tileWidth, tileHeight,
-                assetManager, gameEngine, canvasW, canvasH, backgroundPane) {
-
-        Object.assign(this, {
-            theTileSheet,
-            arenaName,
-            tileWidth,
-            tileHeight,
-            assetManager,
-            gameEngine,
-            canvasH,
-            canvasW,
-            backgroundPane
-        });
-
-        this.tileCols = canvasW / this.tileWidth;
-        this.tileRows = canvasH / this.tileHeight;
-
-        
+    constructor() {
+        throw new Error("Cannot instantiate factory (anti-pattern)");
     }
 
 

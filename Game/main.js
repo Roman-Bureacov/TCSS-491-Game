@@ -14,6 +14,8 @@ import {Spritesheet} from "./character/animation.js";
 import {Camera, Pane, Render, World} from "./engine/render/Render.js";
 import {CharacterFactory as CharacterFactory} from "./character/characterFactory.js";
 import {KeyMapper} from "./engine/keymapper.js";
+import {TileFactory} from "./arena/tileFactory.js";
+import {IndustrialTileFactory} from "./arena/tilesets/factoryTileSet.js";
 
 const gameEngine = new GameEngine(undefined, undefined);
 const CANVAS = document.querySelector('#gameWorld');
@@ -111,6 +113,7 @@ const arena = arenas.arena1; //ARENA_SELECTOR.getArena()
 // AssetManager.queueDownload(character1Img);
 AssetManager.queueDownload("character/guy1/Guy.png");
 // AssetManager.queueDownload(character2Img);
+AssetManager.queueDownload("tileset/Industrial_Tileset/1_Industrial_Tileset_1.png")
 AssetManager.queueDownload(arena.background);
 
 
@@ -141,14 +144,19 @@ AssetManager.downloadAll(async () => {
     // tileDrawable.position.y = 1000;
     // tileDrawable.setDimension(2210, 2465)
     // tileDrawable.updateStatic();
-    
-
 
     backgroundDrawable.setPosition(
         -backgroundDrawable.dimX() / 2,
         backgroundDrawable.dimY() /2,
         0
     );
+
+    let tile = TileFactory.makeTile(
+        TileFactory.setName.A, // pass in the tile set name
+        IndustrialTileFactory.name.A // pass in the tile name for the set
+    );
+    tile.setPosition(-1, 0, 0)
+    tilePane.addDrawable(tile)
 
     // playerOne.setPosition(0, 0);
 
