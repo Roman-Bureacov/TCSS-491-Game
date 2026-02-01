@@ -97,7 +97,7 @@ export const global = {
 
 
 // The output of the character name for each player.
-const character1 = "guy1"; //CHARACTER_SELECTOR.getPlayerCharacter()[0] //player 1 character
+const character1 = "warriorWoman"; //CHARACTER_SELECTOR.getPlayerCharacter()[0] //player 1 character
 const character2 = "guy2"; //CHARACTER_SELECTOR.getPlayerCharacter()[1] //player 2 character
 
 // The output of the arena object for the game.
@@ -124,8 +124,8 @@ ASSET_MANAGER.downloadAll(async () => {
     const tilePane = new Pane();
     const forePane = new Pane();
 
-    const playerOne = new PlayerOne(gameEngine, ASSET_MANAGER, character1, arena.playerOnePos[0], arena.playerOnePos[1]);
-    const playerTwo = new PlayerTwo(gameEngine, ASSET_MANAGER, character2, arena.playerTwoPos[0], arena.playerTwoPos[1]);
+    const playerOne = new PlayerOne(gameEngine, ASSET_MANAGER, character1, arena.playerOnePos[0], arena.playerOnePos[1], 2);
+    const playerTwo = new PlayerTwo(gameEngine, ASSET_MANAGER, character2, arena.playerTwoPos[0], arena.playerTwoPos[1], 1.5);
     const backgroundAsset = ASSET_MANAGER.getAsset("./assets/" + arena.background);
     const arenaTileMap = await setArenaAssets(arena, tilePane);
 
