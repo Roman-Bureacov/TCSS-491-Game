@@ -2,6 +2,7 @@
 
 import {Timer} from "./timer.js";
 import {Render} from "./render/Render.js";
+import {DynamicEntity} from "../character/entity.js";
 
 export class GameEngine {
 
@@ -117,8 +118,8 @@ export class GameEngine {
         this.ctx.canvas.addEventListener("keyup", event => acknowledge(event))
     };
 
-    addEntity(entity) {
-        this.entities.push(entity);
+    addEntity(...entity) {
+        entity.map(e => this.entities.push(e));
     };
 
     draw() {
@@ -142,7 +143,7 @@ export class GameEngine {
             let entity = this.entities[i];
 
             if (!entity.removeFromWorld) {
-                entity.update();
+                if (entity instanceof DynamicEntity) entity.update();
             }
         }
 

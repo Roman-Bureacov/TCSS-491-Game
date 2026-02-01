@@ -2,13 +2,14 @@
 This code manages animation.
  */
 
-import {Matrix} from "../Matrix/Matrix.js";
+import {Matrix} from "../../Matrix/Matrix.js";
 
 /**
  * @typedef Frame
  * @property {number} row the frame row in the spritesheet
  * @property {number} col the frame column in the spritesheet
  */
+
 export class Animator {
 
     /**
@@ -16,26 +17,26 @@ export class Animator {
      * @type {Frame}
      */
     currentFrame = {
-        row: 0,
-        col: 0,
+        row : 0,
+        col : 0,
     }
 
     /**
      * Creates an animator for handling animations
-     * @param spritesheet the spritesheet object
-     * @param yPadding
-     * @param scale
      * @param {Array<[Number, Number]>} frames the frames that this animator is responsible for, where
      * the first entry is the row and the second is the column in the spritesheet matrix; the frames should
      * be sorted from the start of the animation to the end of the animation
-     * @param duration the total duration of this animation
-     * @param [reversed = false] if the animation should reverse the individual frames
+     * @param {number} duration the total duration of this animation
+     * @param {boolean} [reversed=false] if the animation should reverse the individual frames
+     * @param {{ [key: Number]: Audio}} [soundMap=undefined] the map of zero-indexed frame numbers to their audio object
      * @param [isLooping=true] if the animation should loop
      * @param [callback=undefined] if the animation does not loop, this no-argument callback
      * is called once the animation has completed
      */
-    constructor(spritesheet, yPadding, scale, frames, duration, reversed = false, isLooping = false, callback = undefined) {
-        Object.assign(this, {spritesheet, yPadding, scale, frames, duration, reversed, isLooping, callback});
+    constructor(frames, duration, reversed = false,
+                soundMap = undefined,
+                isLooping = true, callback = undefined) {
+        Object.assign(this, { frames, duration, reversed, soundMap, isLooping, callback });
 
         this.lastFrame = -1;
 
@@ -45,32 +46,32 @@ export class Animator {
 
     /**
      * Tells this animator to update
+     * @param {number} timeStep the time step in seconds
      */
     update(timeStep) {
         this.elapsedTime += timeStep;
 
-        let frameNumber = Math.floor(this.elapsedTime / this.frameDelay);
-
-        if (frameNumber >= this.frames.length) {
+        if (this.elapsedTime >= this.duration) {
             if (this.isLooping) {
-                this.elapsedTime = 0;
-                frameNumber = 0;
+                this.reset();
             } else {
-                frameNumber = this.frames.length - 1;
                 this.callback?.();
-                console.log("Call back called.")
+                return;
             }
         }
 
+        let frameNumber = this.currentFrameNumber();
+
+        // if we're not trying to redraw the exact same frame, try playing sound
         if (this.lastFrame !== frameNumber) {
             this.lastFrame = frameNumber;
+            this.soundMap?.[frameNumber]?.play();
         }
 
         const frame = this.frames[frameNumber];
         this.currentFrame.row = frame[0];
         this.currentFrame.col = frame[1];
     }
-
 
     currentFrameNumber() {
         return Math.floor(this.elapsedTime / this.frameDelay);
@@ -83,23 +84,26 @@ export class Animator {
 }
 
 /**
- * Class that represents a spritesheet, indexing the frames with a definitive
- * row and column position object
+ * The object representing a spritesheet as an immutable matrix of frames.
+ *
+ * Entries stored are {x: number, y: number} indicating the position of the frame in pixels.
  *
  * @author Roman Bureacov
  */
 export class Spritesheet extends Matrix {
-    constructor(imagePath, rows, columns) {
+    constructor(image, rows, columns) {
         super(rows, columns);
-        Object.assign(this, {image: imagePath, rows, columns});
-        this.frameWidth = imagePath.width / columns;
-        this.frameHeight = imagePath.height / rows;
+        Object.assign(this, { image, rows, columns });
+
+        this.frameWidth = image.width / columns;
+        this.frameHeight = image.height / rows;
 
         for (let r = 0; r < rows; r++) {
             for (let c = 0; c < columns; c++) {
-                super.set(r, c, {x: c * this.frameWidth, y: r * this.frameHeight});
+                this.set(r, c, {x: c * this.frameWidth, y: r * this.frameHeight});
             }
         }
+
         this.matrix = Object.freeze(this.matrix);
     }
 }

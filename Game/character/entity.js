@@ -2,7 +2,7 @@
 Represents an entity, which is drawable on the renderer
  */
 
-import {Drawable} from "./render/Render.js";
+import {Drawable} from "../engine/render/Render.js";
 import {PhysicsEntity} from "./PhysicsEntity.js";
 
 /**
@@ -12,7 +12,7 @@ import {PhysicsEntity} from "./PhysicsEntity.js";
  *
  * @author Roman Bureacov
  */
-export class Entity extends Drawable {
+export class DynamicEntity extends Drawable {
 
     /**
      * Represents the physics for this entity
@@ -23,15 +23,26 @@ export class Entity extends Drawable {
     /**
      * Constructs a new drawable physics entity
      * @param {Spritesheet} spritesheet the spritesheet
-     * @param {number} startPosX The sprites starting x position
-     * @param {number} startPosY The sprites starting y position
      * @param {number} [dimX=1] the positive x dimension of this entity
      * @param {number} [dimY=1] the positive y dimension of this entity
+     * @param {number} [startX=0] The sprites starting x position
+     * @param {number} [startY=0] The sprites starting y position
      */
-    constructor(spritesheet,startPosX, startPosY, dimX = 1, dimY = 1) {
+    constructor(spritesheet, dimX = 1, dimY = 1, startX=0, startY=0) {
         super(spritesheet, dimX, dimY);
-        this.physics.position.x = startPosX;
-        this.physics.position.y = startPosY;
+        this.physics.position.x = startX;
+        this.physics.position.y = startY;
+    }
+
+    /**
+     * Sets the position for this space object
+     * @param {number} x the x position
+     * @param {number} y the y position
+     * @param {number} [z=0] the z position
+     */
+    setPosition(x, y, z=0) {
+        this.physics.position.x = x;
+        this.physics.position.y = y;
     }
 
     /**
@@ -41,8 +52,11 @@ export class Entity extends Drawable {
     updatePhysics(timestep) {
         this.physics.updatePhysics(timestep);
 
-        this.matrix.set(0, 3, this.physics.position.x);
-        this.matrix.set(1, 3, this.physics.position.y);
+        super.setPosition(
+            this.physics.position.x,
+            this.physics.position.y,
+            0
+        );
     }
 }
 
@@ -56,32 +70,16 @@ export class Entity extends Drawable {
 export class StaticEntity extends Drawable {
 
     /**
-     * the position of this static entity
-     * @type {{x: number, y: number}} the position
-     */
-    position = {
-        x: 0, y: 0
-    }
-
-    /**
      * Constructs a new drawable static entity
      * @param {Spritesheet} spritesheet the spritesheet
      * @param {number} [dimX=1] the positive x dimension of this entity
      * @param {number} [dimY=1] the positive y dimension of this entity
-     * @param {boolean} isArena
      */
     constructor(spritesheet, dimX = 1, dimY = 1) {
         super(spritesheet, dimX, dimY);
     }
 
-    /**
-     * Updates this static entity for the renderer
-     */
-    updateStatic() {
-        this.matrix.set(0,3, this.position.x);
-        this.matrix.set(1,3, this.position.y);
-    }
-    
+
     
 }
 

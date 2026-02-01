@@ -1,14 +1,25 @@
 import {Animator, Spritesheet} from "./animation.js";
-import {Entity} from "./entity.js";
+import {DynamicEntity} from "./entity.js";
 
-/** @typedef {import("./animation.js").Spritesheet} Spritesheet */
+
+/**
+ * The map of direction constants to their respective strings
+ * @readonly
+ * @enum {CharacterDirection}
+ */
+export const CharacterDirections = Object.freeze({
+    UP: "up ",
+    DOWN: "down ",
+    LEFT: "left ",
+    RIGHT: "right ",
+});
 
 /**
  * Creates a basic character
  *
  * @author Roman Bureacov
  */
-export class Character extends Entity {
+export class Character extends DynamicEntity {
 
     /**
      * The scale of this character in the X and Y
@@ -40,16 +51,7 @@ export class Character extends Entity {
      */
     stateLock = false;
 
-    /**
-     * The map of direction constants to their respective strings
-     * @type {Readonly<{UP: string, DOWN: string, LEFT: string, RIGHT: string}>}
-     */
-    static DIRECTION = Object.freeze({
-        UP: "up ",
-        DOWN: "down ",
-        LEFT: "left ",
-        RIGHT: "right ",
-    });
+    static DIRECTION = CharacterDirections;
 
     /**
      * The state of this character as per the states this character may exhibit.
@@ -70,11 +72,13 @@ export class Character extends Entity {
      * @param  {Spritesheet} spritesheet the character spritesheet
      * @param {number} [dimX=1] the positive x dimension of this entity
      * @param {number} [dimY=1] the positive y dimension of this entity
-     * @param startPosX
-     * @param startPosY
+     * @param {number} [startX=0] the start x position
+     * @param {number} [startY=0] the start y position
      */
-    constructor(game, spritesheet, dimX = 1, dimY = 1, startPosX, startPosY) {
-        super(spritesheet, startPosX ,startPosY,dimX, dimY);
+    constructor(game, spritesheet,
+                dimX = 1, dimY = 1,
+                startX = 0, startY = 0) {
+        super(spritesheet, dimX, dimY, startX, startY);
         Object.assign(this, {game});
 
     }
@@ -121,13 +125,22 @@ export class Character extends Entity {
     }
 
     /**
-     * Builds the animation name to retrieve
-     * @returns {string}
+     * Builds the current animation name to retrieve
+     * @returns {string} the animation name
      */
     animationName() {
         return this.state + this.facing;
     }
 
+    /**
+     * Builds a valid animation name
+     * @param {string} state the state
+     * @param {string} facing the facing
+     * @return {string} the animation name
+     */
+    static buildAnimationName(state, facing) {
+        return state + facing;
+    }
 
     /**
      * Sets the state of this character if there is no state lock

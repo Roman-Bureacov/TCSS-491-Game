@@ -1,9 +1,9 @@
 'use strict';
 
-import {Spritesheet} from "./animation.js";
+import {Spritesheet} from "./character/animation.js";
 
-import {Drawable} from "./render/Render.js";
-import {StaticEntity} from "./entity.js";
+import {Drawable} from "./engine/render/Render.js";
+import {StaticEntity} from "./character/entity.js";
 
 
 /**

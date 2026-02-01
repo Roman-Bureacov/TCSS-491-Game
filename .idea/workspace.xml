@@ -4,11 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="a08718b8-ac73-4cb8-b286-185a0b662aef" name="Changes" comment="merged camera with main, just need to refactor some arenaFactory.js to make each block a static entity object. Maybe draw directly on the tilepane instead of a canvas dom?">
-      <change beforePath="$PROJECT_DIR$/Game/main.js" beforeDir="false" afterPath="$PROJECT_DIR$/Game/main.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Game/playerOne.js" beforeDir="false" afterPath="$PROJECT_DIR$/Game/playerOne.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Game/playerTwo.js" beforeDir="false" afterPath="$PROJECT_DIR$/Game/playerTwo.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Game/soundFX.js" beforeDir="false" afterPath="$PROJECT_DIR$/Game/soundFX.js" afterDir="false" />
+    <list default="true" id="a08718b8-ac73-4cb8-b286-185a0b662aef" name="Changes" comment="made factory uninstantiable">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Game/character/characterData.js" beforeDir="false" afterPath="$PROJECT_DIR$/Game/character/characterData.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Game/character/characterFactory.js" beforeDir="false" afterPath="$PROJECT_DIR$/Game/character/characterFactory.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -38,7 +37,7 @@
   }
 }</component>
   <component name="GithubDefaultAccount">
-    <option name="defaultAccountId" value="7c31b2cc-9487-4d7d-9c64-5fe5c3dc777a" />
+    <option name="defaultAccountId" value="b86f5e3b-93fa-4145-9b68-e88eaf00b933" />
   </component>
   <component name="GithubPullRequestsUISettings">{
   &quot;selectedUrlAndAccountId&quot;: {
@@ -78,30 +77,31 @@
     &quot;git-widget-placeholder&quot;: &quot;Merge__Camera__With__Main&quot;,
     &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
     &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Users/Kassi/OneDrive/Computer/Documents/GitHub/TCSS-491-Game/Game/render&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/iwant/IdeaProjects/TCSS-491-Game&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
     &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
     &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
     &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
     &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
     &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;,
+    &quot;two.files.diff.last.used.file&quot;: &quot;C:/Users/iwant/IdeaProjects/TCSS-491-Game2/Game/character/animation.js&quot;,
     &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
 }</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\iwant\IdeaProjects\TCSS-491-Game" />
+      <recent name="C:\Users\iwant\IdeaProjects\TCSS-491-Game\Game" />
       <recent name="C:\Users\Kassi\OneDrive\Computer\Documents\GitHub\TCSS-491-Game\Game\render" />
       <recent name="C:\Users\Kassi\OneDrive\Computer\Documents\GitHub\TCSS-491-Game\Game" />
       <recent name="C:\Users\Kassi\OneDrive\Computer\Documents\GitHub\TCSS-491-Game\Game\assets\music" />
-      <recent name="C:\Users\Kassi\OneDrive\Computer\Documents\GitHub\TCSS-491-Game\Game\assets\character\warriorWoman" />
-      <recent name="C:\Users\Kassi\OneDrive\Computer\Documents\GitHub\TCSS-491-Game\Game\assets\soundFx" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\iwant\IdeaProjects\TCSS-491-Game\Game\engine" />
+      <recent name="C:\Users\iwant\IdeaProjects\TCSS-491-Game\Game\character" />
       <recent name="C:\Users\Kassi\OneDrive\Computer\Documents\GitHub\TCSS-491-Game\Game\render" />
       <recent name="C:\Users\Kassi\OneDrive\Computer\Documents\GitHub\TCSS-491-Game\Game" />
       <recent name="C:\Users\Kassi\OneDrive\Computer\Documents\GitHub\TCSS-491-Game\Game\assets\character\img" />
-      <recent name="C:\Users\Kassi\OneDrive\Computer\Documents\GitHub\TCSS-491-Game\Game\assets" />
-      <recent name="C:\Users\Kassi\OneDrive\Computer\Documents\GitHub\TCSS-491-Game\Game\assets\sprites" />
     </key>
   </component>
   <component name="SharedIndexes">
@@ -131,7 +131,6 @@
       <workItem from="1769654228887" duration="1776000" />
       <workItem from="1769658035515" duration="2248000" />
       <workItem from="1769661010414" duration="99000" />
-      <workItem from="1769706561567" duration="13000" />
     </task>
     <task id="LOCAL-00001" summary="Added a sample arena, background music, character sound fx, sword sound fx, background images">
       <option name="closed" value="true" />
@@ -229,11 +228,122 @@
       <option name="project" value="LOCAL" />
       <updated>1769671719410</updated>
     </task>
-    <option name="localTasksCounter" value="13" />
+    <task id="LOCAL-00013" summary="working fix of the asset manager becoming a static singleton and character factory adhering to the factory pattern">
+      <option name="closed" value="true" />
+      <created>1769692223311</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1769692223312</updated>
+    </task>
+    <task id="LOCAL-00014" summary="working revision of the character and its factory, moved index">
+      <option name="closed" value="true" />
+      <created>1769734722297</created>
+      <option name="number" value="00014" />
+      <option name="presentableId" value="LOCAL-00014" />
+      <option name="project" value="LOCAL" />
+      <updated>1769734722297</updated>
+    </task>
+    <task id="LOCAL-00015" summary="reorganized file structure">
+      <option name="closed" value="true" />
+      <created>1769734912243</created>
+      <option name="number" value="00015" />
+      <option name="presentableId" value="LOCAL-00015" />
+      <option name="project" value="LOCAL" />
+      <updated>1769734912243</updated>
+    </task>
+    <task id="LOCAL-00016" summary="moved game engine">
+      <option name="closed" value="true" />
+      <created>1769741989823</created>
+      <option name="number" value="00016" />
+      <option name="presentableId" value="LOCAL-00016" />
+      <option name="project" value="LOCAL" />
+      <updated>1769741989823</updated>
+    </task>
+    <task id="LOCAL-00017" summary="working character factory">
+      <option name="closed" value="true" />
+      <created>1769748896852</created>
+      <option name="number" value="00017" />
+      <option name="presentableId" value="LOCAL-00017" />
+      <option name="project" value="LOCAL" />
+      <updated>1769748896852</updated>
+    </task>
+    <task id="LOCAL-00018" summary="making push">
+      <option name="closed" value="true" />
+      <created>1769749010456</created>
+      <option name="number" value="00018" />
+      <option name="presentableId" value="LOCAL-00018" />
+      <option name="project" value="LOCAL" />
+      <updated>1769749010456</updated>
+    </task>
+    <task id="LOCAL-00019" summary="put player2 on the board as an example">
+      <option name="closed" value="true" />
+      <created>1769749369782</created>
+      <option name="number" value="00019" />
+      <option name="presentableId" value="LOCAL-00019" />
+      <option name="project" value="LOCAL" />
+      <updated>1769749369782</updated>
+    </task>
+    <task id="LOCAL-00020" summary="JSDoc">
+      <option name="closed" value="true" />
+      <created>1769751713011</created>
+      <option name="number" value="00020" />
+      <option name="presentableId" value="LOCAL-00020" />
+      <option name="project" value="LOCAL" />
+      <updated>1769751713011</updated>
+    </task>
+    <task id="LOCAL-00021" summary="JSDoc">
+      <option name="closed" value="true" />
+      <created>1769752660460</created>
+      <option name="number" value="00021" />
+      <option name="presentableId" value="LOCAL-00021" />
+      <option name="project" value="LOCAL" />
+      <updated>1769752660460</updated>
+    </task>
+    <task id="LOCAL-00022" summary="addentity is now varargs">
+      <option name="closed" value="true" />
+      <created>1769755061888</created>
+      <option name="number" value="00022" />
+      <option name="presentableId" value="LOCAL-00022" />
+      <option name="project" value="LOCAL" />
+      <updated>1769755061888</updated>
+    </task>
+    <task id="LOCAL-00023" summary="made factory uninstantiable">
+      <option name="closed" value="true" />
+      <created>1769755597632</created>
+      <option name="number" value="00023" />
+      <option name="presentableId" value="LOCAL-00023" />
+      <option name="project" value="LOCAL" />
+      <updated>1769755597632</updated>
+    </task>
+    <option name="localTasksCounter" value="24" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State>
+              <option name="FILTERS">
+                <map>
+                  <entry key="branch">
+                    <value>
+                      <list>
+                        <option value="Merge_Camera_With_Main" />
+                      </list>
+                    </value>
+                  </entry>
+                </map>
+              </option>
+            </State>
+          </value>
+        </entry>
+      </map>
+    </option>
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Added a sample arena, background music, character sound fx, sword sound fx, background images" />
@@ -244,7 +354,18 @@
     <MESSAGE value="added warrior woman animation character&#10;&#10;finished implementing a character factory&#10;&#10;created a global character object" />
     <MESSAGE value="Moved files to the main folder" />
     <MESSAGE value="merged camera with main, just need to refactor some arenaFactory.js to make each block a static entity object. Maybe draw directly on the tilepane instead of a canvas dom?" />
-    <option name="LAST_COMMIT_MESSAGE" value="merged camera with main, just need to refactor some arenaFactory.js to make each block a static entity object. Maybe draw directly on the tilepane instead of a canvas dom?" />
+    <MESSAGE value="working fix of the asset manager becoming a static singleton and character factory adhering to the factory pattern" />
+    <MESSAGE value="working revision of the character and its factory, moved index" />
+    <MESSAGE value="reorganized file structure" />
+    <MESSAGE value="moved game engine" />
+    <MESSAGE value="working character factory" />
+    <MESSAGE value="making push" />
+    <MESSAGE value="put player2 on the board" />
+    <MESSAGE value="put player2 on the board as an example" />
+    <MESSAGE value="JSDoc" />
+    <MESSAGE value="addentity is now varargs" />
+    <MESSAGE value="made factory uninstantiable" />
+    <option name="LAST_COMMIT_MESSAGE" value="made factory uninstantiable" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />

@@ -7,11 +7,11 @@ The system has renderable objects, `Drawable`s, which provide the means
 on where to draw themselves as well as.
  */
 
-import { Matrix, MatrixOp } from "../../Matrix/Matrix.js";
-/** @typedef {import("../animation.js").Spritesheet} Spritesheet */
+import { Matrix, MatrixOp } from "../../../Matrix/Matrix.js";
 
 /**
  * An object in space representing
+ * @author Roman Bureacov
  */
 class SpaceObject {
 
@@ -32,7 +32,41 @@ class SpaceObject {
     transform = (transformation) =>
         this.matrix = MatrixOp.multiply(this.matrix, transformation) ;
 
+    /**
+     * Sets the position for this space object in the world
+     * @param {number} x the x position
+     * @param {number} y the y position
+     * @param {number} z the z position
+     */
+    setPosition(x, y, z) {
+        this.matrix.set(0, 3, x);
+        this.matrix.set(1, 3, y);
+        this.matrix.set(2, 3, z);
+    }
 
+    /**
+     * Gets the X position of this space object in the world
+     * @returns {number}
+     */
+    posX() {
+        return this.matrix.get(0, 3);
+    }
+
+    /**
+     * Gets the Y position of this object in the world
+     * @returns {number}
+     */
+    posY() {
+        return this.matrix.get(1, 3);
+    }
+
+    /**
+     * Gets the Z position of this object in the world
+     * @returns {number}
+     */
+    posZ() {
+        return this.matrix.get(3, 3);
+    }
 }
 
 /**
@@ -44,7 +78,7 @@ class SpaceObject {
  *
  * @author Roman Bureacov
  */
-class Entity extends SpaceObject {
+class SpaceEntity extends SpaceObject {
 
     /**
      * A 4x1 column vector representing the scale of this space object.
@@ -60,13 +94,10 @@ class Entity extends SpaceObject {
      * @param {number} [dimY=1] the positive y dimension of this entity
      */
     constructor(dimX = 1, dimY = 1) {
-    super();
-
-    this.matrix.set(1, 1, -1); 
-
-    this.dimension.set(3, 0, 1); 
-    this.setDimension(dimX, dimY);
-
+        super();
+        this.matrix.set(1, 1, -1); // for drawing and scaling, invert Y
+        this.dimension.set(3, 0, 1); // homogenous coordinates
+        this.setDimension(dimX, dimY);
     }
 
     /**
@@ -77,8 +108,6 @@ class Entity extends SpaceObject {
     setDimension(dimX = 1, dimY = 1) {
         this.dimension.set(0, 0, dimX);
         this.dimension.set(1, 0, dimY);
-        this.dimension.set(2, 0, 0);  
-        this.dimension.set(3, 0, 1);
     }
 
     /**
@@ -88,6 +117,30 @@ class Entity extends SpaceObject {
      */
     setDimensionAspect(dimX, aspect) {
         this.setDimension(dimX, dimX * aspect);
+    }
+
+    /**
+     * The X dimension of this entity
+     * @returns {number} the X dimension
+     */
+    dimX() {
+        return this.dimension.get(0, 0);
+    }
+
+    /**
+     * The Y dimension of this entity
+     * @returns {number} the Y dimension
+     */
+    dimY() {
+        return this.dimension.get(1, 0);
+    }
+
+    /**
+     * The Z dimension of this entity
+     * @returns {number} the Z dimension
+     */
+    dimZ() {
+        return this.dimension.get(2, 0);
     }
 }
 
@@ -105,13 +158,13 @@ class Entity extends SpaceObject {
  *
  * @author Roman Bureacov
  */
-class Drawable extends Entity {
+class Drawable extends SpaceEntity {
 
     /**
      * The spritesheet representing this drawable object.
      * @type {Spritesheet}
      */
-    character;
+    spritesheet;
 
     /**
      * The drawing properties of this drawable object used for rendering.
@@ -131,7 +184,7 @@ class Drawable extends Entity {
      * @param {number} [dimX=1] the positive x dimension of this entity
      * @param {number} [dimY=1] the positive y dimension of this entity
      */
-    constructor(spritesheet, dimX = 32, dimY = 32) {
+    constructor(spritesheet, dimX = 1, dimY = 1) {
         super(dimX, dimY);
         Object.assign(this, { spritesheet });
         this.drawingProperties.spritesheet = spritesheet;
@@ -148,7 +201,7 @@ class Pane extends SpaceObject {
 
     /**
      * The list of drawable entities in this world
-     * @type {[Drawable]}
+     * @type {Drawable[]}
      */
     drawables = []
 
@@ -411,8 +464,8 @@ class Render {
                 let width = endpoint.get(0, 0) - x;
                 let height = endpoint.get(1, 0) - y;
 
-                let p = drawable.drawingProperties;
-                let position = p.spritesheet.get(p.row, p.col);
+                let prop = drawable.drawingProperties;
+                let position = prop.spritesheet.get(prop.row, prop.col);
 
                 if (drawable.drawingProperties.isReversed) {
                     context.save();
@@ -420,9 +473,9 @@ class Render {
                     context.scale(-1, 1);
 
                     context.drawImage(
-                        p.spritesheet.image,
+                        prop.spritesheet.image,
                         position.x, position.y,
-                        p.spritesheet.frameWidth, p.spritesheet.frameHeight,
+                        prop.spritesheet.frameWidth, prop.spritesheet.frameHeight,
                         -x - width, y,
                         width, height
                     );
@@ -430,9 +483,9 @@ class Render {
                     context.restore();
                 } else {
                     context.drawImage(
-                        p.spritesheet.image,
+                        prop.spritesheet.image,
                         position.x, position.y,
-                        p.spritesheet.frameWidth, p.spritesheet.frameHeight,
+                        prop.spritesheet.frameWidth, prop.spritesheet.frameHeight,
                         x, y,
                         width, height
                     );
@@ -521,7 +574,7 @@ class Render {
 class World {
     /**
      * The list of panes in the viewable world
-     * @type {[Pane]}
+     * @type {Pane[]}
      */
     panes = []
 
@@ -542,4 +595,4 @@ class World {
 
 }
 
-export { Pane, Camera, Render, World, Drawable, Entity }
+export { Pane, Camera, Render, World, Drawable, SpaceEntity }

@@ -2,17 +2,20 @@
 A concrete implementation of the character class
  */
 
-import {Character} from "./character.js"
-import {Animator, Spritesheet} from "./animation.js";
-import {KeyMapper} from "./keymapper.js";
+import {Character} from "./character/character.js"
+import {Animator, Spritesheet} from "./character/animation.js";
+import {KeyMapper} from "./engine/keymapper.js";
 import {global} from "./main.js";
-import {characterFactory} from "./characterFactory.js";
-import {SoundFX} from "./soundFX.js";
+import {CharacterFactory} from "./character/characterFactory.js";
+import {SoundFX} from "./engine/soundFX.js";
 
+/**
+ * @deprecated
+ */
 export class PlayerOne extends Character {
     constructor(game, assetManager, characterName, startPosX, startPosY, scale = 1) {
 
-        const character = new characterFactory(characterName, assetManager);
+        const character = new CharacterFactory(characterName, assetManager);
         const sprite = character.getCharacterSpriteSheet();
         super(game, sprite, 400 * scale,800 * scale , startPosX, startPosY);
 
