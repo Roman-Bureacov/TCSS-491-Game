@@ -13,6 +13,7 @@ export class AssetManager {
         this.errorCount = 0;
         this.imageCache = [];
         this.audioCache = [];
+        this.textCache = [];
         this.downloadQueue = [];
     }
 
@@ -39,11 +40,11 @@ export class AssetManager {
     };
 
     /**
-     * Downloads the assets queues
+     * Downloads the assets queued
      * @param callback the callback to fire when finished
      */
     static downloadAll(callback) {
-        if (this.downloadQueue.length === 0) setTimeout(callback, 10);
+        // if (this.downloadQueue.length === 0) setTimeout(callback, 10);
 
         Promise.all(
             this.downloadQueue.map(paths => new Promise((res, rej) => {
@@ -82,6 +83,19 @@ export class AssetManager {
                         file.onloadeddata = successMsg;
                         file.onerror = failMsg;
                         this.audioCache[relativePath] = file;
+                        break;
+                    case "txt":
+                        fetch(absolutePath)
+                            .then(resp => resp.text())
+                            .then(text => {
+                                this.successCount++;
+                                this.textCache[relativePath] = text;
+                                res(text);
+                            })
+                            .catch(err => {
+                                this.errorCount++;
+                                rej(err);
+                            })
                         break;
                     default:
                         rej("Unknown file extension: " + ext);
