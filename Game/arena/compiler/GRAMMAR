@@ -1,0 +1,22 @@
+// the grammar depicting the language of the arena text files
+
+root ::= specifiers arena
+
+specifiers ::= setSpecifier dimensionSpecifier
+
+setSpecifier ::= SET COLN TEXT
+
+dimensionSpecifier ::= DIMENSION COLN
+    PIPE originSpecifier
+    PIPE matrixSpecifier
+    PIPE worldSpecifier
+
+originSpecifier ::= ORIGIN COLN [MINS] NUMBER
+
+matrixSpecifier ::= MATRIX COLN NUMBER ROWS BY NUMBER COLS
+
+worldSpecifier ::= SIZE COLN NUMBER BY NUMBER
+
+arena ::= ARENA COLN arenaSymbol { arenaSymbol } END
+
+arenaSymbol ::= LETTER | PERIOD

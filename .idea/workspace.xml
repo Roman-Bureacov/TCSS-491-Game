@@ -4,10 +4,18 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="a08718b8-ac73-4cb8-b286-185a0b662aef" name="Changes" comment="working implementation of a tile factory">
+    <list default="true" id="a08718b8-ac73-4cb8-b286-185a0b662aef" name="Changes" comment="extended asset manager to accept text">
+      <change afterPath="$PROJECT_DIR$/Game/arena/compiler/GRAMMAR" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Game/arena/compiler/SYMBOLS" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Game/arena/compiler/Token.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Game/arena/compiler/arenaParser.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Game/arena/compiler/arenaScanner.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Game/assets/arena/basic.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Game/arena/arenaFactory.js" beforeDir="false" afterPath="$PROJECT_DIR$/Game/arena/arenaFactory.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Game/arena/tileFactory.js" beforeDir="false" afterPath="$PROJECT_DIR$/Game/arena/tileFactory.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Game/arena/tilesets/factoryTileSet.js" beforeDir="false" afterPath="$PROJECT_DIR$/Game/arena/tilesets/industrialTileSet.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Game/arena/tilesets/industrialTileSet.js" beforeDir="false" afterPath="$PROJECT_DIR$/Game/arena/tilesets/industrialTileSet.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Game/assets/assetmanager.js" beforeDir="false" afterPath="$PROJECT_DIR$/Game/assets/assetmanager.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Game/main.js" beforeDir="false" afterPath="$PROJECT_DIR$/Game/main.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -104,11 +112,11 @@
       <recent name="C:\Users\Kassi\OneDrive\Computer\Documents\GitHub\TCSS-491-Game\Game\assets\music" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\iwant\IdeaProjects\TCSS-491-Game\Game\arena\compiler" />
       <recent name="C:\Users\iwant\IdeaProjects\TCSS-491-Game\Game\arena" />
       <recent name="C:\Users\iwant\IdeaProjects\TCSS-491-Game\Game\engine" />
       <recent name="C:\Users\iwant\IdeaProjects\TCSS-491-Game\Game\character" />
       <recent name="C:\Users\Kassi\OneDrive\Computer\Documents\GitHub\TCSS-491-Game\Game\render" />
-      <recent name="C:\Users\Kassi\OneDrive\Computer\Documents\GitHub\TCSS-491-Game\Game" />
     </key>
   </component>
   <component name="RunManager">
@@ -353,7 +361,23 @@
       <option name="project" value="LOCAL" />
       <updated>1769925701218</updated>
     </task>
-    <option name="localTasksCounter" value="26" />
+    <task id="LOCAL-00026" summary="fleshed out industrialTileSet.js">
+      <option name="closed" value="true" />
+      <created>1770102305991</created>
+      <option name="number" value="00026" />
+      <option name="presentableId" value="LOCAL-00026" />
+      <option name="project" value="LOCAL" />
+      <updated>1770102305991</updated>
+    </task>
+    <task id="LOCAL-00027" summary="extended asset manager to accept text">
+      <option name="closed" value="true" />
+      <created>1770104810842</created>
+      <option name="number" value="00027" />
+      <option name="presentableId" value="LOCAL-00027" />
+      <option name="project" value="LOCAL" />
+      <updated>1770104810842</updated>
+    </task>
+    <option name="localTasksCounter" value="28" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -404,7 +428,9 @@
     <MESSAGE value="made factory uninstantiable" />
     <MESSAGE value="pushed some constants out into a separate object in factory" />
     <MESSAGE value="working implementation of a tile factory" />
-    <option name="LAST_COMMIT_MESSAGE" value="working implementation of a tile factory" />
+    <MESSAGE value="fleshed out industrialTileSet.js" />
+    <MESSAGE value="extended asset manager to accept text" />
+    <option name="LAST_COMMIT_MESSAGE" value="extended asset manager to accept text" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />

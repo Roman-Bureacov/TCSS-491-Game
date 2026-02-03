@@ -148,5 +148,14 @@ export class AssetManager {
     static getAudio(path) {
         return this.audioCache[AssetManager.#root + path];
     };
+
+    /**
+     * Gets the text from this manager
+     * @param path the relative path to the file from the asset folder
+     * @returns {string}
+     */
+    static getText(path) {
+        return this.textCache[path];
+    }
 }
 

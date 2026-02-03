@@ -21,7 +21,7 @@ export class TileFactory {
      * @enum {string}
      */
     static setName = Object.freeze( {
-        A : "tileA"
+        INDUSTRIAL : "industrial"
     })
 
     constructor() {
@@ -36,8 +36,28 @@ export class TileFactory {
      */
     static makeTile(setName, tileName) {
         switch (setName) {
-            case TileFactory.setName.A:
+            case TileFactory.setName.INDUSTRIAL:
                 return IndustrialTileFactory.makeTile(tileName);
         }
     }
 }
+
+/**
+ * standardizes the names by mapping a capital alphabetic
+ * character to each name
+ * @param {Object} names the names
+ * @return {Readonly<Object>} the standardized names
+ */
+export const standardizeNames = (names) => {
+    let characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    let index = 0;
+    let standardized = {};
+
+    for (let name in names) {
+        standardized[characters.charAt(index++)] = names[name];
+        if (index >= characters.length) break;
+    }
+
+    return Object.freeze(standardized);
+}
+
