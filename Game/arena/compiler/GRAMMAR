@@ -17,6 +17,6 @@ matrixSpecifier ::= MATRIX COLN NUMBER ROWS BY NUMBER COLS
 
 worldSpecifier ::= SIZE COLN NUMBER BY NUMBER
 
-arena ::= ARENA COLN arenaSymbol { arenaSymbol } END
+arena ::= ARENA COLN { arenaSymbol } END
 
 arenaSymbol ::= LETTER | PERIOD
