@@ -15,7 +15,7 @@ import {Camera, Pane, Render, World} from "./engine/render/Render.js";
 import {CharacterFactory as CharacterFactory} from "./character/characterFactory.js";
 import {KeyMapper} from "./engine/keymapper.js";
 import {TileFactory} from "./arena/tileFactory.js";
-import {IndustrialTileFactory} from "./arena/tilesets/factoryTileSet.js";
+import {IndustrialTileFactory} from "./arena/tilesets/industrialTileSet.js";
 
 const gameEngine = new GameEngine(undefined, undefined);
 const CANVAS = document.querySelector('#gameWorld');
@@ -153,10 +153,17 @@ AssetManager.downloadAll(async () => {
 
     let tile = TileFactory.makeTile(
         TileFactory.setName.A, // pass in the tile set name
-        IndustrialTileFactory.name.A // pass in the tile name for the set
+        IndustrialTileFactory.name.PLAT_LEFT // pass in the tile name for the set
     );
     tile.setPosition(-1, 0, 0)
     tilePane.addDrawable(tile)
+
+    let tile2 = TileFactory.makeTile(
+        TileFactory.setName.A, // pass in the tile set name
+        IndustrialTileFactory.name.COL_TOP // pass in the tile name for the set
+    );
+    tile2.setPosition(1, 0, 0)
+    tilePane.addDrawable(tile2)
 
     // playerOne.setPosition(0, 0);
 

@@ -6,7 +6,7 @@ this file has code for creating tiles
 import {StaticEntity} from "../character/entity.js";
 import {AssetManager} from "../assets/assetmanager.js";
 import {Spritesheet} from "../character/animation.js";
-import {IndustrialTileFactory} from "./tilesets/factoryTileSet.js";
+import {IndustrialTileFactory} from "./tilesets/industrialTileSet.js";
 
 /**
  * A static factory class that makes static tile objects.
