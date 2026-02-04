@@ -61,3 +61,23 @@ export const standardizeNames = (names) => {
     return Object.freeze(standardized);
 }
 
+/**
+ * creates a map of a tile alphabet to matrix row column
+ * @param rows the number of rows to consider
+ * @param columns the number of columns to consider
+ * @return {Object} the mapping of an alphabet to a 2-element list [row: number, column: number]
+ */
+export const alphabetize = (rows, columns) => {
+    const tileAlphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    let index = 0;
+
+    let map = {}
+
+    for (let r = 0; r < rows; r++) {
+        for (let c = 0; c < columns; c++) {
+            map[tileAlphabet.charAt(index++)] = [r, c];
+        }
+    }
+
+    return map;
+}

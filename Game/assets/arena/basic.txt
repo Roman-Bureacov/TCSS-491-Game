@@ -6,7 +6,7 @@ dimension:
 arena:
 ..........
 ..........
-.AA....AA.
+.AC....AC.
 ..........
-.BBBBBBBB.
+.ABBBBBBC.
 end
