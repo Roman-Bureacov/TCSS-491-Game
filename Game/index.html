@@ -1,18 +1,29 @@
-﻿
-<!DOCTYPE html>
-<html lang="EN">
+﻿<!DOCTYPE html>
+<html lang="en">
 <head>
     <meta charset="utf-8">
     <title>Game Project Title Goes Here</title>
-    <script type="text/javascript" src="./assetmanager.js"></script>
-    <script type="text/javascript" src="./arenaFactory.js"></script>
-    <script type="text/javascript" src="./backgroundFactory.js"></script>
-    <script type="text/javascript" src="./timer.js"></script>
-    <script type="text/javascript" src="./gameengine.js"></script>
-    <script type="text/javascript" src="./util.js"></script>
-    <script type="text/javascript" src="./main.js"></script>
+    <link href="style.css" rel="stylesheet"/>
+
 </head>
 <body>
-    <canvas id="gameWorld" width="1024" height="768" style="background: white; border: 1px solid black" tabindex="0" autofocus></canvas>
+
+<div id="gameWrap">
+  <canvas id="gameWorld" width="1024" height="768"
+          style="background: white; border: 1px solid black"
+          tabindex="0" autofocus></canvas>
+
+  <div class="instruction-labels">
+    <label class="instruction">
+      [Press 1 to switch player 1 character.] [Press 2 to switch player 2 character.]
+    </label>
+  </div>
+</div>
+
+
+
+
+<!-- one entrypoint -->
+<script type="module" src="./main.js"></script>
 </body>
 </html>
