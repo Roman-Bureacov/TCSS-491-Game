@@ -20,7 +20,7 @@ const identity = (dimension) => {
  *
  * @param L the left matrix
  * @param R the right matrix
- * @return undefined if the multiplication is impossible, resulting matrix otherwise.
+ * @return {Matrix | undefined} undefined if the multiplication is impossible, resulting matrix otherwise.
  */
 const multiply = (L, R) => {
     if (L.columns !== R.rows) return undefined;
