@@ -43,8 +43,8 @@ export class IndustrialTileFactory {
 
         let tile = new StaticEntity(IndustrialTileFactory.#spritesheet)
         let frame = this.tileNames[name];
-        tile.drawingProperties.row = frame[0];
-        tile.drawingProperties.col = frame[1];
+        tile.drawingProperties.spriteRow = frame[0];
+        tile.drawingProperties.spriteCol = frame[1];
 
         return tile;
     }

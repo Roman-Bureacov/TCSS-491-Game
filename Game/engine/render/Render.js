@@ -8,6 +8,8 @@ on where to draw themselves as well as.
  */
 
 import { Matrix, MatrixOp } from "../../../Matrix/Matrix.js";
+import {Rectangle2D} from "../primitives.js";
+import { DrawingProperties } from "./drawing.js";
 
 /**
  * An object in space representing
@@ -95,7 +97,6 @@ class SpaceEntity extends SpaceObject {
      */
     constructor(dimX = 1, dimY = 1) {
         super();
-        this.matrix.set(1, 1, -1); // for drawing and scaling, invert Y
         this.dimension.set(3, 0, 1); // homogenous coordinates
         this.setDimension(dimX, dimY);
     }
@@ -144,15 +145,6 @@ class SpaceEntity extends SpaceObject {
     }
 }
 
-
-/**
- * @typedef {Object} DrawingProperties
- * @property {Spritesheet} spritesheet the spritesheet representing the drawable object
- * @property {number} row the row in the spritesheet to look at
- * @property {number} col the column in the spritesheet to look at
- * @property {boolean} isReversed if the drawing should be in reverse
- */
-
 /**
  * A drawable object for the renderer to draw.
  *
@@ -171,12 +163,7 @@ class Drawable extends SpaceEntity {
      *
      * @type {DrawingProperties}
      */
-    drawingProperties = {
-        spritesheet : undefined,
-        row: 0,
-        col: 0,
-        isReversed: false,
-    }
+    drawingProperties;
 
     /**
      * Creates a new drawable
@@ -187,7 +174,9 @@ class Drawable extends SpaceEntity {
     constructor(spritesheet, dimX = 1, dimY = 1) {
         super(dimX, dimY);
         Object.assign(this, { spritesheet });
-        this.drawingProperties.spritesheet = spritesheet;
+        this.drawingProperties = new DrawingProperties(
+            spritesheet,
+            new Rectangle2D(0, 0, dimX, dimY))
     }
 
 }
@@ -431,22 +420,22 @@ class Render {
             let paneToCamera = MatrixOp.multiply(worldToCamera, pane.matrix);
             
             for (let drawable of pane.drawables) {
-                let entityMatrix = MatrixOp.multiply(paneToCamera, drawable.matrix);
+                let entityToCamera = MatrixOp.multiply(paneToCamera, drawable.matrix);
 
-                // if on or behind camera...
-                if (entityMatrix.get(2, 3) >= 0) continue;
+                // if on or behind camera... (z-check)
+                if (entityToCamera.get(2, 3) >= 0) continue;
 
-                let endpoint = MatrixOp.multiply(entityMatrix, drawable.dimension);
+                let startpoint = MatrixOp.multiply(entityToCamera, drawable.drawingProperties.bounds.start);
+                let endpoint = MatrixOp.multiply(entityToCamera, drawable.drawingProperties.bounds.end);
 
-                // position is given by C1 and C2 in the entity's matrix, ignore C3
-                Render.#toRasterMatrix(entityMatrix, this.camera);
-                Render.#toRasterPoint(endpoint, this.camera);
+                Render.#toRasterCoordinates(startpoint, this.camera); // now working with matrices
+                Render.#toRasterCoordinates(endpoint, this.camera); // now working with matrices
 
                 // is the entity x y minimum in bounds?
                 let img = this.camera.image;
                 if (
-                    img.width < entityMatrix.get(0, 3)
-                    || img.height < entityMatrix.get(1, 3)
+                    img.width < startpoint.get(0, 0)
+                    || img.height < startpoint.get(1, 0)
                 ) continue;
 
                 // is the entity x y maximum in bounds?
@@ -459,13 +448,13 @@ class Render {
                 // even if it were reversed, it would be testing the same dimensions
                 // at the same point
 
-                let x = entityMatrix.get(0, 3);
-                let y = entityMatrix.get(1, 3);
+                let x = startpoint.get(0, 0);
+                let y = startpoint.get(1, 0);
                 let width = endpoint.get(0, 0) - x;
                 let height = endpoint.get(1, 0) - y;
 
                 let prop = drawable.drawingProperties;
-                let position = prop.spritesheet.get(prop.row, prop.col);
+                let position = prop.spritesheet.get(prop.spriteRow, prop.spriteCol);
 
                 if (drawable.drawingProperties.isReversed) {
                     context.save();
@@ -500,14 +489,13 @@ class Render {
      * @param {Matrix} matrix the column vector
      * @param {Camera} camera the camera that views the point
      */
-    static #toRasterPoint(matrix, camera) {
-                                        // perspective divide with z near plane = 1
+    static #toRasterCoordinates(matrix, camera) {
+        // perspective divide with z near plane = 1
         let z = matrix.get(2, 0);
 
         matrix.set(0, 0, matrix.get(0, 0) / -z);
         matrix.set(1, 0, matrix.get(1, 0) / -z);
 
-                                
         // convert to NDC
         let c = camera.getCanvas();
 
@@ -522,47 +510,6 @@ class Render {
         let rasterY = (1 - NDCY) * camera.image.height; // Y axis in reverse
         matrix.set(0, 0, rasterX);
         matrix.set(1, 0, rasterY);
-    }
-
-    /**
-     * Converts the matrix from camera space into raster space.
-     *
-     * In addition, sets the perspective division in the X1 and Y2 positions
-     *
-     * @param {Matrix} matrix the matrix representing something in camera space
-     * @param {Camera} camera the camera that views what the matrix represents
-     */
-    static #toRasterMatrix = (matrix, camera) => {
-
-        // convert to screen space, perspective divide
-        let z = matrix.get(2, 3);
-
-        // near plane = 1
-        matrix.set(0, 3, matrix.get(0, 3) / -z);
-        matrix.set(1, 3, matrix.get(1, 3) / -z);
-
-        // now in screen space, we can ignore the Z-coordinate
-
-        // convert into NDC
-        // normally this would map to [-1, 1], such as below:
-        // x = 2 * screen.x / ( r - l) - ( r + l ) / ( r - l )
-        // y = 2 * screen.y / ( t - b) - ( t + b ) / ( t - b )
-        // but we aren't a GPU, so we can take some liberty and normalize the coordinates to [0, 1]:
-        // x = (x - l) / (r - l)
-        // y = (y - b) / (t - b)
-        let c = camera.getCanvas();
-
-        let x = matrix.get(0, 3)
-        let NDCX = (x - c.left) / (c.right - c.left);
-
-        let y = matrix.get(1, 3)
-        let NDCY = (y - c.bottom) / (c.top - c.bottom);
-
-        // convert into raster space
-        let rasterX = NDCX * camera.image.width;
-        let rasterY = (1 - NDCY) * camera.image.height; // Y axis in reverse
-        matrix.set(0, 3, rasterX);
-        matrix.set(1, 3, rasterY);
     }
 }
 

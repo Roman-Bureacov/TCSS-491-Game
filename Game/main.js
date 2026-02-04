@@ -142,16 +142,15 @@ AssetManager.downloadAll(async () => {
 
     // const tileDrawable = new TileMapDrawable(arenaTileMap, global.CANVAS_W, global.CANVAS_H);
     const backgroundDrawable = new StaticEntity(new Spritesheet(backgroundAsset, 1, 1));
-    backgroundDrawable.setDimensionAspect(20, 2250/2975)
+    backgroundDrawable.drawingProperties.bounds.setDimensionAspect(20, 2250/2975)
     // tileDrawable.position.x = -1105;
     // tileDrawable.position.y = 1000;
     // tileDrawable.setDimension(2210, 2465)
     // tileDrawable.updateStatic();
 
-    backgroundDrawable.setPosition(
-        -backgroundDrawable.dimX() / 2,
-        backgroundDrawable.dimY() /2,
-        0
+    backgroundDrawable.drawingProperties.bounds.setStart(
+        -backgroundDrawable.drawingProperties.bounds.dimension.width / 2,
+        backgroundDrawable.drawingProperties.bounds.dimension.height /2,
     );
 
     // let tile = TileFactory.makeTile(

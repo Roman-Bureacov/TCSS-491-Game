@@ -4,8 +4,13 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="a08718b8-ac73-4cb8-b286-185a0b662aef" name="Changes" comment="moved over to using standardized names for tiles">
-      <change beforePath="$PROJECT_DIR$/Game/character/characterFactory.js" beforeDir="false" afterPath="$PROJECT_DIR$/Game/character/characterFactory.js" afterDir="false" />
+    <list default="true" id="a08718b8-ac73-4cb8-b286-185a0b662aef" name="Changes" comment="character factory cleanup">
+      <change afterPath="$PROJECT_DIR$/Game/engine/primitives.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Game/engine/render/drawing.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Game/arena/tilesets/industrialTileSet.js" beforeDir="false" afterPath="$PROJECT_DIR$/Game/arena/tilesets/industrialTileSet.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Game/character/character.js" beforeDir="false" afterPath="$PROJECT_DIR$/Game/character/character.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Game/engine/render/Render.js" beforeDir="false" afterPath="$PROJECT_DIR$/Game/engine/render/Render.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Game/main.js" beforeDir="false" afterPath="$PROJECT_DIR$/Game/main.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -70,6 +75,7 @@
     "Java Scratch.scratch_6.executor": "Run",
     "Node.js.arenaFactory.js.executor": "Run",
     "Node.js.main.js.executor": "Run",
+    "Node.js.scratch_7.js.executor": "Run",
     "RunOnceActivity.git.unshallow": "true",
     "RunOnceActivity.typescript.service.memoryLimit.init": "true",
     "disable.download.node.interpreter.editor.notification": "true",
@@ -88,6 +94,7 @@
   },
   "keyToStringList": {
     "com.intellij.ide.scratch.ScratchImplUtil$2/New Scratch File": [
+      "JavaScript",
       "JAVA"
     ]
   }
@@ -108,7 +115,7 @@
       <recent name="C:\Users\Kassi\OneDrive\Computer\Documents\GitHub\TCSS-491-Game\Game\render" />
     </key>
   </component>
-  <component name="RunManager">
+  <component name="RunManager" selected="Node.js.scratch_7.js">
     <configuration name="scratch_6" type="Java Scratch" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="scratch_6" />
       <option name="SCRATCH_FILE_URL" value="file://$APPLICATION_CONFIG_DIR$/scratches/scratch_6.java" />
@@ -116,8 +123,12 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
+    <configuration name="scratch_7.js" type="NodeJSConfigurationType" temporary="true" nameIsGenerated="true" path-to-js-file="$APPLICATION_CONFIG_DIR$/scratches/scratch_7.js" working-dir="$PROJECT_DIR$">
+      <method v="2" />
+    </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Node.js.scratch_7.js" />
         <item itemvalue="Java Scratch.scratch_6" />
       </list>
     </recent_temporary>
@@ -390,7 +401,15 @@
       <option name="project" value="LOCAL" />
       <updated>1770172133844</updated>
     </task>
-    <option name="localTasksCounter" value="31" />
+    <task id="LOCAL-00031" summary="character factory cleanup">
+      <option name="closed" value="true" />
+      <created>1770173760626</created>
+      <option name="number" value="00031" />
+      <option name="presentableId" value="LOCAL-00031" />
+      <option name="project" value="LOCAL" />
+      <updated>1770173760626</updated>
+    </task>
+    <option name="localTasksCounter" value="32" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -420,7 +439,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="merged the arena builder" />
     <MESSAGE value="made building the arena much more modular and less verbose. Is able to implement the setArenasAsset in a more modular sense." />
     <MESSAGE value="awesome guy spawned in to save the day!" />
     <MESSAGE value="added second arena" />
@@ -445,7 +463,8 @@
     <MESSAGE value="made a proper arena builder that builds by text" />
     <MESSAGE value="documentation" />
     <MESSAGE value="moved over to using standardized names for tiles" />
-    <option name="LAST_COMMIT_MESSAGE" value="moved over to using standardized names for tiles" />
+    <MESSAGE value="character factory cleanup" />
+    <option name="LAST_COMMIT_MESSAGE" value="character factory cleanup" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />
