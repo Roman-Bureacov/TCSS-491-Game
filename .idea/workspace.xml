@@ -4,13 +4,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="a08718b8-ac73-4cb8-b286-185a0b662aef" name="Changes" comment="character factory cleanup">
-      <change afterPath="$PROJECT_DIR$/Game/engine/primitives.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Game/engine/render/drawing.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Game/arena/tilesets/industrialTileSet.js" beforeDir="false" afterPath="$PROJECT_DIR$/Game/arena/tilesets/industrialTileSet.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Game/character/character.js" beforeDir="false" afterPath="$PROJECT_DIR$/Game/character/character.js" afterDir="false" />
+    <list default="true" id="a08718b8-ac73-4cb8-b286-185a0b662aef" name="Changes" comment="cleaned up some naming conventions regarding SpaceObject behaviors">
       <change beforePath="$PROJECT_DIR$/Game/engine/render/Render.js" beforeDir="false" afterPath="$PROJECT_DIR$/Game/engine/render/Render.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Game/main.js" beforeDir="false" afterPath="$PROJECT_DIR$/Game/main.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -409,7 +404,23 @@
       <option name="project" value="LOCAL" />
       <updated>1770173760626</updated>
     </task>
-    <option name="localTasksCounter" value="32" />
+    <task id="LOCAL-00032" summary="split drawing of sprites from being encoded into the `drawable` into its own separate class, appended a primitives library">
+      <option name="closed" value="true" />
+      <created>1770200040752</created>
+      <option name="number" value="00032" />
+      <option name="presentableId" value="LOCAL-00032" />
+      <option name="project" value="LOCAL" />
+      <updated>1770200040752</updated>
+    </task>
+    <task id="LOCAL-00033" summary="cleaned up some naming conventions regarding SpaceObject behaviors">
+      <option name="closed" value="true" />
+      <created>1770200408732</created>
+      <option name="number" value="00033" />
+      <option name="presentableId" value="LOCAL-00033" />
+      <option name="project" value="LOCAL" />
+      <updated>1770200408732</updated>
+    </task>
+    <option name="localTasksCounter" value="34" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -439,8 +450,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="made building the arena much more modular and less verbose. Is able to implement the setArenasAsset in a more modular sense." />
-    <MESSAGE value="awesome guy spawned in to save the day!" />
     <MESSAGE value="added second arena" />
     <MESSAGE value="added warrior woman animation character&#10;&#10;finished implementing a character factory&#10;&#10;created a global character object" />
     <MESSAGE value="Moved files to the main folder" />
@@ -464,7 +473,9 @@
     <MESSAGE value="documentation" />
     <MESSAGE value="moved over to using standardized names for tiles" />
     <MESSAGE value="character factory cleanup" />
-    <option name="LAST_COMMIT_MESSAGE" value="character factory cleanup" />
+    <MESSAGE value="split drawing of sprites from being encoded into the `drawable` into its own separate class, appended a primitives library" />
+    <MESSAGE value="cleaned up some naming conventions regarding SpaceObject behaviors" />
+    <option name="LAST_COMMIT_MESSAGE" value="cleaned up some naming conventions regarding SpaceObject behaviors" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />

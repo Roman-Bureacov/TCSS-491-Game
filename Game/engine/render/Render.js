@@ -350,6 +350,8 @@ class Camera extends SpaceObject {
             height: height,
             aspect: aspect,
         })
+
+        this.#modified = true;
     }
 
     /**
