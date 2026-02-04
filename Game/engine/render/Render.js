@@ -69,86 +69,13 @@ class SpaceObject {
     }
 }
 
-/**
- * Represents an entity in 2D space that has a width and height.
- *
- * All drawables are entities, but not all entities are drawable, such as hitboxes.
- *
- * Entities have positive dimensions and have origins starting from the top-left
- *
- * @author Roman Bureacov
- */
-class SpaceEntity extends SpaceObject {
-
-    /**
-     * A 4x1 column vector representing the scale of this space object.
-     *
-     * The scale is represented at a point with respect to this object's origin.
-     * @type {Matrix}
-     */
-    dimension = new Matrix(4, 1);
-
-    /**
-     * Constructs an entity of the dimension
-     * @param {number} [dimX=1] the positive x dimension of this entity
-     * @param {number} [dimY=1] the positive y dimension of this entity
-     */
-    constructor(dimX = 1, dimY = 1) {
-        super();
-        this.dimension.set(3, 0, 1); // homogenous coordinates
-        this.setDimension(dimX, dimY);
-    }
-
-    /**
-     * Sets the dimension of this entity
-     * @param {number} [dimX=1] the positive x dimension of this entity
-     * @param {number} [dimY=1] the positive y dimension of this entity
-     */
-    setDimension(dimX = 1, dimY = 1) {
-        this.dimension.set(0, 0, dimX);
-        this.dimension.set(1, 0, dimY);
-    }
-
-    /**
-     * Sets the dimension of this entity using aspect ratio
-     * @param {number} dimX the positive x dimension of this entity
-     * @param {number} aspect the aspect ratio of the dimension of this entity
-     */
-    setDimensionAspect(dimX, aspect) {
-        this.setDimension(dimX, dimX * aspect);
-    }
-
-    /**
-     * The X dimension of this entity
-     * @returns {number} the X dimension
-     */
-    dimX() {
-        return this.dimension.get(0, 0);
-    }
-
-    /**
-     * The Y dimension of this entity
-     * @returns {number} the Y dimension
-     */
-    dimY() {
-        return this.dimension.get(1, 0);
-    }
-
-    /**
-     * The Z dimension of this entity
-     * @returns {number} the Z dimension
-     */
-    dimZ() {
-        return this.dimension.get(2, 0);
-    }
-}
 
 /**
  * A drawable object for the renderer to draw.
  *
  * @author Roman Bureacov
  */
-class Drawable extends SpaceEntity {
+class Drawable extends SpaceObject {
 
     /**
      * The spritesheet representing this drawable object.
@@ -242,6 +169,10 @@ class Camera extends SpaceObject {
      * The effect of independent aperture is that of being only able to
      * change one dimension, and yet the other dimension changes freely,
      * so the mapping is just wrong.
+     *
+     * For an illustration, see [this](https://www.desmos.com/calculator/e7ihqkk6yz)
+     * and move around the image dimensions.
+     *
      * @type {number}
      */
     static #MM_PER_PIXELS = 22/1000;
