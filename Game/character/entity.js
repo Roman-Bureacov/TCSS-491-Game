@@ -52,7 +52,7 @@ export class DynamicEntity extends Drawable {
     updatePhysics(timestep) {
         this.physics.updatePhysics(timestep);
 
-        super.setPosition(
+        super.setObjectPosition(
             this.physics.position.x,
             this.physics.position.y,
             0

@@ -12,13 +12,18 @@ import {Rectangle2D} from "../primitives.js";
 import { DrawingProperties } from "./drawing.js";
 
 /**
- * An object in space representing
+ * An object in world space.
+ *
+ * Objects themselves only encode a coordinate system, and
+ * additional properties are defined with respect to said local
+ * coordinate system.
+ *
  * @author Roman Bureacov
  */
 class SpaceObject {
 
     /**
-     * The matrix representing this object
+     * The 4x4 matrix representing this object
      * @type {Matrix}
      */
     matrix;
@@ -28,19 +33,12 @@ class SpaceObject {
     }
 
     /**
-     * Transforms this object
-     * @param {Matrix} transformation the matrix to transform by
-     */
-    transform = (transformation) =>
-        this.matrix = MatrixOp.multiply(this.matrix, transformation) ;
-
-    /**
      * Sets the position for this space object in the world
      * @param {number} x the x position
      * @param {number} y the y position
      * @param {number} z the z position
      */
-    setPosition(x, y, z) {
+    setObjectPosition(x, y, z) {
         this.matrix.set(0, 3, x);
         this.matrix.set(1, 3, y);
         this.matrix.set(2, 3, z);
@@ -50,7 +48,7 @@ class SpaceObject {
      * Gets the X position of this space object in the world
      * @returns {number}
      */
-    posX() {
+    objectX() {
         return this.matrix.get(0, 3);
     }
 
@@ -58,7 +56,7 @@ class SpaceObject {
      * Gets the Y position of this object in the world
      * @returns {number}
      */
-    posY() {
+    objectY() {
         return this.matrix.get(1, 3);
     }
 
@@ -66,7 +64,7 @@ class SpaceObject {
      * Gets the Z position of this object in the world
      * @returns {number}
      */
-    posZ() {
+    objectZ() {
         return this.matrix.get(3, 3);
     }
 }

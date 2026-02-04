@@ -170,7 +170,7 @@ export class ArenaParser {
                         )
                     );
 
-                    tile.setPosition(
+                    tile.setObjectPosition(
                         this.parameters.originX + c * colSpacing,
                         this.parameters.originY - r * rowSpacing,  0);
 
