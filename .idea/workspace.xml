@@ -4,8 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="a08718b8-ac73-4cb8-b286-185a0b662aef" name="Changes" comment="cleaned up some naming conventions regarding SpaceObject behaviors">
+    <list default="true" id="a08718b8-ac73-4cb8-b286-185a0b662aef" name="Changes" comment="fixed bug with setting aperture not recalculating the canvas in camera">
       <change beforePath="$PROJECT_DIR$/Game/engine/render/Render.js" beforeDir="false" afterPath="$PROJECT_DIR$/Game/engine/render/Render.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Matrix/Matrix.js" beforeDir="false" afterPath="$PROJECT_DIR$/Matrix/Matrix.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -420,7 +421,15 @@
       <option name="project" value="LOCAL" />
       <updated>1770200408732</updated>
     </task>
-    <option name="localTasksCounter" value="34" />
+    <task id="LOCAL-00034" summary="fixed bug with setting aperture not recalculating the canvas in camera">
+      <option name="closed" value="true" />
+      <created>1770206251102</created>
+      <option name="number" value="00034" />
+      <option name="presentableId" value="LOCAL-00034" />
+      <option name="project" value="LOCAL" />
+      <updated>1770206251102</updated>
+    </task>
+    <option name="localTasksCounter" value="35" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -450,7 +459,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="added second arena" />
     <MESSAGE value="added warrior woman animation character&#10;&#10;finished implementing a character factory&#10;&#10;created a global character object" />
     <MESSAGE value="Moved files to the main folder" />
     <MESSAGE value="merged camera with main, just need to refactor some arenaFactory.js to make each block a static entity object. Maybe draw directly on the tilepane instead of a canvas dom?" />
@@ -475,7 +483,8 @@
     <MESSAGE value="character factory cleanup" />
     <MESSAGE value="split drawing of sprites from being encoded into the `drawable` into its own separate class, appended a primitives library" />
     <MESSAGE value="cleaned up some naming conventions regarding SpaceObject behaviors" />
-    <option name="LAST_COMMIT_MESSAGE" value="cleaned up some naming conventions regarding SpaceObject behaviors" />
+    <MESSAGE value="fixed bug with setting aperture not recalculating the canvas in camera" />
+    <option name="LAST_COMMIT_MESSAGE" value="fixed bug with setting aperture not recalculating the canvas in camera" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />
