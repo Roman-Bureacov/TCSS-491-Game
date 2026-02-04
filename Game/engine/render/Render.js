@@ -65,7 +65,7 @@ class SpaceObject {
      * @returns {number}
      */
     objectZ() {
-        return this.matrix.get(3, 3);
+        return this.matrix.get(2, 3);
     }
 }
 
@@ -228,6 +228,25 @@ class Pane extends SpaceObject {
 class Camera extends SpaceObject {
 
     /**
+     * the conversion rate of millimeters per pixel.
+     *
+     * The purpose of this is to make the aperture dimensions dependent
+     * on the image dimensions. If you make the aperture dimensions
+     * independent of the image (either the width or height, or both)
+     * you may get a squishing effect, where one of the canvas
+     * coordinates (left and right, or top and bottom) don't change
+     * yet as you change the image dimensions, the points map
+     * to a proportional amount of the raster, which is what you do not
+     * want.
+     *
+     * The effect of independent aperture is that of being only able to
+     * change one dimension, and yet the other dimension changes freely,
+     * so the mapping is just wrong.
+     * @type {number}
+     */
+    static #MM_PER_PIXELS = 22/1000;
+
+    /**
      * The focal length for this camera, defined in millimeters.
      *
      * The focal length may be modified using `setFocalLength`.
@@ -287,9 +306,8 @@ class Camera extends SpaceObject {
         });
 
         // for simplicity, both have the same aspect ratio in this project's context
-        this.setAperture(22, this.image.aspect, undefined);
+        this.setAperture(imageWidth * Camera.#MM_PER_PIXELS, this.image.aspect, undefined);
 
-        
         this.#modified = true;
     }
 
@@ -361,14 +379,14 @@ class Camera extends SpaceObject {
     getCanvas() {
 
         if (this.#modified) {
-            // for simplicity, near plane is 1: aperatureWidth / focal * nearPlaneZ
-            const canvasWidth =  this.aperture.width / this.focalLength;
+            // for simplicity, near plane is 1: apertureHeight / focal * nearPlaneZ
+            const canvasHeight =  this.aperture.height / this.focalLength;
 
-            this.#canvas.left = -canvasWidth / 2;
-            this.#canvas.right = -this.#canvas.left;
-            this.#canvas.top = canvasWidth / 2 * this.aperture.aspect;
+            this.#canvas.top = (canvasHeight) / 2.0;
             this.#canvas.bottom = -this.#canvas.top;
-            
+            this.#canvas.right = this.#canvas.top * this.aperture.aspect;
+            this.#canvas.left = -this.#canvas.right;
+
             this.#modified = false;
         }
         
@@ -410,6 +428,7 @@ class Render {
      * @param context the drawing context
      */
     render(context) {
+
         // clear raster
         context.clearRect(0, 0, context.canvas.width, context.canvas.height);
 
