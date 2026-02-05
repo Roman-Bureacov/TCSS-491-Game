@@ -492,4 +492,4 @@ class World {
 
 }
 
-export { Pane, Camera, Render, World, Drawable, SpaceEntity }
+export { Pane, Camera, Render, World, Drawable }
