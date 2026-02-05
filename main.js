@@ -137,6 +137,10 @@ ASSET_MANAGER.downloadAll(async () => {
  */
 function setTileSetPromise(theTileSetPath, theTileSetImg) {
     return new Promise((resolve, reject) => {
+
+        const resolved = new URL(theTileSetPath, window.location.href).href;
+        console.log("Tileset requested:", resolved);
+
         theTileSetImg.onload = () => resolve(theTileSetImg);
         theTileSetImg.onerror = () => reject(new Error("Tileset failed to load: " + theTileSetPath));
         theTileSetImg.src = theTileSetPath;
@@ -174,6 +178,7 @@ function setTileMap(theTileSheet, theMapText, theArenasBackground, theArenaName,
     const buildMap = parseTxtToMap(theMapText, col, row, theArenaLegend);
     return new TileMap(factory, buildMap);
 }
+
 
 /**
  * Builds the arena

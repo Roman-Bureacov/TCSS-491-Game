@@ -4,9 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="dcd98374-5ef8-4e98-9293-7b7574c8a0b7" name="Changes" comment="Completed the character switching function for the prototype.">
-      <change beforePath="$PROJECT_DIR$/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/index.html" afterDir="false" />
-    </list>
+    <list default="true" id="dcd98374-5ef8-4e98-9293-7b7574c8a0b7" name="Changes" comment="Completed the character switching function for the prototype." />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -82,6 +80,7 @@
       <option name="presentableId" value="Default" />
       <updated>1769915774516</updated>
       <workItem from="1769915776031" duration="1727000" />
+      <workItem from="1770302686811" duration="301000" />
     </task>
     <task id="LOCAL-00001" summary="Completed the character switching function for the prototype.">
       <option name="closed" value="true" />
@@ -107,7 +106,15 @@
       <option name="project" value="LOCAL" />
       <updated>1770301257840</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="Completed the character switching function for the prototype.">
+      <option name="closed" value="true" />
+      <created>1770302715539</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1770302715539</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
