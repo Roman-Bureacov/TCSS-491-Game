@@ -19,7 +19,7 @@ const CANVAS = document.querySelector('#gameWorld');
  */
 export const arenas = {
     arena1: {
-        tileSet: "./assets/tileset/Industrial Tileset/1_Industrial_Tileset_1c.png",
+        tileSet: "./assets/tileset/Industrial Tileset/1_Industrial_Tileset_1C.png",
         background: "./assets/background/background03.jpeg",
         backgroundSound: "backgroundMusic1",
         map: "./assets/maps/arena01.txt",
