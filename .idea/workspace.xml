@@ -4,7 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="dcd98374-5ef8-4e98-9293-7b7574c8a0b7" name="Changes" comment="built a tileset debugger" />
+    <list default="true" id="dcd98374-5ef8-4e98-9293-7b7574c8a0b7" name="Changes" comment="renamed path" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -80,7 +80,7 @@
       <option name="presentableId" value="Default" />
       <updated>1769915774516</updated>
       <workItem from="1769915776031" duration="1727000" />
-      <workItem from="1770302686811" duration="622000" />
+      <workItem from="1770302686811" duration="1003000" />
     </task>
     <task id="LOCAL-00001" summary="Completed the character switching function for the prototype.">
       <option name="closed" value="true" />
@@ -122,7 +122,15 @@
       <option name="project" value="LOCAL" />
       <updated>1770303204259</updated>
     </task>
-    <option name="localTasksCounter" value="6" />
+    <task id="LOCAL-00006" summary="renamed path">
+      <option name="closed" value="true" />
+      <created>1770303571004</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1770303571004</updated>
+    </task>
+    <option name="localTasksCounter" value="7" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -131,6 +139,7 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Completed the character switching function for the prototype." />
     <MESSAGE value="built a tileset debugger" />
-    <option name="LAST_COMMIT_MESSAGE" value="built a tileset debugger" />
+    <MESSAGE value="renamed path" />
+    <option name="LAST_COMMIT_MESSAGE" value="renamed path" />
   </component>
 </project>

@@ -49,7 +49,7 @@ export const arenas = {
     },
     // Add more arenas assets here
     arena2: {
-        tileSet: "./assets/tileset/Industrial Tileset/1_Industrial_Tileset_1b.png",
+        tileSet: "./assets/tileset/Industrial_Tileset/1_Industrial_Tileset_1b.png",
         background: "./assets/background/background01.jpeg",
         backgroundSound: "backgroundMusic2",
         map: "./assets/maps/arena02.txt",
