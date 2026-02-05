@@ -139,13 +139,16 @@ function setTileSetPromise(theTileSetPath, theTileSetImg) {
     return new Promise((resolve, reject) => {
 
         const resolved = new URL(theTileSetPath, window.location.href).href;
+        console.log("Tileset path var:", theTileSetPath);
         console.log("Tileset requested:", resolved);
 
         theTileSetImg.onload = () => resolve(theTileSetImg);
-        theTileSetImg.onerror = () => reject(new Error("Tileset failed to load: " + theTileSetPath));
-        theTileSetImg.src = theTileSetPath;
+        theTileSetImg.onerror = () => reject(new Error("Tileset failed to load: " + resolved));
+
+        theTileSetImg.src = resolved;
     });
 }
+
 
 /**
  * Sets the promise and map text
