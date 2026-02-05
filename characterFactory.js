@@ -30,7 +30,7 @@ export class characterFactory {
 
     /**
      * Gets the Character data from CharacterData.js
-     * @returns {*}
+     *
      */
     getCharacter() {
         return this.sprite;

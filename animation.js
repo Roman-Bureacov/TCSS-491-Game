@@ -2,7 +2,7 @@
 This code manages animation.
  */
 
-import {Matrix} from "../Matrix/Matrix.js";
+import {Matrix} from "./Matrix/Matrix.js";
 import {getCharacterData} from "./characterData.js";
 
 /**
@@ -88,7 +88,9 @@ export class Spritesheet extends Matrix {
         Object.assign(this, { image, rows, columns});
 
         this.frameWidth = image.width/ columns;
+        console.log("Width: ", this.frameWidth)
         this.frameHeight = image.height / rows;
+        console.log("Height: ", this.frameHeight)
 
         for (let r = 0; r < rows; r++) {
             for (let c = 0; c < columns; c++) {

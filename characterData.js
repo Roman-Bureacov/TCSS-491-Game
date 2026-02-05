@@ -19,6 +19,8 @@ const CHARACTER_DATA = {
         attackDur: 0.5,
         scale:1,
         swordSound: "quickSwordSwoosh2",
+        frameWidth: 100,
+        frameHeight: 150,
 
     },
     
@@ -41,6 +43,8 @@ const CHARACTER_DATA = {
         attackDur: 0.5,
         scale:1,
         swordSound: "quickSwordSwoosh2",
+        frameWidth: 100,
+        frameHeight: 150,
 
     },
     
@@ -63,19 +67,37 @@ const CHARACTER_DATA = {
         attackDur: 0.5,
         scale:2.5,
         swordSound: "heavySwordSwoosh1",
+        frameWidth: 142,
+        frameHeight: 127,
     }
     
     
 }
 
+/**
+ * Retrieves the characters data sheet
+ * @param {string} theCharacter
+ * @returns {CHARACTER_DATA}
+ */
 export function getCharacterData(theCharacter) {
     return CHARACTER_DATA[theCharacter];
 }
 
+/**
+ * Retrieves all the characters data sheets
+ *
+ * @returns {CHARACTER_DATA} The whole character data object
+ */
 export function getAllCharacterData() {
     return CHARACTER_DATA;
 }
 
+/**
+ * Switches the character sheet
+ *
+ * @param index The index of the character.
+ * @returns {CHARACTER_DATA} The new character data sheet
+ */
 export function switchCharacter(index) {
    let characterMap = {
        0 : getCharacterData("guy1"),

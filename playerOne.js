@@ -9,21 +9,22 @@ import {global} from "./main.js";
 import {characterFactory} from "./characterFactory.js";
 import {SoundFX} from "./soundFX.js";
 import {switchCharacters} from "./switchCharacters.js";
+import {BoundingBox} from "./BoundingBox.js";
 
-export class PlayerTwo extends Character {
+export class PlayerOne extends Character {
     constructor(game, assetManager, characterName, startPosX, startPosY) {
         super(game, characterName);
-        const character = new characterFactory(characterName, assetManager);
-        this.position.x = startPosX;
-        this.position.y = startPosY;
-
-
-        this.character = new characterFactory(characterName, assetManager);
-        this.spritesheet = character.getCharacterSpriteSheet();
 
         this.assetManager = assetManager;
 
+        this.character = new characterFactory(characterName, assetManager);
         this.switchCharacter = new switchCharacters(this);
+
+        this.position.x = startPosX;
+        this.position.y = startPosY;
+
+        console.log("Getting sprite sheet")
+        this.spritesheet = this.character.getCharacterSpriteSheet();
 
         this.states = Object.freeze({
             MOVE: "move ",
@@ -32,7 +33,7 @@ export class PlayerTwo extends Character {
         });
 
         this.state = this.states.IDLE;
-        this.facing = Character.DIRECTION.LEFT;
+        this.facing = Character.DIRECTION.RIGHT;
 
         this.velocityMax.x = 100;
 
@@ -44,7 +45,9 @@ export class PlayerTwo extends Character {
 
         this.setupAnimation();
         this.setupKeymap();
-        this.sound = new SoundFX({masterVolume: 0.8});
+        this.updateBB();
+
+        this.playSound = new SoundFX({masterVolume: 0.8});
     }
 
     setupAnimation() {
@@ -61,7 +64,7 @@ export class PlayerTwo extends Character {
         const attackDur = this.character.getCharacter().attackDur;
         const moveDur = this.character.getCharacter().moveDur;
         const scale = this.character.getCharacter().scale;
-        console.log(idlePad)
+
         this.animations = {
             [this.states.MOVE + Character.DIRECTION.RIGHT]: new Animator(
                 this.spritesheet,
@@ -125,13 +128,13 @@ export class PlayerTwo extends Character {
         this.keymapper = new KeyMapper();
 
         this.keymapper.inputMap = {
-            [KeyMapper.getName("ArrowRight", true)]: "move right",
-            [KeyMapper.getName("ArrowLeft", true)]: "move left",
-            [KeyMapper.getName("ArrowDown", true)]: "attack",
-            [KeyMapper.getName("ArrowRight", false)]: "stop right",
-            [KeyMapper.getName("ArrowLeft", false)]: "stop left",
-            [KeyMapper.getName("Numpad2", true)] : "switch character",
-            [KeyMapper.getName( "Digit2", true)] : "switch character",
+            [KeyMapper.getName("KeyD", true)]: "move right",
+            [KeyMapper.getName("KeyA", true)]: "move left",
+            [KeyMapper.getName("KeyS", true)]: "attack",
+            [KeyMapper.getName("KeyD", false)]: "stop right",
+            [KeyMapper.getName("KeyA", false)]: "stop left",
+            [KeyMapper.getName("Numpad1", true)]: "switch character",
+            [KeyMapper.getName("Digit1", true)]: "switch character",
         };
 
         this.keymapper.outputMap = {
@@ -153,8 +156,10 @@ export class PlayerTwo extends Character {
         if (!this.setState(this.states.MOVE)) {
             const newFacing = acceleration < 0 ? Character.DIRECTION.LEFT : Character.DIRECTION.RIGHT;
             if (newFacing !== this.facing) {
-                this.velocity.x /= 2;
+                this.velocity.x = 0;
+                this.previousFacing = this.facing;
                 this.facing = newFacing;
+
             }
 
             this.constantAcceleration[this.facing] = acceleration;
@@ -178,13 +183,79 @@ export class PlayerTwo extends Character {
             this.lastState = this.state;
             this.state = this.states.ATTACK;
             this.stateLock = true;
-            this.sound.play(this.character.getCharacter().swordSound)
+            this.playSound.play(this.character.getCharacter().swordSound)
+
+            const p1 = this.game.playerOne;
+            if (p1?.BB && this.BB.collide(p1.BB)) {
+
+
+                console.log("Player one struck player two")
+            }
+
         }
+
+    }
+
+    updateBB() {
+        this.BB = new BoundingBox(this.position.x, this.position.y, this.character.getCharacter().frameWidth, this.character.getCharacter().frameHeight)
+    };
+
+    // helper
+    landOnPlatform(entity, platformBB, oldY) {
+        const bb = entity.BB;
+
+        const oldBottom = oldY + bb.height;
+        const newBottom = bb.y + bb.height;
+
+        const platformTop = platformBB.y;
+
+        const horizontallyOverlapping =
+            bb.x < platformBB.x + platformBB.width &&
+            bb.x + bb.width > platformBB.x;
+
+        // falling and crossed platform top this frame
+        if (horizontallyOverlapping &&
+            entity.velocity.y >= 0 &&
+            oldBottom <= platformTop &&
+            newBottom >= platformTop) {
+
+            entity.position.y = platformTop - bb.height; // snap to top
+            entity.velocity.y = 0;
+            entity.updateBB();
+            return true;
+        }
+
+        return false;
     }
 
 
     update() {
+
+        const oldX = this.position.x;
+        const oldY = this.position.y;
         super.update();
+        this.updateBB();
+
+        const platforms = [
+            this.game.platform1[0],
+            this.game.platform2[0],
+            this.game.platform3[0],
+            this.game.platform4[0],
+            this.game.platform5[0],
+        ];
+
+        let grounded = false;
+        for (const p of platforms) {
+            if (this.landOnPlatform(this, p, oldY)) {
+                grounded = true;
+                break;
+            }
+        }
+
+        if (!grounded) {
+            this.velocity.y += 5; // gravity
+        }
+
         this.acceleration.x = 0;
         this.acceleration.y = 0;
         for (let key in this.game.keys) this.keymapper.sendKeyEvent(this.game.keys[key]);
@@ -215,17 +286,60 @@ export class PlayerTwo extends Character {
             case this.states.ATTACK:
 
         }
+        this.updateBB();
+        this.game.playerTwo.updateBB?.();
+
+        const p2 = this.game.playerTwo;
+        if (p2?.BB && this.BB.collide(p2.BB)) {
+            const a = this.BB;
+            const b = p2.BB;
+
+            // overlap amount along x
+            const overlapRight = (a.x + a.width) - b.x;       // a into b from left
+            const overlapLeft = (b.x + b.width) - a.x;       // a into b from right
+
+            // If player1 is left of player2, push left; else push right
+            if (a.x < b.x) {
+                this.position.x -= overlapRight;
+            } else {
+                this.position.x += overlapLeft;
+            }
+
+            this.updateBB();
+        } else if (this.BB.collide(this.game.platform1[0]) || this.BB.collide(this.game.platform2[0])
+            || this.BB.collide(this.game.platform3[0]) || this.BB.collide(this.game.platform4[0]) || this.BB.collide(this.game.platform5[0])) {
+
+            // if (this.BB.collide(this.game.platform1[0])) {
+            //     console.log(this.game.platform1[1])
+            // } else if (this.BB.collide(this.game.platform2[0])) {
+            //     console.log(this.game.platform2[1])
+            //
+            // } else if (this.BB.collide(this.game.platform3[0])) {
+            //     console.log(this.game.platform3[1])
+            //
+            // } else if (this.BB.collide(this.game.platform4[0])) {
+            //     console.log(this.game.platform4[1])
+            //
+            // } else if (this.BB.collide(this.game.platform5[0])) {
+            //     console.log(this.game.platform5[1])
+            //
+            // }
+
+            this.velocity.y = 0;
+        } else {
+            this.velocity.y += 5;
+        }
+
 
     }
-    
+
     getCurrentCharacter() {
-        return this.character;
+        return this.character.getCharacter();
     }
 
     setNewCharacter(theNewCharacterData) {
 
-
-        this.character = new characterFactory(theNewCharacterData.name, this.assetManager);
+        this.character = new characterFactory(theNewCharacterData.name, this.assetManager, this.game);
 
         this.spritesheet = this.character.getCharacterSpriteSheet();
 
@@ -233,9 +347,9 @@ export class PlayerTwo extends Character {
 
         this.currentAnimation = this.animations[this.animationName()];
 
-        console.log("Player Two switched to:", this.character.getCharacter().name);
-
-
+        console.log("Player One switched to:", this.character.getCharacter().name);
+        this.game.playerOne = this;
     }
+
 
 }

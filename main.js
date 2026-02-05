@@ -8,6 +8,7 @@ import {PlayerOne} from "./playerOne.js";
 import {PlayerTwo} from "./playerTwo.js";
 import {getAllCharacterData} from "./characterData.js";
 import {SoundFX} from "./soundFX.js";
+import {BoundingBox} from "./BoundingBox.js";
 
 const gameEngine = new GameEngine();
 const ASSET_MANAGER = new AssetManager();
@@ -68,11 +69,11 @@ export const arenas = {
             "\\": 8, // right floor piece
             " ": -1, // Spaces
         },
-        p1: [33, 320, 162], //top-left platform [left most, right most, y value]
+        p1: [33, 296, 162], //top-left platform [left most, right most, y value]
         p2: [675, 960, 162],
-        p3: [320, 607, 353],
-        p4: [0, 288, 513],
-        p5: [705, 990, 513], // bottom-right platform [left most, right most, y value
+        p3: [353, 670, 353],
+        p4: [35, 317, 610],
+        p5: [706, 988, 610], // bottom-right platform [left most, right most, y value
         floor: 737, // The y-value of the floor.
         playerOnePos: [120, 13],
         playerTwoPos: [760, 13],
@@ -93,7 +94,7 @@ const character1 = "guy1"; //CHARACTER_SELECTOR.getPlayerCharacter()[0] //player
 const character2 = "guy2"; //CHARACTER_SELECTOR.getPlayerCharacter()[1] //player 2 character
 
 // The output of the arena object for the game.
-const arena = arenas.arena1; //ARENA_SELECTOR.getArena()
+const arena = arenas.arena2; //ARENA_SELECTOR.getArena()
 
 Object.values(getAllCharacterData()).forEach(character => {
     ASSET_MANAGER.queueDownload(character.img);
@@ -110,9 +111,21 @@ ASSET_MANAGER.downloadAll(async () => {
 
     const playerOne = new PlayerOne(gameEngine, ASSET_MANAGER, character1, arena.playerOnePos[0], arena.playerOnePos[1]);
     const playerTwo = new PlayerTwo(gameEngine, ASSET_MANAGER, character2, arena.playerTwoPos[0], arena.playerTwoPos[1]);
-
+    
+    gameEngine.playerOne = playerOne;
+    gameEngine.playerTwo = playerTwo;
+    
+    gameEngine.platform1 = [new BoundingBox(arena.p1[0], arena.p1[2], 30 * 9, 1), "platform 1"]
+    gameEngine.platform2 = [new BoundingBox(arena.p2[0], arena.p2[2], 30 * 9, 1), "platform 2"]
+    gameEngine.platform3 = [new BoundingBox(arena.p3[0], arena.p3[2], 30 * 10, 1), "platform 3"]
+    gameEngine.platform4 = [new BoundingBox(arena.p4[0], arena.p4[2], 30 * 9, 1), "platform 4"]
+    gameEngine.platform5 = [new BoundingBox(arena.p5[0], arena.p5[2], 30 * 9, 1), "platform 5"]
+    gameEngine.arenaFloor = [new BoundingBox(0, arena.floor, global.CANVAS_W, 1), "floor"]
+    
 
     const arena1TileMap = await setArenaAssets(arena);
+    
+
 
     gameEngine.init(ctx);
 
