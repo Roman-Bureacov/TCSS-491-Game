@@ -4,14 +4,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="a08718b8-ac73-4cb8-b286-185a0b662aef" name="Changes" comment="made arena parser properly implement a `have` fuction">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Game/arena/compiler/GRAMMAR" beforeDir="false" afterPath="$PROJECT_DIR$/Game/arena/compiler/GRAMMAR" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Game/arena/compiler/SYMBOLS" beforeDir="false" afterPath="$PROJECT_DIR$/Game/arena/compiler/SYMBOLS" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Game/arena/compiler/Token.js" beforeDir="false" afterPath="$PROJECT_DIR$/Game/arena/compiler/Token.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Game/arena/compiler/arenaParser.js" beforeDir="false" afterPath="$PROJECT_DIR$/Game/arena/compiler/arenaParser.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Game/arena/compiler/arenaScanner.js" beforeDir="false" afterPath="$PROJECT_DIR$/Game/arena/compiler/arenaScanner.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Game/assets/arena/basic.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Game/assets/arena/basic.txt" afterDir="false" />
+    <list default="true" id="a08718b8-ac73-4cb8-b286-185a0b662aef" name="Changes" comment="appended being able to specify tile sizes in making the arenas">
+      <change afterPath="$PROJECT_DIR$/Game/arena/compiler/README.md" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -490,7 +484,15 @@
       <option name="project" value="LOCAL" />
       <updated>1770355273084</updated>
     </task>
-    <option name="localTasksCounter" value="42" />
+    <task id="LOCAL-00042" summary="appended being able to specify tile sizes in making the arenas">
+      <option name="closed" value="true" />
+      <created>1770357607693</created>
+      <option name="number" value="00042" />
+      <option name="presentableId" value="LOCAL-00042" />
+      <option name="project" value="LOCAL" />
+      <updated>1770357607693</updated>
+    </task>
+    <option name="localTasksCounter" value="43" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -520,7 +522,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="working revision of the character and its factory, moved index" />
     <MESSAGE value="reorganized file structure" />
     <MESSAGE value="moved game engine" />
     <MESSAGE value="working character factory" />
@@ -545,7 +546,8 @@
     <MESSAGE value="fixed bug regarding aperture being independent of the image dimensions (causing strange distortions)" />
     <MESSAGE value="cleanup" />
     <MESSAGE value="made arena parser properly implement a `have` fuction" />
-    <option name="LAST_COMMIT_MESSAGE" value="made arena parser properly implement a `have` fuction" />
+    <MESSAGE value="appended being able to specify tile sizes in making the arenas" />
+    <option name="LAST_COMMIT_MESSAGE" value="appended being able to specify tile sizes in making the arenas" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />
