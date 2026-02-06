@@ -1,7 +1,8 @@
 # Arena Compiler
 
-The arena compiler is a very simple system. The language it uses is much
-that of a toy language.
+The arena compiler is a very simple system, as depicted below. 
+
+The language itself is an LL(1) language.
 
 ## `set` name
 

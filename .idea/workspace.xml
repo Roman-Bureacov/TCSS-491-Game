@@ -4,8 +4,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="a08718b8-ac73-4cb8-b286-185a0b662aef" name="Changes" comment="appended being able to specify tile sizes in making the arenas">
-      <change afterPath="$PROJECT_DIR$/Game/arena/compiler/README.md" afterDir="false" />
+    <list default="true" id="a08718b8-ac73-4cb8-b286-185a0b662aef" name="Changes" comment="arena now correctly parses floating-point numbers where appropriate">
+      <change beforePath="$PROJECT_DIR$/Game/arena/compiler/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/Game/arena/compiler/README.md" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -492,7 +492,23 @@
       <option name="project" value="LOCAL" />
       <updated>1770357607693</updated>
     </task>
-    <option name="localTasksCounter" value="43" />
+    <task id="LOCAL-00043" summary="docs">
+      <option name="closed" value="true" />
+      <created>1770358862203</created>
+      <option name="number" value="00043" />
+      <option name="presentableId" value="LOCAL-00043" />
+      <option name="project" value="LOCAL" />
+      <updated>1770358862203</updated>
+    </task>
+    <task id="LOCAL-00044" summary="arena now correctly parses floating-point numbers where appropriate">
+      <option name="closed" value="true" />
+      <created>1770359400546</created>
+      <option name="number" value="00044" />
+      <option name="presentableId" value="LOCAL-00044" />
+      <option name="project" value="LOCAL" />
+      <updated>1770359400546</updated>
+    </task>
+    <option name="localTasksCounter" value="45" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -522,8 +538,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="reorganized file structure" />
-    <MESSAGE value="moved game engine" />
     <MESSAGE value="working character factory" />
     <MESSAGE value="making push" />
     <MESSAGE value="put player2 on the board" />
@@ -547,7 +561,9 @@
     <MESSAGE value="cleanup" />
     <MESSAGE value="made arena parser properly implement a `have` fuction" />
     <MESSAGE value="appended being able to specify tile sizes in making the arenas" />
-    <option name="LAST_COMMIT_MESSAGE" value="appended being able to specify tile sizes in making the arenas" />
+    <MESSAGE value="docs" />
+    <MESSAGE value="arena now correctly parses floating-point numbers where appropriate" />
+    <option name="LAST_COMMIT_MESSAGE" value="arena now correctly parses floating-point numbers where appropriate" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />
