@@ -108,7 +108,7 @@ export class Rectangle2D {
     }
 
     /**
-     * Sets the start for this rectangle
+     * Sets the start for this rectangle, preserving dimension
      * @param {number} [x=0] the new X coordinate
      * @param {number} [y=0] the new Y coordinate
      */
