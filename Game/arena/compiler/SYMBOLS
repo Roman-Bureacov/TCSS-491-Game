@@ -1,13 +1,21 @@
-SET         "set"
-COLN        ":"
 SETNAME     <text>
-DIMENSION   "dimension"
-PIPE        "|"
-LETTER      A..Z
-MATRIX      "matrix"
+
 NUMBER      0..9 { 0..9 }
-SIZE        "size"
+LETTER      A..Z
+
+PIPE        "|"
 PERIOD      "."
+COLN        ":"
+MINS        "-"
+
+DIMENSION   "dimension"
+SET         "set"
+MATRIX      "matrix"
+SIZE        "size"
 BY          "by"
 ROWS        "rows"
 COLS        "columns"
+TILES       "tiles"
+DEFAULT     "default"
+AUTO        "auto"
+TILES       "tiles"

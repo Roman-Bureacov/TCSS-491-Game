@@ -24,6 +24,9 @@ export class ArenaScanner {
         "columns" : Token.TYPES.COLS,
         "end" : Token.TYPES.END,
         "origin" : Token.TYPES.ORIGIN,
+        "default" : Token.TYPES.DEFAULT,
+        "auto" : Token.TYPES.AUTO,
+        "tiles" : Token.TYPES.TILES
     }
 
     /**

@@ -13,9 +13,9 @@ export class Token {
         TEXT : "<text>",
         DIMENSION : "Dimension",
         SET : "Set",
-        COLN : ":",
-        PIPE : "|",
-        PERIOD : ".",
+        COLN : "Colon",
+        PIPE : "Pipe",
+        PERIOD : "Period",
         BY : "By",
         LETTER : "<letter>",
         MATRIX : "Matrix",
@@ -24,9 +24,12 @@ export class Token {
         ROWS : "Rows",
         COLS : "Columns",
         END : "End",
-        ORIGIN : "origin",
-        COMMA : ",",
-        MINS : "-",
+        ORIGIN : "Origin",
+        COMMA : "Comma",
+        MINS : "Minus",
+        DEFAULT : "Default",
+        AUTO : "Auto",
+        TILES : "Tiles",
     })
 
     /**

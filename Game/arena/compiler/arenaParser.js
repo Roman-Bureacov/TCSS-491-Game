@@ -1,4 +1,3 @@
-import {Matrix} from "../../../Matrix/Matrix.js";
 import {TileFactory} from "../tileFactory.js";
 import {ArenaScanner} from "./arenaScanner.js";
 import {Token} from "./Token.js";
@@ -22,6 +21,8 @@ export class ArenaParser {
         height : undefined,
         originX : undefined,
         originY : undefined,
+        tileWidth : undefined,
+        tileHeight : undefined,
     }
 
     /**
@@ -100,7 +101,8 @@ export class ArenaParser {
         this.matrixSpecifier();
         this.mustBe(Token.TYPES.PIPE);
         this.worldSpecifier();
-        // this.mustBe(Token.TYPES.PIPE);
+        this.mustBe(Token.TYPES.PIPE);
+        this.tileSpecifier();
     }
 
     /**
@@ -147,11 +149,30 @@ export class ArenaParser {
     worldSpecifier() {
         this.mustBe(Token.TYPES.SIZE);
         this.mustBe(Token.TYPES.COLN);
-        this.mustBe(Token.TYPES.NUMBER);
-        this.parameters.width = parseInt(this.token.image);
-        this.mustBe(Token.TYPES.BY);
-        this.mustBe(Token.TYPES.NUMBER);
-        this.parameters.height = parseInt(this.token.image);
+        const size = this.sizeSpecific();
+        this.parameters.width = size[0];
+        this.parameters.height = size[1];
+    }
+
+    /**
+     * Read the tile size specifier
+     */
+    tileSpecifier() {
+        this.mustBe(Token.TYPES.TILES);
+        this.mustBe(Token.TYPES.COLN);
+        let size = [];
+        if (this.have(Token.TYPES.AUTO)) {
+            size[0] = this.parameters.width / this.parameters.columns;
+            size[1] = this.parameters.height / this.parameters.rows;
+        } else if (this.see(Token.TYPES.NUMBER)) {
+            size = this.sizeSpecific();
+        } else {
+            this.mustBe(Token.TYPES.DEFAULT)
+            size = [1, 1];
+        }
+
+        this.parameters.tileWidth = size[0];
+        this.parameters.tileHeight = size[1];
     }
 
 
@@ -159,10 +180,18 @@ export class ArenaParser {
      * reads a size specifier
      * @return {[first: number, second: number]} the size specified
      */
-    sizeSpecifier() {
+    sizeSpecific() {
         let size = [];
 
         this.mustBe(Token.TYPES.NUMBER);
+        size.push(parseInt(this.token.image))
+
+        this.mustBe(Token.TYPES.BY);
+
+        this.mustBe(Token.TYPES.NUMBER);
+        size.push(parseInt(this.token.image));
+
+        return size;
     }
 
     /**
@@ -190,6 +219,11 @@ export class ArenaParser {
                         this.parameters.originX + c * colSpacing,
                         this.parameters.originY - r * rowSpacing,  0);
 
+                    tile.drawingProperties.bounds.setDimension(
+                        this.parameters.tileWidth,
+                        this.parameters.tileHeight
+                    )
+
                     this.compiledArena.push(tile);
                 } else {
                     this.mustBe(Token.TYPES.PERIOD);
@@ -205,8 +239,9 @@ export class ArenaParser {
 
 
     /**
-     * expects the token type from the scanner
+     * Consumes the next token expects the token type from the scanner
      * @param {string} type
+     * @throws {Error} if the token was not of the type sought
      */
     mustBe(type) {
 
@@ -222,13 +257,13 @@ export class ArenaParser {
 
         if (lookingAt.type !== type)
             throw new Error(
-                `(line ${this.token.line}) 
+                `(line ${this.token.line} of arena file)
                 Expected token type ${type} 
                 but found type ${this.token.type} (${this.token.image})`)
     }
 
     /**
-     * Scans and asks if the token is of the type specified
+     * Scans the next token, only consuming it if it was of the type sought
      * @param {string} type the type
      * @return {boolean} if the token read is of the type
      */
@@ -243,6 +278,20 @@ export class ArenaParser {
         if (have) this.previous = undefined;
 
         return have;
+    }
+
+    /**
+     * Scans the next token and asks if the token is of the type specified
+     * @param {string} type
+     * @return {boolean} if the token was of the type
+     */
+    see(type) {
+        if (!this.previous) {
+            this.next();
+            this.previous = this.token;
+        }
+
+        return this.previous.type === type;
     }
 
     /**

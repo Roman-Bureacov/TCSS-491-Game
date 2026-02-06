@@ -3,6 +3,7 @@ dimension:
 | origin: -5, 5
 | matrix: 5 rows by 10 columns
 | size: 10 by 5
+| tiles: default
 arena:
 ..........
 ..........
