@@ -30,6 +30,12 @@ export class ArenaParser {
     token;
 
     /**
+     * The previous token, for lookahead functionality
+     * @type {Token}
+     */
+    previous;
+
+    /**
      * The built arena
      * @type StaticEntity[]
      */
@@ -94,6 +100,7 @@ export class ArenaParser {
         this.matrixSpecifier();
         this.mustBe(Token.TYPES.PIPE);
         this.worldSpecifier();
+        // this.mustBe(Token.TYPES.PIPE);
     }
 
     /**
@@ -103,15 +110,14 @@ export class ArenaParser {
         this.mustBe(Token.TYPES.ORIGIN);
         this.mustBe(Token.TYPES.COLN);
 
-        let sign ;
-
-        this.next();
+        let sign;
         if (this.have(Token.TYPES.MINS)) sign = -1;
         else sign = 1;
         this.mustBe(Token.TYPES.NUMBER)
         this.parameters.originX = sign * parseInt(this.token.image);
 
-        this.next();
+        this.mustBe(Token.TYPES.COMMA)
+
         if (this.have(Token.TYPES.MINS)) sign = -1;
         else sign = 1;
         this.mustBe(Token.TYPES.NUMBER)
@@ -148,6 +154,17 @@ export class ArenaParser {
         this.parameters.height = parseInt(this.token.image);
     }
 
+
+    /**
+     * reads a size specifier
+     * @return {[first: number, second: number]} the size specified
+     */
+    sizeSpecifier() {
+        let size = [];
+
+        this.mustBe(Token.TYPES.NUMBER);
+    }
+
     /**
      * Read the arena
      */
@@ -161,7 +178,6 @@ export class ArenaParser {
         let colSpacing = (1.0 * this.parameters.width) / this.parameters.columns;
         for (let r = 0; r < this.parameters.rows; r++) {
             for (let c = 0; c < this.parameters.columns; c++) {
-                this.next();
                 if (this.have(Token.TYPES.LETTER)) {
                     let tile = (
                         TileFactory.makeTile(
@@ -176,7 +192,7 @@ export class ArenaParser {
 
                     this.compiledArena.push(tile);
                 } else {
-                    this.mustBe(Token.TYPES.PERIOD, true);
+                    this.mustBe(Token.TYPES.PERIOD);
                 }
             }
         }
@@ -185,29 +201,48 @@ export class ArenaParser {
 
     }
 
-    // helpers
+    // --- helpers
+
+
     /**
      * expects the token type from the scanner
      * @param {string} type
-     * @param {boolean} [readCurrent=false] if to evaluate the current token
      */
-    mustBe(type, readCurrent=false) {
-        if (!readCurrent) this.next();
-        if (this.token.type !== type)
+    mustBe(type) {
+
+        let lookingAt;
+
+        if (this.previous) {
+            lookingAt = this.previous;
+            this.previous = undefined;
+        } else {
+            this.next();
+            lookingAt = this.token;
+        }
+
+        if (lookingAt.type !== type)
             throw new Error(
                 `(line ${this.token.line}) 
                 Expected token type ${type} 
                 but found type ${this.token.type} (${this.token.image})`)
     }
 
-
     /**
-     * Queries if the current token is of the type
+     * Scans and asks if the token is of the type specified
      * @param {string} type the type
      * @return {boolean} if the token read is of the type
      */
     have(type) {
-        return this.token.type === type;
+        if (!this.previous) { // if not defined, get next
+            this.next();
+            this.previous = this.token;
+        }
+
+        let have = this.previous.type === type;
+
+        if (have) this.previous = undefined;
+
+        return have;
     }
 
     /**
