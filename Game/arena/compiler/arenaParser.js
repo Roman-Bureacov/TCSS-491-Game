@@ -116,14 +116,14 @@ export class ArenaParser {
         if (this.have(Token.TYPES.MINS)) sign = -1;
         else sign = 1;
         this.mustBe(Token.TYPES.NUMBER)
-        this.parameters.originX = sign * parseInt(this.token.image);
+        this.parameters.originX = sign * parseFloat(this.token.image);
 
         this.mustBe(Token.TYPES.COMMA)
 
         if (this.have(Token.TYPES.MINS)) sign = -1;
         else sign = 1;
         this.mustBe(Token.TYPES.NUMBER)
-        this.parameters.originY = sign * parseInt(this.token.image);
+        this.parameters.originY = sign * parseFloat(this.token.image);
 
     }
 
@@ -184,12 +184,12 @@ export class ArenaParser {
         let size = [];
 
         this.mustBe(Token.TYPES.NUMBER);
-        size.push(parseInt(this.token.image))
+        size.push(parseFloat(this.token.image))
 
         this.mustBe(Token.TYPES.BY);
 
         this.mustBe(Token.TYPES.NUMBER);
-        size.push(parseInt(this.token.image));
+        size.push(parseFloat(this.token.image));
 
         return size;
     }

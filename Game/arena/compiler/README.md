@@ -56,11 +56,13 @@ This will start placing tiles from `(-5, 5)` in the world.
 The matrix specifier depicts how to lay out the tiles.
 
 The place where the tiles of the arena are placed are specified by a matrix. This
-placement matrix starts from the top-left and ends at the bottom-right.
+placement matrix starts from the top-left and ends at the bottom-right. 
 
 The matrix is specified by 
 
 `matrix: <number> rows by <number> columns`
+
+If either number is a floating-point number, then it is rounded down.
 
 As an example:
 

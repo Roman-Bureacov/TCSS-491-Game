@@ -107,7 +107,16 @@ export class ArenaScanner {
      * @return {string} the image
      */
     buildNumber() {
+
         let n = ""
+        while (this.regexDigit.test(this.ch)) {
+            n = n.concat(this.ch);
+            this.nextCh();
+        }
+        if (this.ch === ".") {
+            n = n.concat(this.ch);
+            this.nextCh();
+        }
         while (this.regexDigit.test(this.ch)) {
             n = n.concat(this.ch);
             this.nextCh();
