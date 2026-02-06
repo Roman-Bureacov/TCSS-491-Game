@@ -26,10 +26,10 @@ class SpaceObject {
      * The 4x4 matrix representing this object
      * @type {Matrix}
      */
-    matrix;
+    transform;
 
     constructor() {
-        this.matrix = MatrixOp.identity(4);
+        this.transform = MatrixOp.identity(4);
     }
 
     /**
@@ -39,9 +39,9 @@ class SpaceObject {
      * @param {number} z the z position
      */
     setObjectPosition(x, y, z) {
-        this.matrix.set(0, 3, x);
-        this.matrix.set(1, 3, y);
-        this.matrix.set(2, 3, z);
+        this.transform.set(0, 3, x);
+        this.transform.set(1, 3, y);
+        this.transform.set(2, 3, z);
     }
 
     /**
@@ -49,7 +49,7 @@ class SpaceObject {
      * @returns {number}
      */
     objectX() {
-        return this.matrix.get(0, 3);
+        return this.transform.get(0, 3);
     }
 
     /**
@@ -57,7 +57,7 @@ class SpaceObject {
      * @returns {number}
      */
     objectY() {
-        return this.matrix.get(1, 3);
+        return this.transform.get(1, 3);
     }
 
     /**
@@ -65,7 +65,7 @@ class SpaceObject {
      * @returns {number}
      */
     objectZ() {
-        return this.matrix.get(2, 3);
+        return this.transform.get(2, 3);
     }
 }
 
@@ -250,8 +250,8 @@ class Camera extends SpaceObject {
      * @param {number} y the y coordinate with respect to the world origin
      */
     lookAt(x, y) {
-        this.matrix.set(0, 3, x);
-        this.matrix.set(1, 3, y);
+        this.transform.set(0, 3, x);
+        this.transform.set(1, 3, y);
     }
 
     /**
@@ -260,7 +260,7 @@ class Camera extends SpaceObject {
      * @param {number} z the depth of this camera
      */
     setDepth(z) {
-        this.matrix.set(2, 3, z);
+        this.transform.set(2, 3, z);
     }
 
     /**
@@ -363,14 +363,14 @@ class Render {
         // clear raster
         context.clearRect(0, 0, context.canvas.width, context.canvas.height);
 
-        let worldToCamera = MatrixOp.inverse(this.camera.matrix);
+        let worldToCamera = MatrixOp.inverse(this.camera.transform);
         for (let pane of this.world.panes) {
             // panes are defined with respect to the world
             
-            let paneToCamera = MatrixOp.multiply(worldToCamera, pane.matrix);
+            let paneToCamera = MatrixOp.multiply(worldToCamera, pane.transform);
             
             for (let drawable of pane.drawables) {
-                let entityToCamera = MatrixOp.multiply(paneToCamera, drawable.matrix);
+                let entityToCamera = MatrixOp.multiply(paneToCamera, drawable.transform);
 
                 // if on or behind camera... (z-check)
                 if (entityToCamera.get(2, 3) >= 0) continue;
