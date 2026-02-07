@@ -68,3 +68,50 @@ test("two overlapping hitboxes", () => {
         strictEqual(h1.intersects(h2), true, intersectTrueString);
     }
 })
+
+test("two hitboxes not overlapping due to different origins", () => {
+    let h1 = make(0,0);
+    let h2 = make(0,0);
+
+    h2.parent = new SpaceObject();
+
+    h1.parent.setObjectPosition(1, 1, 0);
+
+    strictEqual(h1.intersects(h2), false, intersectFalseString)
+})
+
+test("two hitboxes overlapping despite different origins", () => {
+    let h1 = make(0,0);
+    let h2 = make(0,0);
+
+    h2.parent = new SpaceObject();
+
+    h1.parent.setObjectPosition(1, 1, 0);
+    h1.bounds.setStart(-1, -1);
+
+    strictEqual(h1.intersects(h2), true, intersectTrueString)
+})
+
+test("two overlapping hitboxes sending messages", () => {
+    let h1 = make(0,0);
+    let h2 = make(0,0);
+    let flag1 = 0;
+    let flag2 = 0;
+
+    h1.onIntersectionWith = (other) => {
+        if (other.parent === h2.parent) flag1++;
+    }
+
+    h2.onIntersectionWith = (other) => {
+        if (other.parent === h1.parent) {
+            other.onIntersectionWith(h2);
+            flag2++;
+        }
+    }
+
+    h1.onIntersectionWith(h2)
+    strictEqual(flag1, 1, "h1 did nothing on intersection with h2");
+    h2.onIntersectionWith(h1);
+    strictEqual(flag1, 2, "h2 did nothing on intersection with h1");
+    strictEqual(flag2, 1, "h2 did nothing on intersection with h1");
+})
