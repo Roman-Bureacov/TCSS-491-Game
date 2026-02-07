@@ -77,6 +77,8 @@ export class Hitbox {
      *
      * Touching points do not count as an intersection
      *
+     * For illustration, see [this](https://www.desmos.com/calculator/frrxrpi9vb)
+     *
      * @param {number} a the start of the first line
      * @param {number} b the end of the first line
      * @param {number} c the start of the second line
