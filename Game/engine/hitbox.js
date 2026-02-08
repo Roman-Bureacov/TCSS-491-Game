@@ -31,6 +31,13 @@ export class Hitbox {
     parent;
 
     /**
+     * If this hitbox has expired.
+     *
+     * @type {boolean} if the hitbox has expired
+     */
+    expired = false;
+
+    /**
      * The bounds of this hitbox
      * @type {Rectangle2D}
      */
@@ -44,6 +51,15 @@ export class Hitbox {
     constructor(parent, bounds) {
        this.parent = parent;
        this.bounds = bounds;
+    }
+
+    /**
+     * updates the state of this hitbox by the timestep specified.
+     *
+     * @param {number} timestep the time step in seconds
+     */
+    update(timestep) {
+        // ...
     }
 
     /**
