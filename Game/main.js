@@ -14,6 +14,9 @@ import {Spritesheet} from "./character/animation.js";
 import {Camera, Pane, Render, World} from "./engine/render/Render.js";
 import {CharacterFactory as CharacterFactory} from "./character/characterFactory.js";
 import {KeyMapper} from "./engine/keymapper.js";
+import {TileFactory} from "./arena/tileFactory.js";
+import {IndustrialTileFactory} from "./arena/tilesets/industrialTileSet.js";
+import {ArenaFactory} from "./arena/arenaFactory.js";
 
 const gameEngine = new GameEngine(undefined, undefined);
 const CANVAS = document.querySelector('#gameWorld');
@@ -111,7 +114,10 @@ const arena = arenas.arena1; //ARENA_SELECTOR.getArena()
 // AssetManager.queueDownload(character1Img);
 AssetManager.queueDownload("character/guy1/Guy.png");
 // AssetManager.queueDownload(character2Img);
+AssetManager.queueDownload("tileset/Industrial_Tileset/1_Industrial_Tileset_1.png")
 AssetManager.queueDownload(arena.background);
+
+AssetManager.queueDownload("arena/basic.txt")
 
 
 AssetManager.downloadAll(async () => {
@@ -136,29 +142,44 @@ AssetManager.downloadAll(async () => {
 
     // const tileDrawable = new TileMapDrawable(arenaTileMap, global.CANVAS_W, global.CANVAS_H);
     const backgroundDrawable = new StaticEntity(new Spritesheet(backgroundAsset, 1, 1));
-    backgroundDrawable.setDimensionAspect(20, 2250/2975)
+    backgroundDrawable.drawingProperties.bounds.setDimensionAspect(20, 2250/2975)
     // tileDrawable.position.x = -1105;
     // tileDrawable.position.y = 1000;
     // tileDrawable.setDimension(2210, 2465)
     // tileDrawable.updateStatic();
 
-
-
-    backgroundDrawable.setPosition(
-        -backgroundDrawable.dimX() / 2,
-        backgroundDrawable.dimY() /2,
-        0
+    backgroundDrawable.drawingProperties.bounds.setStart(
+        -backgroundDrawable.drawingProperties.bounds.dimension.width / 2,
+        backgroundDrawable.drawingProperties.bounds.dimension.height /2,
     );
+
+    // let tile = TileFactory.makeTile(
+    //     TileFactory.setName.INDUSTRIAL, // pass in the tile set name
+    //     IndustrialTileFactory.tileNames.PLAT_LEFT // pass in the tile name for the set
+    // );
+    // tile.setPosition(-1, 0, 0)
+    // tilePane.addDrawable(tile)
+    //
+    // let tile2 = TileFactory.makeTile(
+    //     TileFactory.setName.INDUSTRIAL, // pass in the tile set name
+    //     IndustrialTileFactory.tileNames.COL_TOP // pass in the tile name for the set
+    // );
+    // tile2.setPosition(1, 0, 0)
+    // tilePane.addDrawable(tile2)
+
+    for (let item of ArenaFactory.makeArena(ArenaFactory.arenas.BASIC)) {
+        tilePane.addDrawable(item);
+    }
 
     // playerOne.setPosition(0, 0);
 
     playerOne.keymapper.inputMap = {
-            [KeyMapper.getName("KeyD", true)]: "move right",
-            [KeyMapper.getName("KeyA", true)]: "move left",
-            [KeyMapper.getName("KeyS", true)]: "attack",
-            [KeyMapper.getName("KeyD", false)]: "stop right",
-            [KeyMapper.getName("KeyA", false)]: "stop left",
-        };
+        [KeyMapper.getName("KeyD", true)]: "move right",
+        [KeyMapper.getName("KeyA", true)]: "move left",
+        [KeyMapper.getName("KeyS", true)]: "attack",
+        [KeyMapper.getName("KeyD", false)]: "stop right",
+        [KeyMapper.getName("KeyA", false)]: "stop left",
+    };
 
     playerTwo.keymapper.inputMap = {
         [KeyMapper.getName("KeyL", true)]: "move right",

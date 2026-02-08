@@ -25,7 +25,7 @@ let approx = (A, B) => {
 test("Make the identity matrix", () => {
     let dimension = 4;
 
-    let actual = Matrix.prototype.identity(dimension);
+    let actual = MatrixOp.identity(dimension);
     for (let r = 0; r < dimension; r++) {
         for (let c = 0; c < dimension; c++) {
             if (r === c) {

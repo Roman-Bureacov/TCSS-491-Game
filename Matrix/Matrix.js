@@ -20,7 +20,7 @@ const identity = (dimension) => {
  *
  * @param L the left matrix
  * @param R the right matrix
- * @return undefined if the multiplication is impossible, resulting matrix otherwise.
+ * @return {Matrix | undefined} undefined if the multiplication is impossible, resulting matrix otherwise.
  */
 const multiply = (L, R) => {
     if (L.columns !== R.rows) return undefined;
@@ -44,10 +44,10 @@ const multiply = (L, R) => {
 /**
  * Finds the determinant of the matrix
  * @param M the matrix
- * @returns {number|null} null if the matrix is not square, the determinant otherwise
+ * @returns {number|undefined} undefined if the matrix is not square, the determinant otherwise
  */
 const determinant = (M) => {
-    if (M.rows !== M.columns) return null;
+    if (M.rows !== M.columns) return undefined;
 
     if (M.rows === 1) {
         return M.get(0, 0);
@@ -67,10 +67,10 @@ const determinant = (M) => {
  * @param M the matrix
  * @param row the row index
  * @param column the column index
- * @returns {number|null} null if the matrix is non-square, the cofactor otherwise
+ * @returns {number|undefined} undefined if the matrix is non-square, the cofactor otherwise
  */
 const cofactor = (M, row, column) => {
-    if (M.rows !== M.columns) return null;
+    if (M.rows !== M.columns) return undefined;
 
     let minor = new Matrix(M.rows - 1, M.columns - 1);
     for (let r = 0, rMinor = 0; r < M.rows; r++) {
@@ -91,10 +91,10 @@ const cofactor = (M, row, column) => {
 /**
  * Calculates the inverse of the matrix
  * @param M
- * @return null if the matrix is singular, the inverse of the matrix otherwise
+ * @return {Matrix|undefined} undefined if the matrix is singular, the inverse of the matrix otherwise
  */
 const inverse = (M) => {
-    if (M.rows !== M.columns) return null;
+    if (M.rows !== M.columns) return undefined;
 
     let dimension = M.rows;
 

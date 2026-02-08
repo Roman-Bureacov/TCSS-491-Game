@@ -1,10 +1,9 @@
 'use strict';
 
-import {getCharacterData} from "./characterData.js";
 import {Animator, Spritesheet} from "./animation.js";
-import {Player, PlayerStates} from "./player.js";
+import {Player} from "./player.js";
 import {AssetManager} from "../assets/assetmanager.js";
-import {Character, CharacterDirections} from "./character.js";
+import {Character} from "./character.js";
 
 /**
  * Factory class that makes characters.
@@ -64,23 +63,6 @@ export class CharacterFactory {
 
         character.currentAnimation = character.animations[character.animationName()];
         return character;
-    }
-
-
-    /**
-     * Retrieves the characters spritesheet component as a new spritesheet object.
-     * @returns {Spritesheet}
-     */
-    getCharacterSpriteSheet() {
-        return this.spritesheet;
-    }
-
-    /**
-     * Gets the Character data from CharacterData.js
-     * @returns {*}
-     */
-    getCharacter() {
-        return this.data;
     }
 
 
@@ -185,10 +167,7 @@ const makeGuy = (game, spritesheet, dimX, dimY) => {
             facing: Character.DIRECTION.RIGHT,
             frames: [[2, 0], [2, 1], [2, 2], [2, 3], [2, 4], [2, 5], [2, 6]],
             duration: PlayerConstants.attack.duration,
-            callback : (player) => () => {
-                player.stateLock = false;
-                player.state = player.lastState;
-            },
+            callback : PlayerConstants.attack.callback
         },
         {
             state: Player.states.ATTACK,
@@ -196,10 +175,7 @@ const makeGuy = (game, spritesheet, dimX, dimY) => {
             frames: [[2, 0], [2, 1], [2, 2], [2, 3], [2, 4], [2, 5], [2, 6]],
             duration: PlayerConstants.attack.duration,
             isReversed: true,
-            callback : (player) => () => {
-                player.stateLock = false;
-                player.state = player.lastState;
-            },
+            callback : PlayerConstants.attack.callback
         }
     ];
 

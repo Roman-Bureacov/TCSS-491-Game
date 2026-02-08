@@ -8,29 +8,29 @@ on where to draw themselves as well as.
  */
 
 import { Matrix, MatrixOp } from "../../../Matrix/Matrix.js";
+import {Rectangle2D} from "../primitives.js";
+import { DrawingProperties } from "./drawing.js";
 
 /**
- * An object in space representing
+ * An object in world space.
+ *
+ * Objects themselves only encode a coordinate system, and
+ * additional properties are defined with respect to said local
+ * coordinate system.
+ *
  * @author Roman Bureacov
  */
 class SpaceObject {
 
     /**
-     * The matrix representing this object
+     * The 4x4 matrix representing this object
      * @type {Matrix}
      */
-    matrix;
+    transform;
 
     constructor() {
-        this.matrix = MatrixOp.identity(4);
+        this.transform = MatrixOp.identity(4);
     }
-
-    /**
-     * Transforms this object
-     * @param {Matrix} transformation the matrix to transform by
-     */
-    transform = (transformation) =>
-        this.matrix = MatrixOp.multiply(this.matrix, transformation) ;
 
     /**
      * Sets the position for this space object in the world
@@ -38,127 +38,44 @@ class SpaceObject {
      * @param {number} y the y position
      * @param {number} z the z position
      */
-    setPosition(x, y, z) {
-        this.matrix.set(0, 3, x);
-        this.matrix.set(1, 3, y);
-        this.matrix.set(2, 3, z);
+    setObjectPosition(x, y, z) {
+        this.transform.set(0, 3, x);
+        this.transform.set(1, 3, y);
+        this.transform.set(2, 3, z);
     }
 
     /**
      * Gets the X position of this space object in the world
      * @returns {number}
      */
-    posX() {
-        return this.matrix.get(0, 3);
+    objectX() {
+        return this.transform.get(0, 3);
     }
 
     /**
      * Gets the Y position of this object in the world
      * @returns {number}
      */
-    posY() {
-        return this.matrix.get(1, 3);
+    objectY() {
+        return this.transform.get(1, 3);
     }
 
     /**
      * Gets the Z position of this object in the world
      * @returns {number}
      */
-    posZ() {
-        return this.matrix.get(3, 3);
+    objectZ() {
+        return this.transform.get(2, 3);
     }
 }
 
-/**
- * Represents an entity in 2D space that has a width and height.
- *
- * All drawables are entities, but not all entities are drawable, such as hitboxes.
- *
- * Entities have positive dimensions and have origins starting from the top-left
- *
- * @author Roman Bureacov
- */
-class SpaceEntity extends SpaceObject {
-
-    /**
-     * A 4x1 column vector representing the scale of this space object.
-     *
-     * The scale is represented at a point with respect to this object's origin.
-     * @type {Matrix}
-     */
-    dimension = new Matrix(4, 1);
-
-    /**
-     * Constructs an entity of the dimension
-     * @param {number} [dimX=1] the positive x dimension of this entity
-     * @param {number} [dimY=1] the positive y dimension of this entity
-     */
-    constructor(dimX = 1, dimY = 1) {
-        super();
-        this.matrix.set(1, 1, -1); // for drawing and scaling, invert Y
-        this.dimension.set(3, 0, 1); // homogenous coordinates
-        this.setDimension(dimX, dimY);
-    }
-
-    /**
-     * Sets the dimension of this entity
-     * @param {number} [dimX=1] the positive x dimension of this entity
-     * @param {number} [dimY=1] the positive y dimension of this entity
-     */
-    setDimension(dimX = 1, dimY = 1) {
-        this.dimension.set(0, 0, dimX);
-        this.dimension.set(1, 0, dimY);
-    }
-
-    /**
-     * Sets the dimension of this entity using aspect ratio
-     * @param {number} dimX the positive x dimension of this entity
-     * @param {number} aspect the aspect ratio of the dimension of this entity
-     */
-    setDimensionAspect(dimX, aspect) {
-        this.setDimension(dimX, dimX * aspect);
-    }
-
-    /**
-     * The X dimension of this entity
-     * @returns {number} the X dimension
-     */
-    dimX() {
-        return this.dimension.get(0, 0);
-    }
-
-    /**
-     * The Y dimension of this entity
-     * @returns {number} the Y dimension
-     */
-    dimY() {
-        return this.dimension.get(1, 0);
-    }
-
-    /**
-     * The Z dimension of this entity
-     * @returns {number} the Z dimension
-     */
-    dimZ() {
-        return this.dimension.get(2, 0);
-    }
-}
-
-
-/**
- * @typedef {Object} DrawingProperties
- * @property {Spritesheet} spritesheet the spritesheet representing the drawable object
- * @property {number} row the row in the spritesheet to look at
- * @property {number} col the column in the spritesheet to look at
- * @property {boolean} isReversed if the drawing should be in reverse
- */
 
 /**
  * A drawable object for the renderer to draw.
  *
  * @author Roman Bureacov
  */
-class Drawable extends SpaceEntity {
+class Drawable extends SpaceObject {
 
     /**
      * The spritesheet representing this drawable object.
@@ -171,12 +88,7 @@ class Drawable extends SpaceEntity {
      *
      * @type {DrawingProperties}
      */
-    drawingProperties = {
-        spritesheet : undefined,
-        row: 0,
-        col: 0,
-        isReversed: false,
-    }
+    drawingProperties;
 
     /**
      * Creates a new drawable
@@ -187,7 +99,9 @@ class Drawable extends SpaceEntity {
     constructor(spritesheet, dimX = 1, dimY = 1) {
         super(dimX, dimY);
         Object.assign(this, { spritesheet });
-        this.drawingProperties.spritesheet = spritesheet;
+        this.drawingProperties = new DrawingProperties(
+            spritesheet,
+            new Rectangle2D(0, 0, dimX, dimY))
     }
 
 }
@@ -239,6 +153,29 @@ class Pane extends SpaceObject {
  * @author Roman Bureacov
  */
 class Camera extends SpaceObject {
+
+    /**
+     * the conversion rate of millimeters per pixel.
+     *
+     * The purpose of this is to make the aperture dimensions dependent
+     * on the image dimensions. If you make the aperture dimensions
+     * independent of the image (either the width or height, or both)
+     * you may get a squishing effect, where one of the canvas
+     * coordinates (left and right, or top and bottom) don't change
+     * yet as you change the image dimensions, the points map
+     * to a proportional amount of the raster, which is what you do not
+     * want.
+     *
+     * The effect of independent aperture is that of being only able to
+     * change one dimension, and yet the other dimension changes freely,
+     * so the mapping is just wrong.
+     *
+     * For an illustration, see [this](https://www.desmos.com/calculator/e7ihqkk6yz)
+     * and move around the image dimensions.
+     *
+     * @type {number}
+     */
+    static #MM_PER_PIXELS = 22/1000;
 
     /**
      * The focal length for this camera, defined in millimeters.
@@ -300,9 +237,8 @@ class Camera extends SpaceObject {
         });
 
         // for simplicity, both have the same aspect ratio in this project's context
-        this.setAperture(22, this.image.aspect, undefined);
+        this.setAperture(imageWidth * Camera.#MM_PER_PIXELS, this.image.aspect, undefined);
 
-        
         this.#modified = true;
     }
 
@@ -314,8 +250,8 @@ class Camera extends SpaceObject {
      * @param {number} y the y coordinate with respect to the world origin
      */
     lookAt(x, y) {
-        this.matrix.set(0, 3, x);
-        this.matrix.set(1, 3, y);
+        this.transform.set(0, 3, x);
+        this.transform.set(1, 3, y);
     }
 
     /**
@@ -324,7 +260,7 @@ class Camera extends SpaceObject {
      * @param {number} z the depth of this camera
      */
     setDepth(z) {
-        this.matrix.set(2, 3, z);
+        this.transform.set(2, 3, z);
     }
 
     /**
@@ -363,6 +299,8 @@ class Camera extends SpaceObject {
             height: height,
             aspect: aspect,
         })
+
+        this.#modified = true;
     }
 
     /**
@@ -372,14 +310,14 @@ class Camera extends SpaceObject {
     getCanvas() {
 
         if (this.#modified) {
-            // for simplicity, near plane is 1: aperatureWidth / focal * nearPlaneZ
-            const canvasWidth =  this.aperture.width / this.focalLength;
+            // for simplicity, near plane is 1: apertureHeight / focal * nearPlaneZ
+            const canvasHeight =  this.aperture.height / this.focalLength;
 
-            this.#canvas.left = -canvasWidth / 2;
-            this.#canvas.right = -this.#canvas.left;
-            this.#canvas.top = canvasWidth / 2 * this.aperture.aspect;
+            this.#canvas.top = (canvasHeight) / 2.0;
             this.#canvas.bottom = -this.#canvas.top;
-            
+            this.#canvas.right = this.#canvas.top * this.aperture.aspect;
+            this.#canvas.left = -this.#canvas.right;
+
             this.#modified = false;
         }
         
@@ -421,32 +359,33 @@ class Render {
      * @param context the drawing context
      */
     render(context) {
+
         // clear raster
         context.clearRect(0, 0, context.canvas.width, context.canvas.height);
 
-        let worldToCamera = MatrixOp.inverse(this.camera.matrix);
+        let worldToCamera = MatrixOp.inverse(this.camera.transform);
         for (let pane of this.world.panes) {
             // panes are defined with respect to the world
             
-            let paneToCamera = MatrixOp.multiply(worldToCamera, pane.matrix);
+            let paneToCamera = MatrixOp.multiply(worldToCamera, pane.transform);
             
             for (let drawable of pane.drawables) {
-                let entityMatrix = MatrixOp.multiply(paneToCamera, drawable.matrix);
+                let entityToCamera = MatrixOp.multiply(paneToCamera, drawable.transform);
 
-                // if on or behind camera...
-                if (entityMatrix.get(2, 3) >= 0) continue;
+                // if on or behind camera... (z-check)
+                if (entityToCamera.get(2, 3) >= 0) continue;
 
-                let endpoint = MatrixOp.multiply(entityMatrix, drawable.dimension);
+                let startpoint = MatrixOp.multiply(entityToCamera, drawable.drawingProperties.bounds.start);
+                let endpoint = MatrixOp.multiply(entityToCamera, drawable.drawingProperties.bounds.end);
 
-                // position is given by C1 and C2 in the entity's matrix, ignore C3
-                Render.#toRasterMatrix(entityMatrix, this.camera);
-                Render.#toRasterPoint(endpoint, this.camera);
+                Render.#toRasterCoordinates(startpoint, this.camera); // now working with matrices
+                Render.#toRasterCoordinates(endpoint, this.camera); // now working with matrices
 
                 // is the entity x y minimum in bounds?
                 let img = this.camera.image;
                 if (
-                    img.width < entityMatrix.get(0, 3)
-                    || img.height < entityMatrix.get(1, 3)
+                    img.width < startpoint.get(0, 0)
+                    || img.height < startpoint.get(1, 0)
                 ) continue;
 
                 // is the entity x y maximum in bounds?
@@ -459,13 +398,13 @@ class Render {
                 // even if it were reversed, it would be testing the same dimensions
                 // at the same point
 
-                let x = entityMatrix.get(0, 3);
-                let y = entityMatrix.get(1, 3);
+                let x = startpoint.get(0, 0);
+                let y = startpoint.get(1, 0);
                 let width = endpoint.get(0, 0) - x;
                 let height = endpoint.get(1, 0) - y;
 
                 let prop = drawable.drawingProperties;
-                let position = prop.spritesheet.get(prop.row, prop.col);
+                let position = prop.spritesheet.get(prop.spriteRow, prop.spriteCol);
 
                 if (drawable.drawingProperties.isReversed) {
                     context.save();
@@ -500,14 +439,13 @@ class Render {
      * @param {Matrix} matrix the column vector
      * @param {Camera} camera the camera that views the point
      */
-    static #toRasterPoint(matrix, camera) {
-                                        // perspective divide with z near plane = 1
+    static #toRasterCoordinates(matrix, camera) {
+        // perspective divide with z near plane = 1
         let z = matrix.get(2, 0);
 
         matrix.set(0, 0, matrix.get(0, 0) / -z);
         matrix.set(1, 0, matrix.get(1, 0) / -z);
 
-                                
         // convert to NDC
         let c = camera.getCanvas();
 
@@ -522,47 +460,6 @@ class Render {
         let rasterY = (1 - NDCY) * camera.image.height; // Y axis in reverse
         matrix.set(0, 0, rasterX);
         matrix.set(1, 0, rasterY);
-    }
-
-    /**
-     * Converts the matrix from camera space into raster space.
-     *
-     * In addition, sets the perspective division in the X1 and Y2 positions
-     *
-     * @param {Matrix} matrix the matrix representing something in camera space
-     * @param {Camera} camera the camera that views what the matrix represents
-     */
-    static #toRasterMatrix = (matrix, camera) => {
-
-        // convert to screen space, perspective divide
-        let z = matrix.get(2, 3);
-
-        // near plane = 1
-        matrix.set(0, 3, matrix.get(0, 3) / -z);
-        matrix.set(1, 3, matrix.get(1, 3) / -z);
-
-        // now in screen space, we can ignore the Z-coordinate
-
-        // convert into NDC
-        // normally this would map to [-1, 1], such as below:
-        // x = 2 * screen.x / ( r - l) - ( r + l ) / ( r - l )
-        // y = 2 * screen.y / ( t - b) - ( t + b ) / ( t - b )
-        // but we aren't a GPU, so we can take some liberty and normalize the coordinates to [0, 1]:
-        // x = (x - l) / (r - l)
-        // y = (y - b) / (t - b)
-        let c = camera.getCanvas();
-
-        let x = matrix.get(0, 3)
-        let NDCX = (x - c.left) / (c.right - c.left);
-
-        let y = matrix.get(1, 3)
-        let NDCY = (y - c.bottom) / (c.top - c.bottom);
-
-        // convert into raster space
-        let rasterX = NDCX * camera.image.width;
-        let rasterY = (1 - NDCY) * camera.image.height; // Y axis in reverse
-        matrix.set(0, 3, rasterX);
-        matrix.set(1, 3, rasterY);
     }
 }
 
@@ -595,4 +492,4 @@ class World {
 
 }
 
-export { Pane, Camera, Render, World, Drawable, SpaceEntity }
+export { Pane, Camera, Render, World, Drawable, SpaceObject }

@@ -119,8 +119,8 @@ export class Character extends DynamicEntity {
 
         }
         this.currentAnimation.update(tick);
-        this.drawingProperties.row = this.currentAnimation.currentFrame.row;
-        this.drawingProperties.col = this.currentAnimation.currentFrame.col;
+        this.drawingProperties.spriteRow = this.currentAnimation.currentFrame.row;
+        this.drawingProperties.spriteCol = this.currentAnimation.currentFrame.col;
         this.drawingProperties.isReversed = this.currentAnimation.reversed;
     }
 
