@@ -5,8 +5,13 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="a08718b8-ac73-4cb8-b286-185a0b662aef" name="Changes" comment="documentation">
-      <change beforePath="$PROJECT_DIR$/Game/engine/hitbox.js" beforeDir="false" afterPath="$PROJECT_DIR$/Game/engine/hitbox.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test/HitboxTest.js" beforeDir="false" afterPath="$PROJECT_DIR$/test/HitboxTest.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Game/arena/tilesets/industrialBTileSet.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Game/assets/arena/arena2.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Game/arena/arenaFactory.js" beforeDir="false" afterPath="$PROJECT_DIR$/Game/arena/arenaFactory.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Game/arena/tileFactory.js" beforeDir="false" afterPath="$PROJECT_DIR$/Game/arena/tileFactory.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Game/assets/arena/basic.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Game/assets/arena/basic.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Game/main.js" beforeDir="false" afterPath="$PROJECT_DIR$/Game/main.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -23,7 +28,7 @@
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$" value="main" />
+        <entry key="$PROJECT_DIR$" value="animation-import-merge" />
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -35,9 +40,6 @@
     &quot;assignee&quot;: &quot;Kjw072892&quot;
   }
 }</component>
-  <component name="GithubDefaultAccount">
-    <option name="defaultAccountId" value="b86f5e3b-93fa-4145-9b68-e88eaf00b933" />
-  </component>
   <component name="GithubPullRequestsUISettings">{
   &quot;selectedUrlAndAccountId&quot;: {
     &quot;url&quot;: &quot;https://github.com/Roman-Bureacov/TCSS-491-Game.git&quot;,
@@ -88,7 +90,7 @@
     "git-widget-placeholder": "Merge__Camera__With__Main",
     "ignore.virus.scanning.warn.message": "true",
     "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "C:/Users/iwant/IdeaProjects/TCSS-491-Game",
+    "last_opened_file_path": "C:/Users/Kassi/OneDrive/Computer/Documents/GitHub/TCSS-491-Game/Game/arena/tilesets",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
@@ -107,11 +109,11 @@
 }]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\Kassi\OneDrive\Computer\Documents\GitHub\TCSS-491-Game\Game\arena\tilesets" />
+      <recent name="C:\Users\Kassi\OneDrive\Computer\Documents\GitHub\TCSS-491-Game\Game\assets\arena" />
       <recent name="C:\Users\iwant\IdeaProjects\TCSS-491-Game" />
       <recent name="C:\Users\iwant\IdeaProjects\TCSS-491-Game\Game" />
       <recent name="C:\Users\Kassi\OneDrive\Computer\Documents\GitHub\TCSS-491-Game\Game\render" />
-      <recent name="C:\Users\Kassi\OneDrive\Computer\Documents\GitHub\TCSS-491-Game\Game" />
-      <recent name="C:\Users\Kassi\OneDrive\Computer\Documents\GitHub\TCSS-491-Game\Game\assets\music" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="C:\Users\iwant\IdeaProjects\TCSS-491-Game\Game\arena\compiler" />
@@ -673,24 +675,6 @@
     <MESSAGE value="tested hitboxes" />
     <MESSAGE value="documentation" />
     <option name="LAST_COMMIT_MESSAGE" value="documentation" />
-  </component>
-  <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" type="javascript">
-          <url>file://$PROJECT_DIR$/test/HitboxTest.js</url>
-          <line>185</line>
-          <properties lambdaOrdinal="-1" />
-          <option name="timeStamp" value="18" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="javascript">
-          <url>file://$PROJECT_DIR$/test/HitboxTest.js</url>
-          <line>178</line>
-          <properties lambdaOrdinal="-1" />
-          <option name="timeStamp" value="19" />
-        </line-breakpoint>
-      </breakpoints>
-    </breakpoint-manager>
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />

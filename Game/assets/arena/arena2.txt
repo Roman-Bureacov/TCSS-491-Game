@@ -1,4 +1,4 @@
-set: industrial
+set: industrialb
 dimension:
 | origin: -7, 1.5
 | matrix: 11 rows by 32 columns
