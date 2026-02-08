@@ -94,7 +94,7 @@ export const global = {
 
 // The output of the character name for each player.
 const character1 = CharacterFactory.names.guy; //CHARACTER_SELECTOR.getPlayerCharacter()[0] //player 1 character
-// const character2 = "guy2"; //CHARACTER_SELECTOR.getPlayerCharacter()[1] //player 2 character
+const character2 = CharacterFactory.names.guy2; //CHARACTER_SELECTOR.getPlayerCharacter()[0] //player 1 character
 
 // The output of the arena object for the game.
 const arena = arenas.arena1; //ARENA_SELECTOR.getArena()
@@ -127,7 +127,7 @@ AssetManager.downloadAll(async () => {
     const forePane = new Pane();
 
     const playerOne = CharacterFactory.makePlayer(character1, gameEngine);
-    const playerTwo = CharacterFactory.makePlayer(character1, gameEngine);
+    const playerTwo = CharacterFactory.makePlayer(character2, gameEngine);
 
     const backgroundAsset = AssetManager.getAsset(arena.background);
 

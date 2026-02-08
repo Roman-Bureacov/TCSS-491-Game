@@ -4,6 +4,7 @@ import {Animator, Spritesheet} from "./animation.js";
 import {Player} from "./player.js";
 import {AssetManager} from "../assets/assetmanager.js";
 import {Character} from "./character.js";
+import {getCharacterData} from "./characterData.js";
 
 /**
  * Factory class that makes characters.
@@ -51,6 +52,12 @@ export class CharacterFactory {
                 break;
             case CharacterFactory.names.guy2:
                 // TODO: make guy2
+                spritesheet = new Spritesheet(
+                    AssetManager.getAsset("character/guy1/Guy2.png"),
+                    3, 14
+                );
+                character = makeGuy(game, spritesheet, 1, 2);
+                
                 break;
             case CharacterFactory.names.warriorWoman:
                 // TODO: make warrior woman
@@ -126,12 +133,13 @@ const PlayerConstants = Object.freeze({
 /**
  * Creates the guy
  * @param {GameEngine} game the game engine
+ * @param {string} name the name of the character.
  * @param {Spritesheet} spritesheet the spritesheet
  * @param {number} dimX the dimension in X
  * @param {number} dimY the dimension in Y
  * @return {Player} the constructed player character
  */
-const makeGuy = (game, spritesheet, dimX, dimY) => {
+const makeGuy = (game, name, spritesheet, dimX, dimY) => {
 
 
     let guy = new Player(game, spritesheet, dimX, dimY);
@@ -140,13 +148,13 @@ const makeGuy = (game, spritesheet, dimX, dimY) => {
         {
             state: Player.states.MOVE,
             facing: Character.DIRECTION.RIGHT,
-            frames: [[1, 0], [1, 1], [1, 2], [1, 3], [1, 4], [1, 5]],
+            frames: getCharacterData(name).moveR,
             duration: PlayerConstants.move.duration
         },
         {
             state: Player.states.MOVE,
             facing: Character.DIRECTION.LEFT,
-            frames: [[1, 13], [1, 12], [1, 11], [1, 10], [1, 9], [1, 8]],
+            frames: getCharacterData(name).moveL,
             duration: PlayerConstants.move.duration
         },
         {
