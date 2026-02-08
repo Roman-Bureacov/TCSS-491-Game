@@ -4,15 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="a08718b8-ac73-4cb8-b286-185a0b662aef" name="Changes" comment="renamed property to better show what it means">
-      <change afterPath="$PROJECT_DIR$/Game/engine/hitbox.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/test/HitboxTest.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Game/engine/primitives.js" beforeDir="false" afterPath="$PROJECT_DIR$/Game/engine/primitives.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Game/engine/render/Render.js" beforeDir="false" afterPath="$PROJECT_DIR$/Game/engine/render/Render.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Game/playerOne.js" beforeDir="false" afterPath="$PROJECT_DIR$/Game/playerOne.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Game/playerTwo.js" beforeDir="false" afterPath="$PROJECT_DIR$/Game/playerTwo.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test/MatrixTest.js" beforeDir="false" afterPath="$PROJECT_DIR$/test/MatrixTest.js" afterDir="false" />
+    <list default="true" id="a08718b8-ac73-4cb8-b286-185a0b662aef" name="Changes" comment="documentation">
+      <change beforePath="$PROJECT_DIR$/Game/engine/hitbox.js" beforeDir="false" afterPath="$PROJECT_DIR$/Game/engine/hitbox.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/HitboxTest.js" beforeDir="false" afterPath="$PROJECT_DIR$/test/HitboxTest.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -76,7 +70,15 @@
   "keyToString": {
     "Java Scratch.scratch_6.executor": "Run",
     "Node.js Test Runner.Make the identity matrix.executor": "Run",
+    "Node.js Test Runner.two hitboxes not overlapping due to different origins.executor": "Run",
+    "Node.js Test Runner.two hitboxes overlapping despite different origins.executor": "Run",
     "Node.js Test Runner.two non-overlapping hitboxes.executor": "Run",
+    "Node.js Test Runner.two overlapping hitboxes being separated ().executor": "Run",
+    "Node.js Test Runner.two overlapping hitboxes being separated (without point tests).executor": "Run",
+    "Node.js Test Runner.two overlapping hitboxes being separated.executor": "Run",
+    "Node.js Test Runner.two overlapping hitboxes sending messages.executor": "Run",
+    "Node.js Test Runner.two overlapping hitboxes.executor": "Run",
+    "Node.js Test Runner.two touching non-overlapping hitboxes.executor": "Run",
     "Node.js.arenaFactory.js.executor": "Run",
     "Node.js.main.js.executor": "Run",
     "Node.js.scratch_7.js.executor": "Run",
@@ -119,31 +121,8 @@
       <recent name="C:\Users\Kassi\OneDrive\Computer\Documents\GitHub\TCSS-491-Game\Game\render" />
     </key>
   </component>
-  <component name="RunManager" selected="Node.js Test Runner.two non-overlapping hitboxes">
-    <configuration name="scratch_6" type="Java Scratch" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="scratch_6" />
-      <option name="SCRATCH_FILE_URL" value="file://$APPLICATION_CONFIG_DIR$/scratches/scratch_6.java" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="scratch_7.js" type="NodeJSConfigurationType" temporary="true" nameIsGenerated="true" path-to-js-file="$APPLICATION_CONFIG_DIR$/scratches/scratch_7.js" working-dir="$PROJECT_DIR$">
-      <method v="2" />
-    </configuration>
-    <configuration name="Make the identity matrix" type="NodeJsTestRunner" temporary="true">
-      <node-interpreter value="project" />
-      <working-dir value="$PROJECT_DIR$" />
-      <language value="JAVA_SCRIPT" />
-      <typescript-loader value="MANUAL_SETUP_IN_NODE_OPTION" />
-      <envs />
-      <scope-kind value="TEST" />
-      <test-file value="$PROJECT_DIR$/test/MatrixTest.js" />
-      <test-names>
-        <test-name value="Make the identity matrix" />
-      </test-names>
-      <method v="2" />
-    </configuration>
-    <configuration name="two non-overlapping hitboxes" type="NodeJsTestRunner" temporary="true">
+  <component name="RunManager" selected="Node.js Test Runner.two overlapping hitboxes being separated ()">
+    <configuration name="two hitboxes overlapping despite different origins" type="NodeJsTestRunner" temporary="true">
       <node-interpreter value="project" />
       <working-dir value="$PROJECT_DIR$" />
       <language value="JAVA_SCRIPT" />
@@ -152,16 +131,69 @@
       <scope-kind value="TEST" />
       <test-file value="$PROJECT_DIR$/test/HitboxTest.js" />
       <test-names>
-        <test-name value="two non-overlapping hitboxes" />
+        <test-name value="two hitboxes overlapping despite different origins" />
+      </test-names>
+      <method v="2" />
+    </configuration>
+    <configuration name="two overlapping hitboxes being separated ()" type="NodeJsTestRunner" temporary="true">
+      <node-interpreter value="project" />
+      <working-dir value="$PROJECT_DIR$" />
+      <language value="JAVA_SCRIPT" />
+      <typescript-loader value="MANUAL_SETUP_IN_NODE_OPTION" />
+      <envs />
+      <scope-kind value="TEST" />
+      <test-file value="$PROJECT_DIR$/test/HitboxTest.js" />
+      <test-names>
+        <test-name value="two overlapping hitboxes being separated ()" />
+      </test-names>
+      <method v="2" />
+    </configuration>
+    <configuration name="two overlapping hitboxes being separated (without point tests)" type="NodeJsTestRunner" temporary="true">
+      <node-interpreter value="project" />
+      <working-dir value="$PROJECT_DIR$" />
+      <language value="JAVA_SCRIPT" />
+      <typescript-loader value="MANUAL_SETUP_IN_NODE_OPTION" />
+      <envs />
+      <scope-kind value="TEST" />
+      <test-file value="$PROJECT_DIR$/test/HitboxTest.js" />
+      <test-names>
+        <test-name value="two overlapping hitboxes being separated (without point tests)" />
+      </test-names>
+      <method v="2" />
+    </configuration>
+    <configuration name="two overlapping hitboxes being separated" type="NodeJsTestRunner" temporary="true">
+      <node-interpreter value="project" />
+      <working-dir value="$PROJECT_DIR$" />
+      <language value="JAVA_SCRIPT" />
+      <typescript-loader value="MANUAL_SETUP_IN_NODE_OPTION" />
+      <envs />
+      <scope-kind value="TEST" />
+      <test-file value="$PROJECT_DIR$/test/HitboxTest.js" />
+      <test-names>
+        <test-name value="two overlapping hitboxes being separated" />
+      </test-names>
+      <method v="2" />
+    </configuration>
+    <configuration name="two overlapping hitboxes sending messages" type="NodeJsTestRunner" temporary="true">
+      <node-interpreter value="project" />
+      <working-dir value="$PROJECT_DIR$" />
+      <language value="JAVA_SCRIPT" />
+      <typescript-loader value="MANUAL_SETUP_IN_NODE_OPTION" />
+      <envs />
+      <scope-kind value="TEST" />
+      <test-file value="$PROJECT_DIR$/test/HitboxTest.js" />
+      <test-names>
+        <test-name value="two overlapping hitboxes sending messages" />
       </test-names>
       <method v="2" />
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Node.js Test Runner.two non-overlapping hitboxes" />
-        <item itemvalue="Node.js Test Runner.Make the identity matrix" />
-        <item itemvalue="Node.js.scratch_7.js" />
-        <item itemvalue="Java Scratch.scratch_6" />
+        <item itemvalue="Node.js Test Runner.two overlapping hitboxes being separated ()" />
+        <item itemvalue="Node.js Test Runner.two overlapping hitboxes being separated (without point tests)" />
+        <item itemvalue="Node.js Test Runner.two overlapping hitboxes being separated" />
+        <item itemvalue="Node.js Test Runner.two overlapping hitboxes sending messages" />
+        <item itemvalue="Node.js Test Runner.two hitboxes overlapping despite different origins" />
       </list>
     </recent_temporary>
   </component>
@@ -192,30 +224,6 @@
       <workItem from="1769654228887" duration="1776000" />
       <workItem from="1769658035515" duration="2248000" />
       <workItem from="1769661010414" duration="99000" />
-    </task>
-    <task id="LOCAL-00001" summary="Added a sample arena, background music, character sound fx, sword sound fx, background images">
-      <option name="closed" value="true" />
-      <created>1769050929460</created>
-      <option name="number" value="00001" />
-      <option name="presentableId" value="LOCAL-00001" />
-      <option name="project" value="LOCAL" />
-      <updated>1769050929460</updated>
-    </task>
-    <task id="LOCAL-00002" summary="merged the arena builder">
-      <option name="closed" value="true" />
-      <created>1769147636525</created>
-      <option name="number" value="00002" />
-      <option name="presentableId" value="LOCAL-00002" />
-      <option name="project" value="LOCAL" />
-      <updated>1769147636525</updated>
-    </task>
-    <task id="LOCAL-00003" summary="made building the arena much more modular and less verbose. Is able to implement the setArenasAsset in a more modular sense.">
-      <option name="closed" value="true" />
-      <created>1769148526462</created>
-      <option name="number" value="00003" />
-      <option name="presentableId" value="LOCAL-00003" />
-      <option name="project" value="LOCAL" />
-      <updated>1769148526462</updated>
     </task>
     <task id="LOCAL-00004" summary="awesome guy spawned in to save the day!">
       <option name="closed" value="true" />
@@ -561,7 +569,55 @@
       <option name="project" value="LOCAL" />
       <updated>1770360837335</updated>
     </task>
-    <option name="localTasksCounter" value="47" />
+    <task id="LOCAL-00047" summary="docs">
+      <option name="closed" value="true" />
+      <created>1770384929607</created>
+      <option name="number" value="00047" />
+      <option name="presentableId" value="LOCAL-00047" />
+      <option name="project" value="LOCAL" />
+      <updated>1770384929607</updated>
+    </task>
+    <task id="LOCAL-00048" summary="missing SpaceObject export">
+      <option name="closed" value="true" />
+      <created>1770384943724</created>
+      <option name="number" value="00048" />
+      <option name="presentableId" value="LOCAL-00048" />
+      <option name="project" value="LOCAL" />
+      <updated>1770384943724</updated>
+    </task>
+    <task id="LOCAL-00049" summary="fixed odd test aspect">
+      <option name="closed" value="true" />
+      <created>1770385509334</created>
+      <option name="number" value="00049" />
+      <option name="presentableId" value="LOCAL-00049" />
+      <option name="project" value="LOCAL" />
+      <updated>1770385509334</updated>
+    </task>
+    <task id="LOCAL-00050" summary="working and tested hitbox collisions">
+      <option name="closed" value="true" />
+      <created>1770423572387</created>
+      <option name="number" value="00050" />
+      <option name="presentableId" value="LOCAL-00050" />
+      <option name="project" value="LOCAL" />
+      <updated>1770423572389</updated>
+    </task>
+    <task id="LOCAL-00051" summary="tested hitboxes">
+      <option name="closed" value="true" />
+      <created>1770438552482</created>
+      <option name="number" value="00051" />
+      <option name="presentableId" value="LOCAL-00051" />
+      <option name="project" value="LOCAL" />
+      <updated>1770438552482</updated>
+    </task>
+    <task id="LOCAL-00052" summary="documentation">
+      <option name="closed" value="true" />
+      <created>1770438807737</created>
+      <option name="number" value="00052" />
+      <option name="presentableId" value="LOCAL-00052" />
+      <option name="project" value="LOCAL" />
+      <updated>1770438807737</updated>
+    </task>
+    <option name="localTasksCounter" value="53" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -591,10 +647,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="making push" />
-    <MESSAGE value="put player2 on the board" />
-    <MESSAGE value="put player2 on the board as an example" />
-    <MESSAGE value="JSDoc" />
     <MESSAGE value="addentity is now varargs" />
     <MESSAGE value="made factory uninstantiable" />
     <MESSAGE value="pushed some constants out into a separate object in factory" />
@@ -602,7 +654,6 @@
     <MESSAGE value="fleshed out industrialTileSet.js" />
     <MESSAGE value="extended asset manager to accept text" />
     <MESSAGE value="made a proper arena builder that builds by text" />
-    <MESSAGE value="documentation" />
     <MESSAGE value="moved over to using standardized names for tiles" />
     <MESSAGE value="character factory cleanup" />
     <MESSAGE value="split drawing of sprites from being encoded into the `drawable` into its own separate class, appended a primitives library" />
@@ -614,18 +665,29 @@
     <MESSAGE value="made arena parser properly implement a `have` fuction" />
     <MESSAGE value="appended being able to specify tile sizes in making the arenas" />
     <MESSAGE value="arena now correctly parses floating-point numbers where appropriate" />
-    <MESSAGE value="docs" />
     <MESSAGE value="renamed property to better show what it means" />
-    <option name="LAST_COMMIT_MESSAGE" value="renamed property to better show what it means" />
+    <MESSAGE value="docs" />
+    <MESSAGE value="missing SpaceObject export" />
+    <MESSAGE value="fixed odd test aspect" />
+    <MESSAGE value="working and tested hitbox collisions" />
+    <MESSAGE value="tested hitboxes" />
+    <MESSAGE value="documentation" />
+    <option name="LAST_COMMIT_MESSAGE" value="documentation" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" type="javascript">
-          <url>file://$PROJECT_DIR$/Game/engine/hitbox.js</url>
-          <line>85</line>
+          <url>file://$PROJECT_DIR$/test/HitboxTest.js</url>
+          <line>185</line>
           <properties lambdaOrdinal="-1" />
-          <option name="timeStamp" value="3" />
+          <option name="timeStamp" value="18" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="javascript">
+          <url>file://$PROJECT_DIR$/test/HitboxTest.js</url>
+          <line>178</line>
+          <properties lambdaOrdinal="-1" />
+          <option name="timeStamp" value="19" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
