@@ -5,7 +5,7 @@ import {KeyMapper} from "../engine/keymapper.js";
  * @author Roman Bureacov
  *
  * @param {string} name a string name for the player
- * @param {Player} player the player to assign a keymap to
+ * @param {Player} player the player to assign an input map keymap to
  */
 export const assignKeymap = (name, player) => {
     switch (name) {
