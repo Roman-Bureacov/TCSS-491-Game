@@ -44,11 +44,9 @@ export class ArenaParser {
 
     /**
      * Constructs a new arena parser
-     * @param {string} tileset the tileset name
      * @param {string} text the text to parse
      */
-    constructor(tileset, text) {
-        Object.assign(this, {tileset});
+    constructor(text) {
         this.scanner = new ArenaScanner(text);
     }
 

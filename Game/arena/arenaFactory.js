@@ -38,21 +38,18 @@ export class ArenaFactory {
      */
     static makeArena(name) {
         let text;
-        let tileset;
 
         switch (name) {
             case this.arenas.BASIC :
-                tileset = TileFactory.setName.INDUSTRIAL;
                 text = AssetManager.getText("arena/basic.txt");
                 break;
             case this.arenas.ARENA2:
-                tileset = TileFactory.setName.INDUSTRIALB;
                 text = AssetManager.getText("arena/arena2.txt")
                 break;
             default: throw new Error("Unknown arena name " + name);
         }
 
-        let builder = new ArenaParser(tileset, text);
+        let builder = new ArenaParser(text);
 
         return builder.buildArena();
 
