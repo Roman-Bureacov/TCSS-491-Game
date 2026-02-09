@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="029b2ee0-fb0f-45b5-9337-32d389e01ff4" name="Changes" comment="comminting before checkout">
-      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+    <list default="true" id="029b2ee0-fb0f-45b5-9337-32d389e01ff4" name="Changes" comment="updating the code from main">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/characterData.js" beforeDir="false" afterPath="$PROJECT_DIR$/characterData.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main.js" beforeDir="false" afterPath="$PROJECT_DIR$/main.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -31,6 +32,9 @@
     &quot;accountId&quot;: &quot;dedc19cc-3180-4571-8a3b-ae18bc873602&quot;
   }
 }</component>
+  <component name="ProblemsViewState">
+    <option name="selectedTabId" value="CurrentFile" />
+  </component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 1
 }</component>
@@ -47,6 +51,7 @@
     "RunOnceActivity.typescript.service.memoryLimit.init": "true",
     "git-widget-placeholder": "ayush",
     "kotlin-language-version-configured": "true",
+    "nodejs_interpreter_path": "/Users/ayush/Library/Application Support/JetBrains/IntelliJIdea2025.3/node/versions/24.13.0/bin/node",
     "nodejs_package_manager_path": "npm",
     "settings.editor.selected.configurable": "preferences.keymap",
     "vue.rearranger.settings.migration": "true"
@@ -68,7 +73,7 @@
       <option name="presentableId" value="Default" />
       <updated>1768521957457</updated>
       <workItem from="1768521958631" duration="10000" />
-      <workItem from="1770581617545" duration="1871000" />
+      <workItem from="1770581617545" duration="7687000" />
     </task>
     <task id="LOCAL-00001" summary="comminting before checkout">
       <option name="closed" value="true" />
@@ -78,7 +83,23 @@
       <option name="project" value="LOCAL" />
       <updated>1770581695080</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="updating the code from main">
+      <option name="closed" value="true" />
+      <created>1770583546063</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1770583546063</updated>
+    </task>
+    <task id="LOCAL-00003" summary="updating the code from main">
+      <option name="closed" value="true" />
+      <created>1770583593536</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1770583593536</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -97,6 +118,7 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="comminting before checkout" />
-    <option name="LAST_COMMIT_MESSAGE" value="comminting before checkout" />
+    <MESSAGE value="updating the code from main" />
+    <option name="LAST_COMMIT_MESSAGE" value="updating the code from main" />
   </component>
 </project>
