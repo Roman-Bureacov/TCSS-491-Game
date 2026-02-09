@@ -7,6 +7,7 @@ import {StaticEntity} from "../character/entity.js";
 import {AssetManager} from "../assets/assetmanager.js";
 import {Spritesheet} from "../character/animation.js";
 import {IndustrialTileFactory} from "./tilesets/industrialTileSet.js";
+import {IndustrialBTileFactory} from "./tilesets/industrialBTileSet.js";
 
 /**
  * A static factory class that makes static tile objects.
@@ -21,7 +22,8 @@ export class TileFactory {
      * @enum {string}
      */
     static setName = Object.freeze( {
-        INDUSTRIAL : "industrial"
+        INDUSTRIAL : "industrial",
+        INDUSTRIALB: "industrialb",
     })
 
     constructor() {
@@ -38,6 +40,8 @@ export class TileFactory {
         switch (setName) {
             case TileFactory.setName.INDUSTRIAL:
                 return IndustrialTileFactory.makeTile(tileName);
+            case TileFactory.setName.INDUSTRIALB:
+                return IndustrialBTileFactory.makeTile(tileName);
         }
     }
 }

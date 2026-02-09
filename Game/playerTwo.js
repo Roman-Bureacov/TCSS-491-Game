@@ -17,11 +17,11 @@ import {SoundFX} from "./engine/soundFX.js";
  * @deprecated
  */
 export class PlayerTwo extends Character {
-    constructor(game, assetManager, characterName, startPosX, startPosY) {
+    constructor(game, assetManager, characterName, startPosX, startPosY, scale = 1) {
 
         const character = new CharacterFactory(characterName, assetManager);
         const sprite = character.getCharacterSpriteSheet();
-        super(game, sprite, 200,400 , startPosX, startPosY);
+        super(game, sprite,200 * scale,450 * scale, startPosX, startPosY);
 
         this.character = character.getCharacter();
         this.sprite = character.getCharacterSpriteSheet();

@@ -22,7 +22,8 @@ export class ArenaFactory {
      * @enum {string}
      */
     static arenas = Object.freeze({
-        BASIC : "basicArena"
+        BASIC : "basicArena",
+        ARENA2: "arena2"
     });
 
     constructor() {
@@ -43,6 +44,10 @@ export class ArenaFactory {
             case this.arenas.BASIC :
                 tileset = TileFactory.setName.INDUSTRIAL;
                 text = AssetManager.getText("arena/basic.txt");
+                break;
+            case this.arenas.ARENA2:
+                tileset = TileFactory.setName.INDUSTRIALB;
+                text = AssetManager.getText("arena/arena2.txt")
                 break;
             default: throw new Error("Unknown arena name " + name);
         }
