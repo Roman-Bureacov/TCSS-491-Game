@@ -66,6 +66,11 @@ const CHARACTER_DATA = {
     
 }
 
+/**
+ * @typedef 
+ * @param {string}theCharacter
+ * @returns {*}
+ */
 export function getCharacterData(theCharacter) {
     return CHARACTER_DATA[theCharacter];
 }

@@ -19,9 +19,9 @@ export class CharacterFactory {
      * @type {Readonly<string: string>}
      */
     static names = Object.freeze({
-        guy : "guy",
-        guy2 : "guy2",
-        warriorWoman : "WarriorWoman",
+        guy: "guy1",
+        guy2: "guy2",
+        warriorWoman: "WarriorWoman",
     })
 
 
@@ -32,12 +32,13 @@ export class CharacterFactory {
     /**
      * Constructs a character.
      *
+     * @param {string} playerName The name of the player
      * @param {string} name the character name
      * @param {GameEngine} [game=undefined] the game this character will live in.
-     * If undefined the character constructed will have an undefined game.
+     * If undefined, the character constructed will have an undefined game.
      * @return {Player} a build character fresh off the line
      */
-    static makePlayer(name, game=undefined) {
+    static makePlayer(playerName, name, game = undefined) {
 
         let character;
         let spritesheet = undefined;
@@ -48,22 +49,21 @@ export class CharacterFactory {
                     AssetManager.getAsset("character/guy1/Guy.png"),
                     3, 14
                 );
-                character = makeGuy(game, spritesheet, 1, 2)
+                character = makeGuy(playerName, game, name, spritesheet, 1, 2)
                 break;
             case CharacterFactory.names.guy2:
                 // TODO: make guy2
                 spritesheet = new Spritesheet(
-                    AssetManager.getAsset("character/guy1/Guy2.png"),
+                    AssetManager.getAsset("character/guy2/Guy2.png"),
                     3, 14
                 );
-                character = makeGuy(game, spritesheet, 1, 2);
-                
+                character = makeGuy(playerName, game, name, spritesheet, 1, 2);
                 break;
             case CharacterFactory.names.warriorWoman:
                 // TODO: make warrior woman
                 break;
             default:
-                throw new Error("Unknown character name: "  + name);
+                throw new Error("Unknown character name: " + name);
 
         }
 
@@ -115,15 +115,9 @@ const compileAnimators = (character, properties) => {
  * @type {Object}
  */
 const PlayerConstants = Object.freeze({
-    move: {
-        duration: 1
-    },
-    idle: {
-        duration: 1
-    },
     attack: {
         duration: 0.5,
-        callback : (player) => () => {
+        callback: (player) => () => {
             player.stateLock = false;
             player.state = player.lastState;
         }
@@ -132,6 +126,7 @@ const PlayerConstants = Object.freeze({
 
 /**
  * Creates the guy
+ * @param {string} playerName The name of the player
  * @param {GameEngine} game the game engine
  * @param {string} name the name of the character.
  * @param {Spritesheet} spritesheet the spritesheet
@@ -139,54 +134,52 @@ const PlayerConstants = Object.freeze({
  * @param {number} dimY the dimension in Y
  * @return {Player} the constructed player character
  */
-const makeGuy = (game, name, spritesheet, dimX, dimY) => {
+const makeGuy = (playerName, game, name, spritesheet, dimX, dimY) => {
 
 
-    let guy = new Player(game, spritesheet, dimX, dimY);
+    let character = new Player(playerName, game, spritesheet, dimX, dimY);
 
     let animations = [
         {
             state: Player.states.MOVE,
             facing: Character.DIRECTION.RIGHT,
             frames: getCharacterData(name).moveR,
-            duration: PlayerConstants.move.duration
+            duration: getCharacterData(name).moveDur
         },
         {
             state: Player.states.MOVE,
             facing: Character.DIRECTION.LEFT,
             frames: getCharacterData(name).moveL,
-            duration: PlayerConstants.move.duration
+            duration: getCharacterData(name).moveDur
         },
         {
             state: Player.states.IDLE,
             facing: Character.DIRECTION.RIGHT,
-            frames: [[0, 0]],
-            duration: PlayerConstants.idle.duration
+            frames: getCharacterData(name).idleR,
+            duration: getCharacterData(name).idleDur
         },
         {
             state: Player.states.IDLE,
             facing: Character.DIRECTION.LEFT,
-            frames: [[0, 0]],
-            duration: PlayerConstants.idle.duration,
-            isReversed: true
+            frames: getCharacterData(name).idleL,
+            duration: getCharacterData(name).idleDur,
         },
         {
             state: Player.states.ATTACK,
             facing: Character.DIRECTION.RIGHT,
-            frames: [[2, 0], [2, 1], [2, 2], [2, 3], [2, 4], [2, 5], [2, 6]],
-            duration: PlayerConstants.attack.duration,
-            callback : PlayerConstants.attack.callback
+            frames: getCharacterData(name).attackR,
+            duration: getCharacterData(name).attackDur,
+            callback: PlayerConstants.attack.callback
         },
         {
             state: Player.states.ATTACK,
             facing: Character.DIRECTION.LEFT,
-            frames: [[2, 0], [2, 1], [2, 2], [2, 3], [2, 4], [2, 5], [2, 6]],
-            duration: PlayerConstants.attack.duration,
-            isReversed: true,
-            callback : PlayerConstants.attack.callback
+            frames: getCharacterData(name).attackL,
+            duration: getCharacterData(name).attackDur,
+            callback: PlayerConstants.attack.callback
         }
     ];
 
-    compileAnimators(guy, animations);
-    return guy;
+    compileAnimators(character, animations);
+    return character;
 }

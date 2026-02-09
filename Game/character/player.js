@@ -38,10 +38,11 @@ export class Player extends Character {
      * @type {KeyMapper}
      */
     keymapper;
-    
+
     /**
      * Constructs a new playable character with no animators and an empty input map.
      *
+     * @param {string} playerName Either playerOne or playerTwo
      * @param {GameEngine} game the game
      * @param {Spritesheet} spritesheet the spritesheet representing this character
      * @param {number} dimX the positive dimension of this character
@@ -49,11 +50,12 @@ export class Player extends Character {
      * @param {number} [startX=0] the starting x position
      * @param {number} [startY=0] the starting y position
      */
-    constructor(game, spritesheet,
+    constructor(playerName, game, spritesheet,
                 dimX = 1, dimY = 1,
-                startX=0, startY=0) {
+                startX = 0, startY = 0) {
         super(game, spritesheet, dimX, dimY, startX, startY);
 
+        this.playerName = playerName;
         this.state = Player.states.IDLE;
         this.facing = Character.DIRECTION.RIGHT;
 
@@ -72,15 +74,6 @@ export class Player extends Character {
 
     initKeymap() {
         this.keymapper = new KeyMapper();
-
-        // this.keymapper.inputMap = {
-        //     [KeyMapper.getName("KeyD", true)]: "move right",
-        //     [KeyMapper.getName("KeyA", true)]: "move left",
-        //     [KeyMapper.getName("KeyS", true)]: "attack",
-        //     [KeyMapper.getName("KeyD", false)]: "stop right",
-        //     [KeyMapper.getName("KeyA", false)]: "stop left",
-        // };
-
         this.keymapper.outputMap = {
             "move right": () => this.move(800),
             "move left": () => this.move(-800),
@@ -88,7 +81,32 @@ export class Player extends Character {
             "stop right": () => this.stopMoving(Character.DIRECTION.RIGHT),
             "stop left": () => this.stopMoving(Character.DIRECTION.LEFT),
         };
-    }
+
+
+        switch (this.playerName) {
+            case "playerOne": {
+
+                this.keymapper.inputMap = {
+                    [KeyMapper.getName("KeyD", true)]: "move right",
+                    [KeyMapper.getName("KeyA", true)]: "move left",
+                    [KeyMapper.getName("KeyS", true)]: "attack",
+                    [KeyMapper.getName("KeyD", false)]: "stop right",
+                    [KeyMapper.getName("KeyA", false)]: "stop left",
+                };
+                break;
+            }
+            case "playerTwo": {
+                this.keymapper.inputMap = {
+                    [KeyMapper.getName("KeyL", true)]: "move right",
+                    [KeyMapper.getName("KeyJ", true)]: "move left",
+                    [KeyMapper.getName("KeyK", true)]: "attack",
+                    [KeyMapper.getName("KeyL", false)]: "stop right",
+                    [KeyMapper.getName("KeyJ", false)]: "stop left",
+                };
+                break;
+            }
+        }
+    };
 
     /**
      * Sets the acceleration for this character
@@ -133,7 +151,7 @@ export class Player extends Character {
     update() {
         this.physics.acceleration.x = 0;
         this.physics.acceleration.y = 0;
-        
+
         for (let key in this.game.keys) this.keymapper.sendKeyEvent(this.game.keys[key]);
 
         // hard-coded gobbledegook

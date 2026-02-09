@@ -105,6 +105,8 @@ const arena = arenas.arena1; //ARENA_SELECTOR.getArena()
 // queue the image path for download.
 // AssetManager.queueDownload(character1Img);
 AssetManager.queueDownload("character/guy1/Guy.png");
+AssetManager.queueDownload("character/guy2/Guy2.png");
+AssetManager.queueDownload("character/warriorWoman/warriorWoman.png");
 // AssetManager.queueDownload(character2Img);
 AssetManager.queueDownload("tileset/Industrial_Tileset/1_Industrial_Tileset_1.png")
 AssetManager.queueDownload("tileset/Industrial_Tileset/1_Industrial_Tileset_1B.png")
@@ -126,8 +128,8 @@ AssetManager.downloadAll(async () => {
     const tilePane = new Pane();
     const forePane = new Pane();
 
-    const playerOne = CharacterFactory.makePlayer(character1, gameEngine);
-    const playerTwo = CharacterFactory.makePlayer(character2, gameEngine);
+    const playerOne = CharacterFactory.makePlayer("playerOne",character1, gameEngine);
+    const playerTwo = CharacterFactory.makePlayer("playerTwo",character2, gameEngine);
 
     const backgroundAsset = AssetManager.getAsset(arena.background);
 
@@ -157,24 +159,6 @@ AssetManager.downloadAll(async () => {
     for (let item of ArenaFactory.makeArena(ArenaFactory.arenas.ARENA2)) {
         tilePane.addDrawable(item);
     }
-
-
-    playerOne.keymapper.inputMap = {
-        [KeyMapper.getName("KeyD", true)]: "move right",
-        [KeyMapper.getName("KeyA", true)]: "move left",
-        [KeyMapper.getName("KeyS", true)]: "attack",
-        [KeyMapper.getName("KeyD", false)]: "stop right",
-        [KeyMapper.getName("KeyA", false)]: "stop left",
-    };
-
-    playerTwo.keymapper.inputMap = {
-        [KeyMapper.getName("KeyL", true)]: "move right",
-        [KeyMapper.getName("KeyJ", true)]: "move left",
-        [KeyMapper.getName("KeyK", true)]: "attack",
-        [KeyMapper.getName("KeyL", false)]: "stop right",
-        [KeyMapper.getName("KeyJ", false)]: "stop left",
-    };
-
 
     const camera = new Camera(canvas.width, canvas.height);
     camera.setDepth(5);
