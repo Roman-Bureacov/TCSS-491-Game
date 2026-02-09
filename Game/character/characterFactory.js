@@ -32,13 +32,12 @@ export class CharacterFactory {
     /**
      * Constructs a character.
      *
-     * @param {string} playerName The name of the player
      * @param {string} name the character name
      * @param {GameEngine} [game=undefined] the game this character will live in.
      * If undefined, the character constructed will have an undefined game.
      * @return {Player} a build character fresh off the line
      */
-    static makePlayer(playerName, name, game = undefined) {
+    static makePlayer(name, game = undefined) {
 
         let character;
         let spritesheet = undefined;
@@ -49,7 +48,7 @@ export class CharacterFactory {
                     AssetManager.getAsset("character/guy1/Guy.png"),
                     3, 14
                 );
-                character = makeGuy(playerName, game, name, spritesheet, 1, 2)
+                character = makeGuy(game, name, spritesheet, 1, 2)
                 break;
             case CharacterFactory.names.guy2:
                 // TODO: make guy2
@@ -57,7 +56,7 @@ export class CharacterFactory {
                     AssetManager.getAsset("character/guy2/Guy2.png"),
                     3, 14
                 );
-                character = makeGuy(playerName, game, name, spritesheet, 1, 2);
+                character = makeGuy(game, name, spritesheet, 1, 2);
                 break;
             case CharacterFactory.names.warriorWoman:
                 // TODO: make warrior woman
@@ -134,10 +133,10 @@ const PlayerConstants = Object.freeze({
  * @param {number} dimY the dimension in Y
  * @return {Player} the constructed player character
  */
-const makeGuy = (playerName, game, name, spritesheet, dimX, dimY) => {
+const makeGuy = (game, name, spritesheet, dimX, dimY) => {
 
 
-    let character = new Player(playerName, game, spritesheet, dimX, dimY);
+    let character = new Player(game, spritesheet, dimX, dimY);
 
     let animations = [
         {

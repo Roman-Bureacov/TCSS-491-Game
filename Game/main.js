@@ -9,6 +9,7 @@ import {Camera, Pane, Render, World} from "./engine/render/Render.js";
 import {CharacterFactory as CharacterFactory} from "./character/characterFactory.js";
 import {KeyMapper} from "./engine/keymapper.js";
 import {ArenaFactory} from "./arena/arenaFactory.js";
+import {assignKeymap, PLAYER} from "./character/keymapAssigner.js";
 
 const gameEngine = new GameEngine(undefined, undefined);
 const CANVAS = document.querySelector('#gameWorld');
@@ -128,8 +129,10 @@ AssetManager.downloadAll(async () => {
     const tilePane = new Pane();
     const forePane = new Pane();
 
-    const playerOne = CharacterFactory.makePlayer("playerOne",character1, gameEngine);
-    const playerTwo = CharacterFactory.makePlayer("playerTwo",character2, gameEngine);
+    const playerOne = CharacterFactory.makePlayer(character1, gameEngine);
+    const playerTwo = CharacterFactory.makePlayer(character2, gameEngine);
+    assignKeymap(PLAYER.ONE, playerOne);
+    assignKeymap(PLAYER.TWO, playerTwo);
 
     const backgroundAsset = AssetManager.getAsset(arena.background);
 
@@ -141,20 +144,6 @@ AssetManager.downloadAll(async () => {
         -backgroundDrawable.drawingProperties.bounds.dimension.width / 2,
         backgroundDrawable.drawingProperties.bounds.dimension.height /2,
     );
-
-    // let tile = TileFactory.makeTile(
-    //     TileFactory.setName.INDUSTRIAL, // pass in the tile set name
-    //     IndustrialTileFactory.tileNames.PLAT_LEFT // pass in the tile name for the set
-    // );
-    // tile.setPosition(-1, 0, 0)
-    // tilePane.addDrawable(tile)
-    //
-    // let tile2 = TileFactory.makeTile(
-    //     TileFactory.setName.INDUSTRIAL, // pass in the tile set name
-    //     IndustrialTileFactory.tileNames.COL_TOP // pass in the tile name for the set
-    // );
-    // tile2.setPosition(1, 0, 0)
-    // tilePane.addDrawable(tile2)
 
     for (let item of ArenaFactory.makeArena(ArenaFactory.arenas.ARENA2)) {
         tilePane.addDrawable(item);
