@@ -66,45 +66,45 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "Java Scratch.scratch_6.executor": "Run",
-    "Node.js Test Runner.Make the identity matrix.executor": "Run",
-    "Node.js Test Runner.two hitboxes not overlapping due to different origins.executor": "Run",
-    "Node.js Test Runner.two hitboxes overlapping despite different origins.executor": "Run",
-    "Node.js Test Runner.two non-overlapping hitboxes.executor": "Run",
-    "Node.js Test Runner.two overlapping hitboxes being separated ().executor": "Run",
-    "Node.js Test Runner.two overlapping hitboxes being separated (without point tests).executor": "Run",
-    "Node.js Test Runner.two overlapping hitboxes being separated.executor": "Run",
-    "Node.js Test Runner.two overlapping hitboxes sending messages.executor": "Run",
-    "Node.js Test Runner.two overlapping hitboxes.executor": "Run",
-    "Node.js Test Runner.two touching non-overlapping hitboxes.executor": "Run",
-    "Node.js.arenaFactory.js.executor": "Run",
-    "Node.js.main.js.executor": "Run",
-    "Node.js.scratch_7.js.executor": "Run",
-    "RunOnceActivity.git.unshallow": "true",
-    "RunOnceActivity.typescript.service.memoryLimit.init": "true",
-    "disable.download.node.interpreter.editor.notification": "true",
-    "git-widget-placeholder": "Merge__Camera__With__Main",
-    "ignore.virus.scanning.warn.message": "true",
-    "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "C:/Users/iwant/IdeaProjects/TCSS-491-Game",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "settings.editor.selected.configurable": "preferences.pluginManager",
-    "two.files.diff.last.used.file": "C:/Users/iwant/IdeaProjects/TCSS-491-Game2/Game/character/animation.js",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Java Scratch.scratch_6.executor&quot;: &quot;Run&quot;,
+    &quot;Node.js Test Runner.Make the identity matrix.executor&quot;: &quot;Run&quot;,
+    &quot;Node.js Test Runner.two hitboxes not overlapping due to different origins.executor&quot;: &quot;Run&quot;,
+    &quot;Node.js Test Runner.two hitboxes overlapping despite different origins.executor&quot;: &quot;Run&quot;,
+    &quot;Node.js Test Runner.two non-overlapping hitboxes.executor&quot;: &quot;Run&quot;,
+    &quot;Node.js Test Runner.two overlapping hitboxes being separated ().executor&quot;: &quot;Run&quot;,
+    &quot;Node.js Test Runner.two overlapping hitboxes being separated (without point tests).executor&quot;: &quot;Run&quot;,
+    &quot;Node.js Test Runner.two overlapping hitboxes being separated.executor&quot;: &quot;Run&quot;,
+    &quot;Node.js Test Runner.two overlapping hitboxes sending messages.executor&quot;: &quot;Run&quot;,
+    &quot;Node.js Test Runner.two overlapping hitboxes.executor&quot;: &quot;Run&quot;,
+    &quot;Node.js Test Runner.two touching non-overlapping hitboxes.executor&quot;: &quot;Run&quot;,
+    &quot;Node.js.arenaFactory.js.executor&quot;: &quot;Run&quot;,
+    &quot;Node.js.main.js.executor&quot;: &quot;Run&quot;,
+    &quot;Node.js.scratch_7.js.executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.typescript.service.memoryLimit.init&quot;: &quot;true&quot;,
+    &quot;disable.download.node.interpreter.editor.notification&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;Merge__Camera__With__Main&quot;,
+    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/iwant/IdeaProjects/TCSS-491-Game&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;,
+    &quot;two.files.diff.last.used.file&quot;: &quot;C:/Users/iwant/IdeaProjects/TCSS-491-Game2/Game/character/animation.js&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   },
-  "keyToStringList": {
-    "com.intellij.ide.scratch.ScratchImplUtil$2/New Scratch File": [
-      "JavaScript",
-      "JAVA"
+  &quot;keyToStringList&quot;: {
+    &quot;com.intellij.ide.scratch.ScratchImplUtil$2/New Scratch File&quot;: [
+      &quot;JavaScript&quot;,
+      &quot;JAVA&quot;
     ]
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="C:\Users\iwant\IdeaProjects\TCSS-491-Game" />
