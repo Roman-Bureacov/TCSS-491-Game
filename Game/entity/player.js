@@ -8,6 +8,8 @@ import {KeyMapper} from "../engine/keymapper.js";
 import {global} from "../main.js";
 import {CharacterFactory} from "./characterFactory.js";
 import {SoundFX} from "../engine/soundFX.js";
+import {Hitbox, HitboxOp} from "../engine/hitbox.js";
+import {TileEntity} from "./tileEntity.js";
 
 /**
  * Enum representing the possible states of player characters
@@ -66,6 +68,7 @@ export class Player extends Character {
         this.lastState = this.state;
 
         this.initKeymap();
+        this.initHitbox();
 
         // this.playSound = new SoundFX({masterVolume: 0.8});
     }
@@ -80,6 +83,20 @@ export class Player extends Character {
             "stop left": () => this.stopMoving(Character.DIRECTION.LEFT),
         };
     };
+
+    initHitbox() {
+        this.hitbox = new Hitbox(this, this.drawingProperties.bounds);
+        this.hitbox.resolveIntersection = (properties) => {
+            if (properties.other.parent === this) {
+                return;
+            } else if (properties.other.parent instanceof TileEntity) {
+                HitboxOp.separate(properties);
+                this.physics.position.x = this.objectX();
+                this.physics.position.y = this.objectY();
+                console.log(this.physics.position)
+            }
+        }
+    }
 
     /**
      * Sets the acceleration for this character
@@ -123,7 +140,7 @@ export class Player extends Character {
 
     update() {
         this.physics.acceleration.x = 0;
-        this.physics.acceleration.y = 0;
+        this.physics.acceleration.y = -0.1;
 
         for (let key in this.game.keys) this.keymapper.sendKeyEvent(this.game.keys[key]);
 
