@@ -67,12 +67,18 @@ export class Hitbox {
      *
      * Touching edges do not count as intersections.
      *
+     * If a hitbox expires before the game engine gets to
+     * updating it and removing it, the intersection test will
+     * automatically fail.
+     *
      * @param {Hitbox} other
      * @return {undefined | IntersectionTestProperties}
      * if the hitboxes intersect: the intersection test properties;
      * otherwise `undefined` (no intersection found)
      */
     intersects(other) {
+        if (this.expired) return undefined;
+
         let thisStart = MatrixOp.multiply(this.parent.transform, this.bounds.start);
         let thisEnd = MatrixOp.multiply(this.parent.transform, this.bounds.end);
         let thisStartX = thisStart.get(0, 0);
@@ -112,7 +118,7 @@ export class Hitbox {
      * Instructs what happens on intersections with the other hitbox
      * @param {IntersectionTestProperties} properties the properties pertaining to an intersection
      */
-    onIntersectionWith(properties) {
+    resolveIntersection(properties) {
         // ...
     }
 

@@ -1,9 +1,9 @@
 'use strict';
 
-import {Spritesheet} from "../character/animation.js";
+import {Spritesheet} from "../entity/animation.js";
 
 import {Drawable} from "../engine/render/Render.js";
-import {StaticEntity} from "../character/entity.js";
+import {StaticEntity} from "../entity/entity.js";
 import {AssetManager} from "../assets/assetmanager.js";
 import {ArenaParser} from "./compiler/arenaParser.js";
 import {TileFactory} from "./tileFactory.js";
@@ -34,7 +34,7 @@ export class ArenaFactory {
      * Creates an arena
      *
      * @param {string} name the arena name
-     * @return {StaticEntity[]} the collection of static entities that make up this arena
+     * @return {TileEntity[]} the collection of static entities that make up this arena
      */
     static makeArena(name) {
         let text;

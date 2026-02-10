@@ -3,9 +3,9 @@ this file has code for creating tiles
 
  */
 
-import {StaticEntity} from "../character/entity.js";
+import {StaticEntity} from "../entity/entity.js";
 import {AssetManager} from "../assets/assetmanager.js";
-import {Spritesheet} from "../character/animation.js";
+import {Spritesheet} from "../entity/animation.js";
 import {IndustrialTileFactory} from "./tilesets/industrialTileSet.js";
 import {IndustrialBTileFactory} from "./tilesets/industrialBTileSet.js";
 
@@ -34,7 +34,7 @@ export class TileFactory {
      * Constructs a tile static entity
      * @param {string} setName the name of the tile set
      * @param {string} tileName the name of tile type
-     * @return {StaticEntity} the tile entity
+     * @return {TileEntity} the tile entity
      */
     static makeTile(setName, tileName) {
         switch (setName) {

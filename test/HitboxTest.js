@@ -99,23 +99,23 @@ test("two overlapping hitboxes sending messages", () => {
     let flag1 = 0;
     let flag2 = 0;
 
-    h1.onIntersectionWith = (prop) => {
+    h1.resolveIntersection = (prop) => {
         if (prop.other.parent === h2.parent) flag1++;
     }
 
-    h2.onIntersectionWith = (prop) => {
+    h2.resolveIntersection = (prop) => {
         if (prop.other.parent === h1.parent) {
-            prop.other.onIntersectionWith(prop);
+            prop.other.resolveIntersection(prop);
             flag2++;
         }
     }
 
     let p;
     p = h1.intersects(h2);
-    h1.onIntersectionWith(p)
+    h1.resolveIntersection(p)
     strictEqual(flag1, 1, "h1 did nothing on intersection with h2");
     p = h2.intersects(h1);
-    h2.onIntersectionWith(p);
+    h2.resolveIntersection(p);
     strictEqual(flag1, 2, "h2 did nothing on intersection with h1");
     strictEqual(flag2, 1, "h2 did nothing on intersection with h1");
 })
@@ -167,7 +167,7 @@ test("two overlapping hitboxes being separated", () => {
         [-0.5,   -1], [-0.25,   -1], [0,  -1], [0.25,  -1], [0.5,   -1]
     ]
 
-    h2.onIntersectionWith = (prop) => {
+    h2.resolveIntersection = (prop) => {
         HitboxOp.separate(prop);
     }
 
@@ -176,7 +176,7 @@ test("two overlapping hitboxes being separated", () => {
         let p = h2.intersects(h1);
         notStrictEqual(p, undefined, "expected intersection but got undefined (no intersection found)")
 
-        h2.onIntersectionWith(p);
+        h2.resolveIntersection(p);
 
         strictEqual(h1.parent.objectX(), 0, "h1 moved on X when it shouldn't have");
         strictEqual(h1.parent.objectY(), 0, "h1 moved on Y when it shouldn't have");

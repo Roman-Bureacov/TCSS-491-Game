@@ -38,7 +38,7 @@ export class ArenaParser {
 
     /**
      * The built arena
-     * @type StaticEntity[]
+     * @type TileEntity[]
      */
     compiledArena = [];
 
@@ -53,7 +53,7 @@ export class ArenaParser {
     /**
      * Builds an arena based on text
      *
-     * @return {StaticEntity[]} the set of tiles representing the arena
+     * @return {TileEntity[]} the set of tiles representing the arena
      */
     buildArena() {
         this.root();
@@ -215,12 +215,17 @@ export class ArenaParser {
 
                     tile.setObjectPosition(
                         this.parameters.originX + c * colSpacing,
-                        this.parameters.originY - r * rowSpacing,  0);
-
+                        this.parameters.originY - r * rowSpacing,
+                        0
+                    );
                     tile.drawingProperties.bounds.setDimension(
                         this.parameters.tileWidth,
                         this.parameters.tileHeight
-                    )
+                    );
+                    tile.hitbox.bounds.setDimension(
+                        this.parameters.tileWidth,
+                        this.parameters.tileHeight
+                    );
 
                     this.compiledArena.push(tile);
                 } else {

@@ -1,7 +1,8 @@
 import {AssetManager} from "../../assets/assetmanager.js";
-import {Spritesheet} from "../../character/animation.js";
-import {StaticEntity} from "../../character/entity.js";
+import {Spritesheet} from "../../entity/animation.js";
+import {StaticEntity} from "../../entity/entity.js";
 import {alphabetize, standardizeNames} from "../tileFactory.js";
+import {TileEntity} from "../../entity/tileEntity.js";
 
 /**
  * A factory for building tiles of the industrial style.
@@ -37,11 +38,12 @@ export class IndustrialBTileFactory {
     /**
      * Makes the tile from this set.
      * @param {string} name the name of the tile
+     * @return {TileEntity} the new tile entity
      */
     static makeTile(name) {
         this.buildSelf();
 
-        let tile = new StaticEntity(IndustrialBTileFactory.#spritesheet)
+        let tile = new TileEntity(IndustrialBTileFactory.#spritesheet)
         let frame = this.tileNames[name];
         tile.drawingProperties.spriteRow = frame[0];
         tile.drawingProperties.spriteCol = frame[1];

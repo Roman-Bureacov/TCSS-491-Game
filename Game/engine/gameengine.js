@@ -2,7 +2,7 @@
 
 import {Timer} from "./timer.js";
 import {Render} from "./render/Render.js";
-import {DynamicEntity} from "../character/entity.js";
+import {DynamicEntity} from "../entity/entity.js";
 
 export class GameEngine {
 
@@ -30,7 +30,34 @@ export class GameEngine {
         this.ctx = null;
 
         // Everything that will be updated and drawn each frame
-        this.entities = [];
+        /**
+         * The collection of entities.
+         *
+         * Dynamic entities will be updated every simulation iteration.
+         *
+         * Static entities are not updated on simulation iteration.
+         *
+         * @type {{dynamic: DynamicEntity[], static: StaticEntity[]}}
+         */
+        this.entities = {
+            dynamic : [],
+            static : []
+        }
+
+        /**
+         * The collection of static and dynamic hitboxes.
+         *
+         * Dynamic hitboxes will actively check for intersections on every simulation iteration.
+         *
+         * Static hitboxes only exist and don't actively check for intersections,
+         * only resulting in intersections.
+         *
+         * @type {{dynamic: Hitbox[], static: Hitbox[]}}
+         */
+        this.hitboxes = {
+            dynamic : [],
+            static : []
+        }
 
         // Information on the input
         this.click = null;
@@ -118,45 +145,99 @@ export class GameEngine {
         this.ctx.canvas.addEventListener("keyup", event => acknowledge(event))
     };
 
-    addEntity(...entity) {
-        entity.map(e => this.entities.push(e));
+    /**
+     * Adds a dynamic entity and spawns its associated hitbox property into the game.
+     * @param {DynamicEntity} entity the dynamic entity
+     */
+    addDynamicEntity(...entity) {
+        entity.map(e => {
+            this.entities.dynamic.push(e);
+            if (e.hitbox) this.hitboxes.dynamic.push(e.hitbox);
+        });
+
+    }
+
+    /**
+     * Adds a static entity and spawns its associated hitbox property into the game.
+     * @param {StaticEntity} entity the static entity
+     */
+    addStaticEntity(...entity) {
+        entity.map(e => {
+            this.entities.static.push(e);
+            if (e.hitbox) this.hitboxes.static.push(e.hitbox);
+        });
     };
 
+    /**
+     * Spawns a dynamic hitbox in which this game engine becomes aware of
+     * @param {Hitbox} hitbox the hitbox to make the game aware of
+     */
+    spawnDynamicHitbox(hitbox) {
+        this.hitboxes.dynamic.push(hitbox)
+    }
+
+    /**
+     * Tells this engine's renderer to draw
+     */
     draw() {
-        // Clear the whole canvas with transparent color (rgba(0, 0, 0, 0))
-        // this.ctx.clearRect(0, 0, this.ctx.canvas.frameWidth, this.ctx.canvas.frameHeight);
-
-        /*
-        // Draw latest things first
-        for (let i = this.entities.length - 1; i >= 0; i--) {
-            this.entities[i].draw(this.ctx, this);
-        }
-         */
-
         this.render.render(this.ctx);
     };
 
-    update() {
-        let entitiesCount = this.entities.length;
-
-        for (let i = 0; i < entitiesCount; i++) {
-            let entity = this.entities[i];
-
-            if (!entity.removeFromWorld) {
-                if (entity instanceof DynamicEntity) entity.update();
-            }
-        }
-
-        for (let i = this.entities.length - 1; i >= 0; --i) {
-            if (this.entities[i].removeFromWorld) {
-                this.entities.splice(i, 1);
+    /**
+     * Updates the dynamic entities recognized by this engine
+     */
+    updateEntities() {
+        for (let i = 0; i < this.entities.dynamic.length; i++) {
+            if (this.entities.dynamic[i].expired) {
+                this.entities.dynamic.splice(i, 1);
+            } else {
+                this.entities.dynamic[i].update();
             }
         }
     };
 
+    /**
+     * Find any and all intersections between dynamic hitboxes and every other hitbox
+     */
+    detectIntersections() {
+        this.hitboxes.dynamic.forEach( h1 => {
+            this.hitboxes.dynamic.forEach( h2 => {
+                let properties = h1.intersects(h2);
+                if (properties) h1.resolveIntersection(properties);
+            });
+            this.hitboxes.static.forEach( h2 => {
+                let properties = h1.intersects(h2);
+                if (properties) h1.resolveIntersection(properties);
+            })
+        })
+    }
+
+    /**
+     * updates the dynamic hitboxes, removing them if they expired
+     */
+    updateHitboxes() {
+        for (let i = 0; i < this.hitboxes.dynamic.length; i++) {
+            if (this.hitboxes.dynamic[i].expired) {
+                this.hitboxes.dynamic.splice(i, 1);
+            } else {
+                this.hitboxes.dynamic[i].update(this.clockTick);
+            }
+        }
+    }
+
+    /**
+     * Core loop of the game engine, specifically looping:
+     * 
+     *   1. update dynamic entities
+     *   2. find hitbox intersections and resolve
+     *   3. update hitbox states 
+     *   4. draw
+     */
     loop() {
         this.clockTick = this.timer.tick();
-        this.update();
+        this.updateEntities();
+        this.detectIntersections();
+        this.updateHitboxes();
         this.draw();
         this.keys = {};
     };

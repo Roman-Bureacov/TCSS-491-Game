@@ -15,6 +15,12 @@ import {PhysicsEntity} from "./PhysicsEntity.js";
 export class DynamicEntity extends Drawable {
 
     /**
+     * The defining hitbox of this entity, if it exists.
+     * @type {Hitbox}
+     */
+    hitbox;
+
+    /**
      * Represents the physics for this entity
      * @type {PhysicsEntity}
      */
@@ -70,6 +76,12 @@ export class DynamicEntity extends Drawable {
 export class StaticEntity extends Drawable {
 
     /**
+     * The defining hitbox of this entity, if it exists.
+     * @type {Hitbox}
+     */
+    hitbox;
+
+    /**
      * Constructs a new drawable static entity
      * @param {Spritesheet} spritesheet the spritesheet
      * @param {number} [dimX=1] the positive x dimension of this entity
@@ -79,8 +91,6 @@ export class StaticEntity extends Drawable {
         super(spritesheet, dimX, dimY);
     }
 
-
-    
 }
 
 

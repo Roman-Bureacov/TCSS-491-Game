@@ -1,12 +1,12 @@
 import {GameEngine} from "./engine/gameengine.js"
 import {AssetManager} from "./assets/assetmanager.js";
 
-import {StaticEntity} from "./character/entity.js";
-import {Spritesheet} from "./character/animation.js";
+import {StaticEntity} from "./entity/entity.js";
+import {Spritesheet} from "./entity/animation.js";
 import {Camera, Pane, Render, World} from "./engine/render/Render.js";
-import {CharacterFactory as CharacterFactory} from "./character/characterFactory.js";
+import {CharacterFactory as CharacterFactory} from "./entity/characterFactory.js";
 import {ArenaFactory} from "./arena/arenaFactory.js";
-import {assignKeymap, PLAYER} from "./character/keymapAssigner.js";
+import {assignKeymap, PLAYER} from "./entity/keymapAssigner.js";
 
 const gameEngine = new GameEngine(undefined, undefined);
 const CANVAS = document.querySelector('#gameWorld');
@@ -80,16 +80,16 @@ AssetManager.downloadAll(async () => {
     forePane.addDrawable(playerOne, playerTwo);
 
     // create the arena
-    for (let item of ArenaFactory.makeArena(ArenaFactory.arenas.ARENA2)) {
-        tilePane.addDrawable(item);
-    }
+    let arena = ArenaFactory.makeArena(ArenaFactory.arenas.ARENA2);
+    arena.map(e => tilePane.addDrawable(e))
 
     world.addPane(backgroundPane);
     world.addPane(tilePane);
     world.addPane(forePane);
 
-    //Add new Player Entity
-    gameEngine.addEntity(playerOne, playerTwo);
+    //Add entities
+    gameEngine.addDynamicEntity(playerOne, playerTwo);
+    arena.map(e => gameEngine.addStaticEntity(e));
 
     gameEngine.render = renderer;
 
