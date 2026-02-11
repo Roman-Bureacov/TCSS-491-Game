@@ -143,25 +143,29 @@ const makeGuy = (game, name, spritesheet, dimX, dimY) => {
             state: Player.states.MOVE,
             facing: Character.DIRECTION.RIGHT,
             frames: getCharacterData(name).moveR,
-            duration: getCharacterData(name).moveDur
+            duration: getCharacterData(name).moveDur,
+            isLooping: true
         },
         {
             state: Player.states.MOVE,
             facing: Character.DIRECTION.LEFT,
             frames: getCharacterData(name).moveL,
-            duration: getCharacterData(name).moveDur
+            duration: getCharacterData(name).moveDur,
+            isLooping: true
         },
         {
             state: Player.states.IDLE,
             facing: Character.DIRECTION.RIGHT,
             frames: getCharacterData(name).idleR,
-            duration: getCharacterData(name).idleDur
+            duration: getCharacterData(name).idleDur,
+            isLooping: true
         },
         {
             state: Player.states.IDLE,
             facing: Character.DIRECTION.LEFT,
             frames: getCharacterData(name).idleL,
             duration: getCharacterData(name).idleDur,
+            isLooping: true
         },
         {
             state: Player.states.ATTACK,
