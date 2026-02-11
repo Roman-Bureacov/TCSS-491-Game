@@ -3,6 +3,8 @@
 import {Timer} from "./timer.js";
 import {Render} from "./render/Render.js";
 import {DynamicEntity} from "../entity/entity.js";
+import {MatrixOp} from "../../Matrix/Matrix.js";
+import {Point} from "./primitives.js";
 
 export class GameEngine {
 
@@ -18,6 +20,19 @@ export class GameEngine {
      */
     keys = {};
 
+    /**
+     * The focus, what two players the camera will focus on
+     * when the engine iterates.
+     *
+     * If one of both characters aren't defined, then
+     * the engine will not try to focus the camera.
+     *
+     * @type {{playerA: Player, playerB: Player}}
+     */
+    focus = {
+        playerA : undefined,
+        playerB : undefined,
+    }
 
     /**
      * Constructs a game engine
@@ -180,6 +195,59 @@ export class GameEngine {
      * Tells this engine's renderer to draw
      */
     draw() {
+
+        // should we focus?
+        if (this.focus.playerA && this.focus.playerB) {
+            const minDepth = 4;
+            const maxDepth = 8;
+
+            // make the looking "bounding box" by using the centers of the primary hitboxes
+            let A = this.focus.playerA;
+            let B = this.focus.playerB;
+            let lookA = new Point( // center of A
+                (A.hitbox.bounds.start.x() + A.hitbox.bounds.end.x()) / 2,
+                (A.hitbox.bounds.start.y() + A.hitbox.bounds.end.y()) / 2,
+            );
+            let lookB = new Point( // center of B
+                (B.hitbox.bounds.start.x() + B.hitbox.bounds.end.x()) / 2,
+                (B.hitbox.bounds.start.y() + B.hitbox.bounds.end.y()) / 2,
+            );
+
+            // we try to focus based on the bounds
+            // that both sprites make
+            // the start of A and the end of B
+            const lookStart = MatrixOp.multiply(
+                this.focus.playerA.transform,
+                lookA
+            )
+            const lookEnd = MatrixOp.multiply(
+                this.focus.playerB.transform,
+                lookB
+            )
+
+            const lookX = (lookStart.get(0, 0) + lookEnd.get(0, 0)) / 2;
+            const lookY = (lookStart.get(1, 0) + lookEnd.get(1, 0)) / 2;
+
+
+            this.render.camera.lookAt(
+                lookX, lookY
+            );
+
+
+            // new depth is the X we wish to see divided by the tan of the theta FOV
+            // theta FOV is the arctan of the canvas width over the focal length
+            const lookWidth = Math.abs(lookX - lookStart.get(0, 0));
+            const canvas = this.render.camera.getCanvas();
+            const newDepth = lookWidth / (canvas.right * 2 / this.render.camera.focalLength);
+
+            this.render.camera.setDepth(
+                Math.min(
+                    Math.max(minDepth, newDepth),
+                    maxDepth
+                )
+            )
+        }
+
         this.render.render(this.ctx);
     };
 

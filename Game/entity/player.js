@@ -93,7 +93,7 @@ export class Player extends Character {
                 HitboxOp.separate(properties);
                 this.physics.position.x = this.objectX();
                 this.physics.position.y = this.objectY();
-                console.log(this.physics.position)
+                // console.log(this.physics.position)
             }
         }
     }

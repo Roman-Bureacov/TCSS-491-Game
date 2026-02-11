@@ -80,7 +80,7 @@ AssetManager.downloadAll(async () => {
     forePane.addDrawable(playerOne, playerTwo);
 
     // create the arena
-    let arena = ArenaFactory.makeArena(ArenaFactory.arenas.ARENA2);
+    let arena = ArenaFactory.makeArena(ArenaFactory.arenas.BASIC);
     arena.map(e => tilePane.addDrawable(e))
 
     world.addPane(backgroundPane);
@@ -92,6 +92,8 @@ AssetManager.downloadAll(async () => {
     arena.map(e => gameEngine.addStaticEntity(e));
 
     gameEngine.render = renderer;
+    gameEngine.focus.playerA = playerOne;
+    gameEngine.focus.playerB = playerTwo;
 
     // debug properties (for console usage)
     window.DEBUG.render = {
