@@ -237,8 +237,10 @@ export class GameEngine {
             // new depth is the X we wish to see divided by the tan of the theta FOV
             // theta FOV is the arctan of the canvas width over the focal length
             const lookWidth = Math.abs(lookX - lookStart.get(0, 0));
+            const lookHeight = Math.abs(lookY - lookStart.get(1, 0));
+            const lookRadius = Math.sqrt(lookWidth**2 + lookHeight**2);
             const canvas = this.render.camera.getCanvas();
-            const newDepth = lookWidth / (canvas.right * 2 / this.render.camera.focalLength);
+            const newDepth = lookRadius / (canvas.right * 2 / this.render.camera.focalLength);
 
             this.render.camera.setDepth(
                 Math.min(
