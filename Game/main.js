@@ -60,7 +60,7 @@ AssetManager.downloadAll(async () => {
     const backgroundAsset = AssetManager.getAsset("background/background03.jpeg");
     const backgroundDrawable = new StaticEntity(new Spritesheet(backgroundAsset, 1, 1));
     // now position the background...
-    backgroundDrawable.drawingProperties.bounds.setDimensionAspect(20, 2250/2975)
+    backgroundDrawable.drawingProperties.bounds.setDimensionAspect(30, 2250/2975)
     backgroundDrawable.drawingProperties.bounds.setStart(
         -backgroundDrawable.drawingProperties.bounds.dimension.width / 2,
         backgroundDrawable.drawingProperties.bounds.dimension.height /2,
