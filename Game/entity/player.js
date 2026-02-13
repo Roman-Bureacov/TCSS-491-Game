@@ -10,6 +10,7 @@ import {CharacterFactory} from "./characterFactory.js";
 import {SoundFX} from "../engine/soundFX.js";
 import {Hitbox, HitboxOp} from "../engine/hitbox.js";
 import {TileEntity} from "./tileEntity.js";
+import {Rectangle2D} from "../engine/primitives.js";
 
 /**
  * Enum representing the possible states of player characters
@@ -85,7 +86,14 @@ export class Player extends Character {
     };
 
     initHitbox() {
-        this.hitbox = new Hitbox(this, this.drawingProperties.bounds);
+        let box = this.drawingProperties.bounds;
+        this.hitbox = new Hitbox(
+            this,
+            new Rectangle2D(
+                box.start.x(), box.start.y(),
+                box.end.x(), box.end.y()
+            )
+        );
         this.hitbox.resolveIntersection = (properties) => {
             if (properties.other.parent === this) {
                 return;
