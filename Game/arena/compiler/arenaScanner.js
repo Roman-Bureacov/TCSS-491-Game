@@ -127,7 +127,6 @@ export class ArenaScanner {
 
     /**
      * Reads and returns the next character found
-     * @return {string}
      */
     nextCh() {
         this.ch = this.text.charAt(this.index++);
