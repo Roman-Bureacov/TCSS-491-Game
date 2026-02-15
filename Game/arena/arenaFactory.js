@@ -1,13 +1,7 @@
 'use strict';
 
-import {Spritesheet} from "../entity/animation.js";
-
-import {Drawable} from "../engine/render/Render.js";
-import {StaticEntity} from "../entity/entity.js";
 import {AssetManager} from "../assets/assetmanager.js";
 import {ArenaParser} from "./compiler/arenaParser.js";
-import {TileFactory} from "./tileFactory.js";
-
 
 /**
  * Factory for building arenas

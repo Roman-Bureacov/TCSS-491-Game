@@ -3,11 +3,9 @@ A concrete implementation of the character class
  */
 
 import {Character} from "./character.js"
-import {Animator, Spritesheet} from "./animation.js";
+import {Spritesheet} from "./animation.js";
 import {KeyMapper} from "../engine/keymapper.js";
-import {global} from "../main.js";
 import {CharacterFactory} from "./characterFactory.js";
-import {SoundFX} from "../engine/soundFX.js";
 import {Hitbox, HitboxOp} from "../engine/hitbox.js";
 import {TileEntity} from "./tileEntity.js";
 import {Rectangle2D} from "../engine/primitives.js";

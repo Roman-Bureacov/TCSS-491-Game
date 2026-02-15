@@ -5,7 +5,6 @@ import {DynamicEntity} from "./entity.js";
 /**
  * The map of direction constants to their respective strings
  * @readonly
- * @enum {CharacterDirection}
  */
 export const CharacterDirections = Object.freeze({
     UP: "up ",

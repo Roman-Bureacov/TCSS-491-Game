@@ -4,7 +4,6 @@ A concrete implementation of the character class
 
 import {Character} from "./entity/character.js"
 import {KeyMapper} from "./engine/keymapper.js";
-import {CharacterFactory} from "./entity/characterFactory.js";
 import {Player} from "./entity/player.js";
 import {getCharacterData} from "./entity/characterData.js";
 import {Spritesheet} from "./entity/animation.js";
