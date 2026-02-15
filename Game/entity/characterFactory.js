@@ -34,6 +34,8 @@ export class CharacterFactory {
      * configures the characters animation and moving
      * @param player The player object
      * @param name The name of the character.
+     *
+     * @author Kassie Whitney
      */
     static configurePlayer(player, name) {
         let data = getCharacterData(name);
