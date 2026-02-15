@@ -30,6 +30,11 @@ export class CharacterFactory {
     }
 
 
+    /**
+     * configures the characters animation and moving
+     * @param player The player object
+     * @param name The name of the character.
+     */
     static configurePlayer(player, name) {
         let data = getCharacterData(name);
 
@@ -97,7 +102,6 @@ export class CharacterFactory {
         }
 
         player.currentAnimation = player.animations[player.animationName()];
-        return player;
 
     }
 
@@ -163,6 +167,7 @@ export class CharacterFactory {
  * Compiles and creates the animators for the character
  * @param {Character} character the character to compile animators into
  * @param {AnimatorProp[]} properties the properties of every animator for the character
+ * @deprecated
  */
 const compileAnimators = (character, properties) => {
     for (let prop of properties) {
