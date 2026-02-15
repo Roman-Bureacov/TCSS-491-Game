@@ -32,12 +32,6 @@ export class CharacterFactory {
 
     static configurePlayer(player, name) {
         let data = getCharacterData(name);
-        console.log(name)
-        console.log(data.moveR)
-        // if (!data) throw new Error("Unknown character data for: " + name);
-
-        // // IMPORTANT: make sure spritesheet is correct for THIS player
-        // player.spritesheet = new Spritesheet(player.spritesheet?.image ?? player.spritesheet, data.numRow, data.numCol);
 
         const animations = [
             {
@@ -114,6 +108,7 @@ export class CharacterFactory {
      * @param {GameEngine} [game=undefined] the game this character will live in.
      * If undefined, the character constructed will have an undefined game.
      * @return {Player} a build character fresh off the line
+     * @deprecated
      */
     static makePlayer(name, game = undefined) {
 
@@ -210,6 +205,7 @@ const PlayerConstants = Object.freeze({
  * @param {number} dimX the dimension in X
  * @param {number} dimY the dimension in Y
  * @return {Player} the constructed player character
+ * @deprecated
  */
 const makeGuy = (game, name, spritesheet, dimX, dimY) => {
 
