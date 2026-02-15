@@ -231,7 +231,7 @@ const separate = (properties) => {
                 ) ? DIRECTIONS.RIGHT : DIRECTIONS.LEFT;
             } else {
                 pushDirection = ( // down as tie-breaker
-                    vectorBiasY <= 0
+                    vectorBiasY < 0
                 ) ? DIRECTIONS.UP : DIRECTIONS.DOWN;
             }
         } else {
