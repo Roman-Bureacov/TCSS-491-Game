@@ -22,7 +22,6 @@ export class PlayerTwo extends Player {
         Object.assign(this, {game, assetManager, characterName})
         
         this.setupKeymap();
-        // this.buildCharacter();
 
     }
 
@@ -36,10 +35,6 @@ export class PlayerTwo extends Player {
             [KeyMapper.getName("KeyJ", false)]: "stop left",
         };
     }
-    //
-    // buildCharacter() {
-    //     CharacterFactory.makePlayer(this.characterName, this.game);
-    // }
 
 }
 
