@@ -132,18 +132,46 @@ const expectAt = (atX, atY, hitbox) => {
     let actualY = actualOrigin.get(1, 0);
     strictEqual(atX, actualX,
         `expected to find hitbox at
-        (${actualX}, ${actualY})
+        (${atX}, ${atY})
         but found hitbox at 
-        (${atX}, ${atY}) 
+        (${actualX}, ${actualY}) 
         `
     )
     strictEqual(atY, actualY,
         `expected to find hitbox at
-        (${actualX}, ${actualY})
+        (${atX}, ${atY})
         but found hitbox at 
-        (${atX}, ${atY}) 
+        (${actualX}, ${actualY}) 
         `
     )
+}
+
+/**
+ * tests the points to see if overlaps occurred and hitboxes were separated
+ * @param {Hitbox} h1 the moving hitbox
+ * @param {Hitbox} h2 the immovable hitbox
+ * @param {[Number, Number][]} points the points to move h1 to
+ * @param {[Number, Number][]} expectedPoints the expected origin of h1 after the separation
+ */
+const testPoints = (h1, h2, points, expectedPoints) => {
+    h2.resolveIntersection = (prop) => {
+        HitboxOp.separate(prop);
+    }
+
+    for (let i in points) {
+        h2.parent.setObjectPosition(points[i][0], points[i][1], 0);
+        let p = h2.intersects(h1);
+        notStrictEqual(p, undefined, "expected intersection but got undefined (no intersection found)")
+
+        h2.resolveIntersection(p);
+
+        strictEqual(h1.parent.objectX(), 0, "h1 moved on X when it shouldn't have");
+        strictEqual(h1.parent.objectY(), 0, "h1 moved on Y when it shouldn't have");
+        strictEqual(h1.parent.objectZ(), 0, "h1 moved on Z when it shouldn't have");
+        strictEqual(h2.intersects(h1), undefined, intersectFalseString);
+        strictEqual(h1.intersects(h2), undefined, intersectFalseString);
+        expectAt(expectedPoints[i][0], expectedPoints[i][1], h2);
+    }
 }
 
 test("two overlapping hitboxes being separated", () => {
@@ -185,4 +213,70 @@ test("two overlapping hitboxes being separated", () => {
         strictEqual(h1.intersects(h2), undefined, intersectFalseString);
         expectAt(expectedPoints[i][0], expectedPoints[i][1], h2);
     }
+})
+
+test("two overlapping hitboxes being separated, using the bias", () => {
+    let h1 = make(0, 0);
+    let h2 = make(0, 0);
+    h2.parent = new SpaceObject();
+
+    let points = [
+        [-0.75, 0.75], [ -0.5,  0.5], [0, 0.5], [ 0.5, 0.5], [0.75, 0.75],
+        [-0.75,  0.5],                                       [0.75,  0.5],
+        [-0.75,    0],                                       [0.75,    0],
+        [-0.75, -0.5],                                       [0.75, -0.5],
+        [-0.75,-0.75], [ -0.5, -0.5], [0,-0.5], [ 0.5,-0.5], [0.75,-0.75]
+    ];
+
+    let expectedPoints = [
+        [-0.75,   1], [ -0.5,    1], [0,   1], [ 0.5,   1], [ 0.75,   1],
+        [   -1, 0.5],                                       [    1, 0.5],
+        [   -1,   0],                                       [    1,   0],
+        [   -1,-0.5],                                       [    1,-0.5],
+        [-0.75,  -1], [ -0.5,   -1], [0,  -1], [ 0.5,  -1], [ 0.75,  -1]
+    ]
+
+    h2.resolveIntersection = (prop) => {
+        HitboxOp.separate(prop);
+    }
+
+    for (let i in points) {
+        h2.parent.setObjectPosition(points[i][0], points[i][1], 0);
+        let p = h2.intersects(h1);
+        notStrictEqual(p, undefined, "expected intersection but got undefined (no intersection found)")
+
+        h2.resolveIntersection(p);
+
+        strictEqual(h1.parent.objectX(), 0, "h1 moved on X when it shouldn't have");
+        strictEqual(h1.parent.objectY(), 0, "h1 moved on Y when it shouldn't have");
+        strictEqual(h1.parent.objectZ(), 0, "h1 moved on Z when it shouldn't have");
+        strictEqual(h2.intersects(h1), undefined, intersectFalseString);
+        strictEqual(h1.intersects(h2), undefined, intersectFalseString);
+        expectAt(expectedPoints[i][0], expectedPoints[i][1], h2);
+    }
+})
+
+test("two overlapping hitboxes being separated, using the bias, where one hitbox is tall", () => {
+    let h1 = make(0, 0);
+    let h2 = make(0, 0);
+    h2.parent = new SpaceObject();
+    h2.bounds.setDimension(1, 2);
+
+    let points = [
+        [-0.8,  1.7], [ -0.6,  1.7], [0.6, 1.7], [0.8,  1.7],
+        [-0.8,  1.3],                            [0.8,  1.3],
+        [-0.8,  0.5],                            [0.8,  0.5],
+        [-0.8, -0.2],                            [0.8, -0.2],
+        [-0.8, -0.7], [ -0.6, -0.7], [0.6,-0.7], [0.8, -0.7]
+    ];
+
+    let expectedPoints = [
+        [  -1,  1.7], [ -0.6,    2], [0.6,   2], [  1,  1.7],
+        [  -1,  1.3],                            [  1,  1.3],
+        [  -1,  0.5],                            [  1,  0.5],
+        [  -1, -0.2],                            [  1, -0.2],
+        [  -1, -0.7], [ -0.6,   -1], [0.6,  -1], [  1, -0.7]
+    ];
+
+    testPoints(h1, h2, points, expectedPoints)
 })

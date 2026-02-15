@@ -1,18 +1,9 @@
 import {Animator, Spritesheet} from "./animation.js";
 import {DynamicEntity} from "./entity.js";
+import {DIRECTIONS} from "../engine/constants.js";
 
 
-/**
- * The map of direction constants to their respective strings
- * @readonly
- * @enum {CharacterDirection}
- */
-export const CharacterDirections = Object.freeze({
-    UP: "up ",
-    DOWN: "down ",
-    LEFT: "left ",
-    RIGHT: "right ",
-});
+
 
 /**
  * Creates a basic character
@@ -51,7 +42,7 @@ export class Character extends DynamicEntity {
      */
     stateLock = false;
 
-    static DIRECTION = CharacterDirections;
+    static DIRECTION = DIRECTIONS;
 
     /**
      * The state of this character as per the states this character may exhibit.

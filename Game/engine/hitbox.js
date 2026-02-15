@@ -3,6 +3,7 @@ This file has the information for hitboxes
  */
 
 import {MatrixOp} from "../../Matrix/Matrix.js";
+import {DIRECTIONS} from "./constants.js";
 
 /**
  * @typedef IntersectionTestProperties
@@ -168,7 +169,7 @@ const testOverlap = (a, b, c, d) => {
  * 
  * Note that this assumes that the two boxes are already intersecting.
  *
- * For an illustration on how pushing works, see [this](https://www.desmos.com/calculator/owehi6a6po)
+ * For an illustration on how pushing works, see [this](https://www.desmos.com/calculator/zclnpnrjoh)
  *
  * The algorithm will solve ambiguous ties on pushing trying to:
  *  1. push down (otherwise push up)
@@ -186,24 +187,93 @@ const separate = (properties) => {
     let otherCenterY = (properties.otherStartY + properties.otherEndY) / 2
     let subjectCenterX = (properties.subjectStartX + properties.subjectEndX) / 2
     let subjectCenterY = (properties.subjectStartY + properties.subjectEndY) / 2
-    let intersectDimX = Math.abs(otherCenterX - subjectCenterX);
-    let intersectDimY = Math.abs(otherCenterY - subjectCenterY);
 
-    // we need to push on the greater axis
+    // find point vectors, from center of other to start/end points of subject
+    let vectorStartX = properties.subjectStartX - otherCenterX;
+    let vectorStartY = properties.subjectStartY - otherCenterY;
+    let vectorEndX = properties.subjectEndX - otherCenterX;
+    let vectorEndY = properties.subjectEndY - otherCenterY;
+
+    let pushDirection;
+
+    // do we need to use bias?
+    if (vectorStartX * vectorEndX * vectorStartY * vectorEndY >= 0) {
+        // if they disagree or agree on both, use bias
+
+        // find bias vector
+        let subjectClosestX = (
+            subjectCenterX < otherCenterX
+        ) ? properties.subjectEndX : properties.subjectStartX;
+
+        let subjectClosestY = (
+            subjectCenterY < otherCenterY
+        ) ? properties.subjectStartY : properties.subjectEndY
+
+        let vectorBiasX = subjectClosestX - otherCenterX;
+        let vectorBiasY = subjectClosestY - otherCenterY;
+        if (vectorBiasX === 0) {
+            vectorBiasX = (
+                otherCenterX < subjectCenterX
+            ) ? -Number.EPSILON : Number.EPSILON;
+        }
+        if (vectorBiasY === 0) {
+            vectorBiasY = (
+                subjectCenterY >= otherCenterY
+            ) ? -Number.EPSILON : Number.EPSILON;
+        }
+
+        if (vectorStartX * vectorEndX <= 0 && vectorStartY * vectorEndY <= 0) {
+            // both vectors disagree on both axis, use smaller component of bias to decide
+            // then push in that opposite direction
+            if (Math.abs(vectorBiasX) < Math.abs(vectorBiasY)) { // y-axis as tie-breaker
+                pushDirection = ( // right as tie-breaker
+                    vectorBiasX < 0
+                ) ? DIRECTIONS.RIGHT : DIRECTIONS.LEFT;
+            } else {
+                pushDirection = ( // down as tie-breaker
+                    vectorBiasY <= 0
+                ) ? DIRECTIONS.UP : DIRECTIONS.DOWN;
+            }
+        } else {
+            // both vectors agree on both axis, use bigger component of bias to decide
+            if (Math.abs(vectorBiasX) <= Math.abs(vectorBiasY)) { // y-axis as tie-breaker
+                pushDirection = ( // down as tie-breaker
+                    vectorBiasY > 0
+                ) ? DIRECTIONS.UP : DIRECTIONS.DOWN;
+            } else {
+                pushDirection = ( // right as tie-breaker
+                    vectorBiasX >= 0
+                ) ? DIRECTIONS.RIGHT : DIRECTIONS.LEFT;
+            }
+        }
+        
+    } else {
+        if (vectorStartX * vectorEndX <= 0) { // disagree on X, y-axis as tie-breaker
+            pushDirection = ( // down as tie-breaker
+                vectorStartY > 0
+            ) ? DIRECTIONS.UP : DIRECTIONS.DOWN;
+        } else { // disagree on Y
+            pushDirection = ( // right as tie-breaker
+                vectorStartX < 0
+            ) ? DIRECTIONS.LEFT : DIRECTIONS.RIGHT;
+        }
+    }
+
     let dx = 0;
     let dy = 0
-    if (intersectDimX <= intersectDimY) { // we need to push on the y-axis
-        if (subjectCenterY > otherCenterY) { // push up
+    switch (pushDirection) {
+        case DIRECTIONS.UP:
             dy = properties.otherStartY - properties.subjectEndY;
-        } else { // push down
+            break;
+        case DIRECTIONS.DOWN:
             dy = -(properties.subjectStartY - properties.otherEndY)
-        }
-    } else { // we need to push on the x-axis
-        if (subjectCenterX >= otherCenterX) { // push right
-            dx = properties.otherEndX - properties.subjectStartX;
-        } else { // push left
+            break;
+        case DIRECTIONS.LEFT:
             dx = -(properties.subjectEndX - properties.otherStartX)
-        }
+            break;
+        case DIRECTIONS.RIGHT:
+            dx = properties.otherEndX - properties.subjectStartX;
+            break;
     }
 
     properties.subject.parent.setObjectPosition(
