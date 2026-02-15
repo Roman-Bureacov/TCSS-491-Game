@@ -91,7 +91,7 @@ export class Player extends Character {
             this,
             new Rectangle2D(
                 box.start.x(), box.start.y(),
-                box.end.x(), box.end.y()
+                box.dimension.width, box.dimension.height
             )
         );
         this.hitbox.resolveIntersection = (properties) => {
