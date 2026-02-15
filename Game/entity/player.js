@@ -9,6 +9,8 @@ import {CharacterFactory} from "./characterFactory.js";
 import {Hitbox, HitboxOp} from "../engine/hitbox.js";
 import {TileEntity} from "./tileEntity.js";
 import {Rectangle2D} from "../engine/primitives.js";
+import {SoundFX} from "../engine/soundFX.js";
+import {getCharacterData} from "./characterData.js";
 
 /**
  * Enum representing the possible states of player characters
@@ -60,6 +62,7 @@ export class Player extends Character {
         this.facing = playerPosition;
         this.state = Player.states.IDLE;
         this.physics.velocityMax.x = 10;
+        this.name = name;
 
         this.constantAcceleration = {
             [Character.DIRECTION.LEFT]: 0,
@@ -70,7 +73,7 @@ export class Player extends Character {
         this.initKeymap();
         this.initHitbox();
 
-        CharacterFactory.configurePlayer(this, name)
+        CharacterFactory.configurePlayer(this, this.name)
 
         // this.playSound = new SoundFX({masterVolume: 0.8});
     }
@@ -102,7 +105,6 @@ export class Player extends Character {
                 HitboxOp.separate(properties);
                 this.physics.position.x = this.objectX();
                 this.physics.position.y = this.objectY();
-                // console.log(this.physics.position)
             }
         }
     }
@@ -141,7 +143,8 @@ export class Player extends Character {
             this.lastState = this.state;
             this.state = Player.states.ATTACK;
             this.stateLock = true;
-            // this.playSound.play(this.character.swordSound)
+            const swordSwingFx = getCharacterData(this.name).swordSound
+            SoundFX.play(swordSwingFx)
         }
 
     }
@@ -161,6 +164,7 @@ export class Player extends Character {
         switch (this.state) {
             case Player.states.ATTACK :
                 this.physics.velocity.x = 0;
+
                 break;
             case Player.states.MOVE :
                 this.physics.acceleration.x =
