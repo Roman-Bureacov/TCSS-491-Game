@@ -192,6 +192,7 @@ const compileAnimators = (character, properties) => {
 /**
  * collection of constants for characters to use in their animators
  * @type {Object}
+ * @deprecated
  */
 const PlayerConstants = Object.freeze({
     attack: {
