@@ -1,5 +1,5 @@
 import {StaticEntity} from "./entity.js";
-import {Hitbox} from "../engine/hitbox.js";
+import {Hitbox} from "../engine/hitbox.js"
 import {Rectangle2D} from "../engine/primitives.js";
 
 /**

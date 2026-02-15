@@ -29,6 +29,84 @@ export class CharacterFactory {
         throw new Error("Cannot instantiate factory (anti-pattern)");
     }
 
+
+    static configurePlayer(player, name) {
+        let data = getCharacterData(name);
+        console.log(name)
+        console.log(data.moveR)
+        // if (!data) throw new Error("Unknown character data for: " + name);
+
+        // // IMPORTANT: make sure spritesheet is correct for THIS player
+        // player.spritesheet = new Spritesheet(player.spritesheet?.image ?? player.spritesheet, data.numRow, data.numCol);
+
+        const animations = [
+            {
+                state: Player.states.MOVE,
+                facing: Character.DIRECTION.RIGHT,
+                frames: data.moveR,
+                duration: data.moveDur,
+                isLooping: true
+            },
+            {
+                state: Player.states.MOVE,
+                facing: Character.DIRECTION.LEFT,
+                frames: data.moveL,
+                duration: data.moveDur,
+                isLooping: true
+            },
+            {
+                state: Player.states.IDLE,
+                facing: Character.DIRECTION.RIGHT,
+                frames: data.idleR,
+                duration: data.idleDur,
+                isLooping: true
+            },
+            {
+                state: Player.states.IDLE,
+                facing: Character.DIRECTION.LEFT,
+                frames: data.idleL,
+                duration: data.idleDur,
+                isLooping: true
+            },
+            {
+                state: Player.states.ATTACK,
+                facing: Character.DIRECTION.RIGHT,
+                frames: data.attackR,
+                duration: data.attackDur,
+                callback: () => {
+                    player.stateLock = false;
+                    player.state = player.lastState;
+                }
+            },
+            {
+                state: Player.states.ATTACK,
+                facing: Character.DIRECTION.LEFT,
+                frames: data.attackL,
+                duration: data.attackDur,
+                callback: () => {
+                    player.stateLock = false;
+                    player.state = player.lastState;
+                }
+            }
+        ];
+
+        // compileAnimators but applied to THIS player
+        for (let prop of animations) {
+            player.animations[Player.buildAnimationName(prop.state, prop.facing)] = new Animator(
+                prop.frames,
+                prop.duration,
+                prop.isReversed ?? false,
+                prop.soundMap,
+                prop.isLooping ?? false,
+                prop.callback
+            );
+        }
+
+        player.currentAnimation = player.animations[player.animationName()];
+        return player;
+
+    }
+
     /**
      * Constructs a character.
      *

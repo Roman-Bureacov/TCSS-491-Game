@@ -7,6 +7,9 @@ import {Camera, Pane, Render, World} from "./engine/render/Render.js";
 import {CharacterFactory as CharacterFactory} from "./entity/characterFactory.js";
 import {ArenaFactory} from "./arena/arenaFactory.js";
 import {assignKeymap, PLAYER} from "./entity/keymapAssigner.js";
+import {PlayerOne} from "./playerOne.js";
+import {getCharacterData} from "./entity/characterData.js";
+import {PlayerTwo} from "./playerTwo.js";
 
 const gameEngine = new GameEngine(undefined, undefined);
 const CANVAS = document.querySelector('#gameWorld');
@@ -50,22 +53,23 @@ AssetManager.downloadAll(async () => {
     const character2 = CharacterFactory.names.guy2; //CHARACTER_SELECTOR.getPlayerCharacter()[0] //player 1 character
 
     // create brand-new characters
-    const playerOne = CharacterFactory.makePlayer(character1, gameEngine);
-    const playerTwo = CharacterFactory.makePlayer(character2, gameEngine);
+    // const playerOne = new PlayerOne(gameEngine, AssetManager, character1, 0, 100, 1)
+    const playerOne = new PlayerOne(gameEngine, AssetManager, character1, -1, 0, 1)
+    const playerTwo =  new PlayerTwo(gameEngine, AssetManager, character2, 1, 0, 1)
     // give them keymaps...
-    assignKeymap(PLAYER.ONE, playerOne);
+    // assignKeymap(PLAYER.ONE, playerOne);
     assignKeymap(PLAYER.TWO, playerTwo);
+    assignKeymap(PLAYER.ONE, playerOne);
 
     // make the background
     const backgroundAsset = AssetManager.getAsset("background/background03.jpeg");
     const backgroundDrawable = new StaticEntity(new Spritesheet(backgroundAsset, 1, 1));
     // now position the background...
-    backgroundDrawable.drawingProperties.bounds.setDimensionAspect(30, 2250/2975)
+    backgroundDrawable.drawingProperties.bounds.setDimensionAspect(30, 2250 / 2975)
     backgroundDrawable.drawingProperties.bounds.setStart(
         -backgroundDrawable.drawingProperties.bounds.dimension.width / 2,
-        backgroundDrawable.drawingProperties.bounds.dimension.height /2,
+        backgroundDrawable.drawingProperties.bounds.dimension.height / 2,
     );
-
 
 
     // now we need a camera
@@ -79,26 +83,30 @@ AssetManager.downloadAll(async () => {
     backgroundPane.addDrawable(backgroundDrawable);
     forePane.addDrawable(playerOne, playerTwo);
 
-    // create the arena
-    let arena = ArenaFactory.makeArena(ArenaFactory.arenas.BASIC);
-    arena.map(e => tilePane.addDrawable(e))
-
     world.addPane(backgroundPane);
     world.addPane(tilePane);
     world.addPane(forePane);
 
-    //Add entities
+// create the arena (array of TileEntity)
+    const arena = ArenaFactory.makeArena(ArenaFactory.arenas.ARENA2);
+
+// add tiles to the pane
+    for (const item of arena) {
+        tilePane.addDrawable(item);
+    }
+
+// Add entities
     gameEngine.addDynamicEntity(playerOne, playerTwo);
-    arena.map(e => gameEngine.addStaticEntity(e));
+    arena.forEach(e => gameEngine.addStaticEntity(e));
 
     gameEngine.render = renderer;
-    gameEngine.focus.playerA = playerOne;
+    // gameEngine.focus.playerA = playerOne;
     gameEngine.focus.playerB = playerTwo;
 
     // debug properties (for console usage)
     window.DEBUG.render = {
-        char1 : playerOne,
-        char2 : playerTwo,
+        // char1: playerOne,
+        char2: playerTwo,
         world: world,
         renderer: renderer,
         pane: forePane,

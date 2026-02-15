@@ -51,15 +51,16 @@ export class Player extends Character {
      * @param {number} dimY the positive dimension of this character
      * @param {number} [startX=0] the starting x position
      * @param {number} [startY=0] the starting y position
+     * @param playerPosition The starting direction of the players.
+     * @param name The name of the character.
      */
     constructor(game, spritesheet,
                 dimX = 1, dimY = 1,
-                startX = 0, startY = 0) {
+                startX = 0, startY = 0, playerPosition, name) {
         super(game, spritesheet, dimX, dimY, startX, startY);
 
+        this.facing = playerPosition;
         this.state = Player.states.IDLE;
-        this.facing = Character.DIRECTION.RIGHT;
-
         this.physics.velocityMax.x = 10;
 
         this.constantAcceleration = {
@@ -70,6 +71,8 @@ export class Player extends Character {
 
         this.initKeymap();
         this.initHitbox();
+
+        CharacterFactory.configurePlayer(this, name)
 
         // this.playSound = new SoundFX({masterVolume: 0.8});
     }
@@ -150,11 +153,12 @@ export class Player extends Character {
         this.physics.acceleration.x = 0;
         this.physics.acceleration.y = -0.1;
 
-        for (let key in this.game.keys) this.keymapper.sendKeyEvent(this.game.keys[key]);
+        // for (let key in this.game.keys) this.keymapper.sendKeyEvent(this.game.keys[key]);
 
-        // hard-coded gobbledegook
-        // if ( this.physics.position.x > global.CANVAS_W - 20)  this.physics.position.x = -75;
-        // else if ( this.physics.position.x < -75)  this.physics.position.x = global.CANVAS_W - 20;
+        for (let k in this.game.keys) {
+            console.log("Player got event:", this.game.keys[k].type, this.game.keys[k].code);
+            this.keymapper.sendKeyEvent(this.game.keys[k]);
+        }
 
         switch (this.state) {
             case Player.states.ATTACK :
