@@ -370,6 +370,8 @@ class Render {
             let paneToCamera = MatrixOp.multiply(worldToCamera, pane.transform);
             
             for (let drawable of pane.drawables) {
+                if (drawable.drawingProperties.hidden) continue;
+
                 let entityToCamera = MatrixOp.multiply(paneToCamera, drawable.transform);
 
                 // if on or behind camera... (z-check)

@@ -36,6 +36,12 @@ export class DrawingProperties {
     bounds;
 
     /**
+     * If the drawing should be omitted or not.
+     * @type {boolean}
+     */
+    hidden = false;
+
+    /**
      * Constructs drawing properties to be used by the renderer
      * @param {Spritesheet} spritesheet
      * @param {Rectangle2D} bounds
