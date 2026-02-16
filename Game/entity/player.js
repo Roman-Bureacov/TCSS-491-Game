@@ -43,6 +43,12 @@ export class Player extends Character {
     keymapper;
 
     /**
+     * If this character is on the ground
+     * @type {boolean}
+     */
+    onGround = false;
+
+    /**
      * Constructs a new playable character with no animators and an empty input map.
      *
      * @param {GameEngine} game the game
@@ -82,6 +88,7 @@ export class Player extends Character {
             "attack": () => this.swing(),
             "stop right": () => this.stopMoving(Character.DIRECTION.RIGHT),
             "stop left": () => this.stopMoving(Character.DIRECTION.LEFT),
+            "jump": () => this.jump(),
         };
     };
 
@@ -98,7 +105,12 @@ export class Player extends Character {
             if (properties.other.parent === this) {
                 return;
             } else if (properties.other.parent instanceof TileEntity) {
-                HitboxOp.separate(properties);
+                HitboxOp.separate(properties); // repositions object origin
+                if (this.objectY() - this.physics.position.y > 0) {
+                    // this entity was push up, therefore we must be on the ground
+                    this.onGround = true;
+                }
+
                 this.physics.position.x = this.objectX();
                 this.physics.position.y = this.objectY();
                 // console.log(this.physics.position)
@@ -145,10 +157,21 @@ export class Player extends Character {
 
     }
 
+    /**
+     * causes this player to jump
+     */
+    jump() {
+        if (!this.stateLock) {
+            if (this.onGround) {
+                this.onGround = false;
+                this.physics.velocity.y = 25;
+            }
+        }
+    }
 
     update() {
         this.physics.acceleration.x = 0;
-        this.physics.acceleration.y = -0.1;
+        this.physics.acceleration.y = -2.5;
 
         for (let key in this.game.keys) this.keymapper.sendKeyEvent(this.game.keys[key]);
 
