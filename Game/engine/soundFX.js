@@ -35,22 +35,6 @@ export class SoundFX {
         }
     }
 
-    static pause(name) {
-        const audio = sounds.get(name);
-        if (audio) audio.pause();
-    }
-
-    static stop(name) {
-        const audio = sounds.get(name);
-        if (!audio) return;
-        audio.pause();
-        audio.currentTime = 0;
-    }
-
-    static _clamp(x) {
-        return Math.max(0, Math.min(1, x));
-    }
-
 }
 
 
