@@ -15,7 +15,7 @@ const CANVAS = document.querySelector('#gameWorld');
 
 //-------------------------------------------Place in modules for final-------------------------------------------//
 /**
- * Put this inside an arena selector class]
+ * Put this inside an arena selector class
  */
 export const arenas = {
     arena1: {
@@ -89,8 +89,8 @@ export const global = {
 
 
 // The output of the character name for each player.
-const character1 = "guy1"; //CHARACTER_SELECTOR.getPlayerCharacter()[0] //player 1 character
-const character2 = "guy2"; //CHARACTER_SELECTOR.getPlayerCharacter()[1] //player 2 character
+const character1 = "knight"; //CHARACTER_SELECTOR.getPlayerCharacter()[0] //player 1 character
+const character2 = "samurai"; //CHARACTER_SELECTOR.getPlayerCharacter()[1] //player 2 character
 
 // The output of the arena object for the game.
 const arena = arenas.arena1; //ARENA_SELECTOR.getArena()

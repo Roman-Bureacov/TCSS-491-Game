@@ -1,27 +1,23 @@
 ﻿<!DOCTYPE html>
-<html lang="en">
+<html lang="EN">
 <head>
     <meta charset="utf-8">
-    <title>Game Project Title Goes Here</title>
-    <link href="style.css" rel="stylesheet"/>
-
+    <title>Untitled Game Project</title>
+    <script type="module" src="./Game/main.js"></script>
+<!--    <link rel="icon" href="assets/img/GuyPortrait.png" type="image/png">-->
 </head>
-<body>
-
-<div id="gameWrap">
-  <canvas id="gameWorld" width="1024" height="768"
-          style="background: white; border: 1px solid black"
-          tabindex="0" autofocus></canvas>
-
-  <div class="instruction-labels">
-    <label class="instruction">
-      [Press 1 to switch player 1 character.] [Press 2 to switch player 2 character.] [Player 1: WASD] [Player 2:
-        Arrow keys]
-    </label>
-  </div>
-</div>
-
-<!-- one entrypoint -->
-<script type="module" src="main.js"></script>
+<body style="background: #261111">
+    <div style="
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        translate: -50% -50%;
+        padding: 20px;
+        box-shadow: red 10px 10px 50px;
+        background: darkred;
+    ">
+        <canvas id="gameWorld" width="1024" height="768" style="background: white; border: 1px solid black" tabindex="0" autofocus></canvas>
+        <p style="font-family: Impact, fantasy; font-size: 5rem;">Game</p>
+    </div>
 </body>
 </html>
