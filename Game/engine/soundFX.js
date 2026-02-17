@@ -17,14 +17,14 @@ export class SoundFX {
      * @param loop True if the soundFx or music needs to loop
      * @author Kassie Whitney
      */
-    static add(name, path, {loop = false} = {}) {
+    static add(name, path, loop = false) {
         const audio = new Audio(path);
         audio.preload = "auto";
         audio.loop = loop;
         sounds.set(name, audio);
     }
 
-    static play(name, {restart = true} = {}) {
+    static play(name, restart = true) {
         const audio = sounds.get(name);
         if (!audio) throw new Error(`Unknown sound: ${name}`);
         if (restart) audio.currentTime = 0;

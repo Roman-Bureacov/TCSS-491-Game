@@ -8,8 +8,9 @@ import {CharacterFactory as CharacterFactory} from "./entity/characterFactory.js
 import {ArenaFactory} from "./arena/arenaFactory.js";
 import {assignKeymap, PLAYER} from "./entity/keymapAssigner.js";
 import {PlayerOne} from "./playerOne.js";
-import {getCharacterData} from "./entity/characterData.js";
 import {PlayerTwo} from "./playerTwo.js";
+
+import { SoundFX } from "./engine/soundFX.js";
 
 const gameEngine = new GameEngine(undefined, undefined);
 const CANVAS = document.querySelector('#gameWorld');
@@ -100,14 +101,15 @@ AssetManager.downloadAll(async () => {
     arena.forEach(e => gameEngine.addStaticEntity(e));
 
     gameEngine.render = renderer;
-    // gameEngine.focus.playerA = playerOne;
+    gameEngine.focus.playerA = playerOne;
     gameEngine.focus.playerB = playerTwo;
 
     // debug properties (for console usage)
     window.DEBUG.render = {
-        // char1: playerOne,
+        char1: playerOne,
         char2: playerTwo,
         world: world,
+        soundFX: SoundFX,
         renderer: renderer,
         pane: forePane,
         renderLoop: true,

@@ -2,9 +2,6 @@ import {Animator, Spritesheet} from "./animation.js";
 import {DynamicEntity} from "./entity.js";
 import {DIRECTIONS} from "../engine/constants.js";
 
-
-
-
 /**
  * Creates a basic character
  *
@@ -42,7 +39,7 @@ export class Character extends DynamicEntity {
      */
     stateLock = false;
 
-    static DIRECTION = CharacterDirections;
+    static DIRECTION = DIRECTIONS;
 
     /**
      * The state of this character as per the states this character may exhibit.
