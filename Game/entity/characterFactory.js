@@ -51,7 +51,8 @@ export class CharacterFactory {
             {
                 state: Player.states.MOVE,
                 facing: Character.DIRECTION.LEFT,
-                frames: data.moveL,
+                frames: data.moveR,
+                isReversed:true,
                 duration: data.moveDur,
                 isLooping: true
             },
@@ -65,7 +66,8 @@ export class CharacterFactory {
             {
                 state: Player.states.IDLE,
                 facing: Character.DIRECTION.LEFT,
-                frames: data.idleL,
+                frames: data.idleR,
+                isReversed: true,
                 duration: data.idleDur,
                 isLooping: true
             },
@@ -82,7 +84,8 @@ export class CharacterFactory {
             {
                 state: Player.states.ATTACK,
                 facing: Character.DIRECTION.LEFT,
-                frames: data.attackL,
+                frames: data.attackR,
+                isReversed:true,
                 duration: data.attackDur,
                 callback: () => {
                     player.stateLock = false;
