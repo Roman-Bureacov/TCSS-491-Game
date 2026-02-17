@@ -36,12 +36,12 @@ export class SoundFX {
     }
 
     static pause(name) {
-        const audio = this.sounds.get(name);
-        if (a) audio.pause();
+        const audio = sounds.get(name);
+        if (audio) audio.pause();
     }
 
     static stop(name) {
-        const audio = this.sounds.get(name);
+        const audio = sounds.get(name);
         if (!audio) return;
         audio.pause();
         audio.currentTime = 0;
