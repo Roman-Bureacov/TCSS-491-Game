@@ -59,8 +59,8 @@ AssetManager.downloadAll(async () => {
     const playerTwo =  new PlayerTwo(gameEngine, AssetManager, character2, 1, 0, 1)
     // give them keymaps...
     // assignKeymap(PLAYER.ONE, playerOne);
-    assignKeymap(PLAYER.TWO, playerTwo);
-    assignKeymap(PLAYER.ONE, playerOne);
+    // assignKeymap(PLAYER.TWO, playerTwo);
+    // assignKeymap(PLAYER.ONE, playerOne);
 
     // make the background
     const backgroundAsset = AssetManager.getAsset("background/background03.jpeg");
