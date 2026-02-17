@@ -29,6 +29,84 @@ export class CharacterFactory {
         throw new Error("Cannot instantiate factory (anti-pattern)");
     }
 
+
+    /**
+     * configures the characters animation and moving
+     * @param player The player object
+     * @param name The name of the character.
+     *
+     * @author Kassie Whitney
+     */
+    static configurePlayer(player, name) {
+        let data = getCharacterData(name);
+
+        const animations = [
+            {
+                state: Player.states.MOVE,
+                facing: Character.DIRECTION.RIGHT,
+                frames: data.moveR,
+                duration: data.moveDur,
+                isLooping: true
+            },
+            {
+                state: Player.states.MOVE,
+                facing: Character.DIRECTION.LEFT,
+                frames: data.moveL,
+                duration: data.moveDur,
+                isLooping: true
+            },
+            {
+                state: Player.states.IDLE,
+                facing: Character.DIRECTION.RIGHT,
+                frames: data.idleR,
+                duration: data.idleDur,
+                isLooping: true
+            },
+            {
+                state: Player.states.IDLE,
+                facing: Character.DIRECTION.LEFT,
+                frames: data.idleL,
+                duration: data.idleDur,
+                isLooping: true
+            },
+            {
+                state: Player.states.ATTACK,
+                facing: Character.DIRECTION.RIGHT,
+                frames: data.attackR,
+                duration: data.attackDur,
+                callback: () => {
+                    player.stateLock = false;
+                    player.state = player.lastState;
+                }
+            },
+            {
+                state: Player.states.ATTACK,
+                facing: Character.DIRECTION.LEFT,
+                frames: data.attackL,
+                duration: data.attackDur,
+                callback: () => {
+                    player.stateLock = false;
+                    player.state = player.lastState;
+                }
+            }
+        ];
+
+        // compileAnimators but applied to THIS player
+        for (let prop of animations) {
+            player.animations[Player.buildAnimationName(prop.state, prop.facing)] = new Animator(
+                prop.frames,
+                prop.duration,
+                prop.isReversed ?? false,
+                prop.soundMap,
+                prop.isLooping ?? false,
+                prop.callback
+            );
+        }
+
+        player.currentAnimation = player.animations[player.animationName()];
+
+    }
+
     /**
      * Constructs a character.
      *
@@ -36,6 +114,7 @@ export class CharacterFactory {
      * @param {GameEngine} [game=undefined] the game this character will live in.
      * If undefined, the character constructed will have an undefined game.
      * @return {Player} a build character fresh off the line
+     * @deprecated
      */
     static makePlayer(name, game = undefined) {
 
@@ -90,6 +169,7 @@ export class CharacterFactory {
  * Compiles and creates the animators for the character
  * @param {Character} character the character to compile animators into
  * @param {AnimatorProp[]} properties the properties of every animator for the character
+ * @deprecated
  */
 const compileAnimators = (character, properties) => {
     for (let prop of properties) {
@@ -112,6 +192,7 @@ const compileAnimators = (character, properties) => {
 /**
  * collection of constants for characters to use in their animators
  * @type {Object}
+ * @deprecated
  */
 const PlayerConstants = Object.freeze({
     attack: {
@@ -132,6 +213,7 @@ const PlayerConstants = Object.freeze({
  * @param {number} dimX the dimension in X
  * @param {number} dimY the dimension in Y
  * @return {Player} the constructed player character
+ * @deprecated
  */
 const makeGuy = (game, name, spritesheet, dimX, dimY) => {
 

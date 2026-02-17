@@ -3,14 +3,14 @@ A concrete implementation of the character class
  */
 
 import {Character} from "./character.js"
-import {Animator, Spritesheet} from "./animation.js";
+import {Spritesheet} from "./animation.js";
 import {KeyMapper} from "../engine/keymapper.js";
-import {global} from "../main.js";
 import {CharacterFactory} from "./characterFactory.js";
-import {SoundFX} from "../engine/soundFX.js";
 import {Hitbox, HitboxOp} from "../engine/hitbox.js";
 import {TileEntity} from "./tileEntity.js";
 import {Rectangle2D} from "../engine/primitives.js";
+import {SoundFX} from "../engine/soundFX.js";
+import {getCharacterData} from "./characterData.js";
 
 /**
  * Enum representing the possible states of player characters
@@ -57,16 +57,18 @@ export class Player extends Character {
      * @param {number} dimY the positive dimension of this character
      * @param {number} [startX=0] the starting x position
      * @param {number} [startY=0] the starting y position
+     * @param playerPosition The starting direction of the players.
+     * @param name The name of the character.
      */
     constructor(game, spritesheet,
                 dimX = 1, dimY = 1,
-                startX = 0, startY = 0) {
+                startX = 0, startY = 0, playerPosition, name) {
         super(game, spritesheet, dimX, dimY, startX, startY);
 
+        this.facing = playerPosition;
         this.state = Player.states.IDLE;
-        this.facing = Character.DIRECTION.RIGHT;
-
         this.physics.velocityMax.x = 10;
+        this.name = name;
 
         this.constantAcceleration = {
             [Character.DIRECTION.LEFT]: 0,
@@ -76,6 +78,8 @@ export class Player extends Character {
 
         this.initKeymap();
         this.initHitbox();
+
+        CharacterFactory.configurePlayer(this, this.name)
 
         // this.playSound = new SoundFX({masterVolume: 0.8});
     }
@@ -113,7 +117,6 @@ export class Player extends Character {
 
                 this.physics.position.x = this.objectX();
                 this.physics.position.y = this.objectY();
-                // console.log(this.physics.position)
             }
         }
     }
@@ -152,7 +155,8 @@ export class Player extends Character {
             this.lastState = this.state;
             this.state = Player.states.ATTACK;
             this.stateLock = true;
-            // this.playSound.play(this.character.swordSound)
+            const swordSwingFx = getCharacterData(this.name).swordSound
+            SoundFX.play(swordSwingFx)
         }
 
     }
@@ -173,15 +177,17 @@ export class Player extends Character {
         this.physics.acceleration.x = 0;
         this.physics.acceleration.y = -2.5;
 
-        for (let key in this.game.keys) this.keymapper.sendKeyEvent(this.game.keys[key]);
+        // for (let key in this.game.keys) this.keymapper.sendKeyEvent(this.game.keys[key]);
 
-        // hard-coded gobbledegook
-        // if ( this.physics.position.x > global.CANVAS_W - 20)  this.physics.position.x = -75;
-        // else if ( this.physics.position.x < -75)  this.physics.position.x = global.CANVAS_W - 20;
+        for (let k in this.game.keys) {
+            console.log("Player got event:", this.game.keys[k].type, this.game.keys[k].code);
+            this.keymapper.sendKeyEvent(this.game.keys[k]);
+        }
 
         switch (this.state) {
             case Player.states.ATTACK :
                 this.physics.velocity.x = 0;
+
                 break;
             case Player.states.MOVE :
                 this.physics.acceleration.x =

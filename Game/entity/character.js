@@ -42,7 +42,7 @@ export class Character extends DynamicEntity {
      */
     stateLock = false;
 
-    static DIRECTION = DIRECTIONS;
+    static DIRECTION = CharacterDirections;
 
     /**
      * The state of this character as per the states this character may exhibit.
