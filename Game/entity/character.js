@@ -100,13 +100,12 @@ export class Character extends DynamicEntity {
         // are we switching animations?
         if (!anim) return; // no animation for this state+facing
 
-        if (anim !== this.currentAnimation) {
-            if (this.currentAnimation) this.currentAnimation.reset();
-            this.currentAnimation = anim;
-            if (this.currentAnimation) this.currentAnimation.reset();
-
-        }
         this.currentAnimation.update(tick);
+
+        if (anim !== this.currentAnimation) {
+            this.currentAnimation = anim;
+            this.currentAnimation.reset();
+        }
         this.drawingProperties.spriteRow = this.currentAnimation.currentFrame.row;
         this.drawingProperties.spriteCol = this.currentAnimation.currentFrame.col;
         this.drawingProperties.isReversed = this.currentAnimation.reversed;
