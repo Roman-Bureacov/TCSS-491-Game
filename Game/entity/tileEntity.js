@@ -29,7 +29,10 @@ export class TileEntity extends StaticEntity {
      */
     constructor(spritesheet, dimX = 1, dimY = 1) {
         super(spritesheet);
+        
         this.hitbox = new Hitbox(this, new Rectangle2D(0, 0, dimX, dimY));
+        this.hitbox.kind = "tile";
+        this.hitbox.enabled = true;
     }
 
 

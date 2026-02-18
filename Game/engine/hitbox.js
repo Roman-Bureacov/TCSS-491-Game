@@ -32,6 +32,21 @@ export class Hitbox {
     parent;
 
     /**
+     * Flag for if the hitbox is enabled or disabled.
+     * 
+     * @type {boolean}
+     */
+    enabled = true;   // NEW
+
+    /**
+     * Differentiates between a body hitbox and an attack hitbox as well as a tile hitbox.
+     * 
+     * @type {string}
+     */
+    kind = "body";    // NEW: "body" | "attack" | "tile" etc.
+
+
+    /**
      * If this hitbox has expired.
      *
      * @type {boolean} if the hitbox has expired
@@ -50,8 +65,8 @@ export class Hitbox {
      * @param {Rectangle2D} bounds the bounds for this hitbox
      */
     constructor(parent, bounds) {
-       this.parent = parent;
-       this.bounds = bounds;
+        this.parent = parent;
+        this.bounds = bounds;
     }
 
     /**
@@ -78,7 +93,8 @@ export class Hitbox {
      * otherwise `undefined` (no intersection found)
      */
     intersects(other) {
-        if (this.expired) return undefined;
+        if (this.expired || this.enabled === false) return undefined;
+        if (other.expired || other.enabled === false) return undefined;
 
         let thisStart = MatrixOp.multiply(this.parent.transform, this.bounds.start);
         let thisEnd = MatrixOp.multiply(this.parent.transform, this.bounds.end);
@@ -86,8 +102,8 @@ export class Hitbox {
         let thisStartY = thisStart.get(1, 0);
         let thisEndX = thisEnd.get(0, 0);
         let thisEndY = thisEnd.get(1, 0);
-        
-        
+
+
         let otherStart = MatrixOp.multiply(other.parent.transform, other.bounds.start);
         let otherEnd = MatrixOp.multiply(other.parent.transform, other.bounds.end);
         let otherStartX = otherStart.get(0, 0);
@@ -100,17 +116,18 @@ export class Hitbox {
 
         if (testOverlap(thisStartX, thisEndX, otherStartX, otherEndX)
             && testOverlap(thisStartY, thisEndY, otherStartY, otherEndY)) {
+
             return {
-                subject : this,
-                other : other,
-                subjectStartX : thisStartX,
-                subjectStartY : thisStartY,
-                subjectEndX : thisEndX,
-                subjectEndY : thisEndY,
-                otherStartX : otherStartX,
-                otherStartY : otherStartY,
-                otherEndX : otherEndX,
-                otherEndY : otherEndY
+                subject: this,
+                other: other,
+                subjectStartX: thisStartX,
+                subjectStartY: thisStartY,
+                subjectEndX: thisEndX,
+                subjectEndY: thisEndY,
+                otherStartX: otherStartX,
+                otherStartY: otherStartY,
+                otherEndX: otherEndX,
+                otherEndY: otherEndY
             }
         } else return undefined;
     }
@@ -166,7 +183,7 @@ const testOverlap = (a, b, c, d) => {
 /**
  * Separates the two hitboxes by pushing the subject (the one who found the intersection) from the other
  * (the one who was found to be intersecting with) to solve the intersection.
- * 
+ *
  * Note that this assumes that the two boxes are already intersecting.
  *
  * For an illustration on how pushing works, see [this](https://www.desmos.com/calculator/zclnpnrjoh)
@@ -246,7 +263,7 @@ const separate = (properties) => {
                 ) ? DIRECTIONS.RIGHT : DIRECTIONS.LEFT;
             }
         }
-        
+
     } else {
         if (vectorStartX * vectorEndX <= 0) { // disagree on X, y-axis as tie-breaker
             pushDirection = ( // down as tie-breaker
@@ -283,4 +300,4 @@ const separate = (properties) => {
     )
 }
 
-export const HitboxOp = { separate }
+export const HitboxOp = {separate}

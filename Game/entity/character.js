@@ -1,5 +1,6 @@
 import {Animator, Spritesheet} from "./animation.js";
 import {DynamicEntity} from "./entity.js";
+
 import {DIRECTIONS} from "../engine/constants.js";
 
 /**

@@ -12,6 +12,7 @@ import {Rectangle2D} from "../engine/primitives.js";
 import {SoundFX} from "../engine/soundFX.js";
 import {getCharacterData} from "./characterData.js";
 
+
 /**
  * Enum representing the possible states of player characters
  * @readonly
@@ -57,15 +58,19 @@ export class Player extends Character {
      * @param {number} dimY the positive dimension of this character
      * @param {number} [startX=0] the starting x position
      * @param {number} [startY=0] the starting y position
-     * @param playerPosition The starting direction of the players.
+     * @param facingDir The starting direction of the players.
      * @param name The name of the character.
      */
     constructor(game, spritesheet,
                 dimX = 1, dimY = 1,
-                startX = 0, startY = 0, playerPosition, name) {
+                startX = 0, startY = 0, facingDir, name) {
         super(game, spritesheet, dimX, dimY, startX, startY);
 
-        this.facing = playerPosition;
+
+        this.playerHealth = 100;
+
+
+        this.facing = facingDir;
         this.state = Player.states.IDLE;
         this.physics.velocityMax.x = 10;
         this.name = name;
@@ -76,12 +81,110 @@ export class Player extends Character {
         };
         this.lastState = this.state;
 
+
+        let box = this.drawingProperties.bounds;
+        this.hitbox = new Hitbox(
+            this,
+            new Rectangle2D(
+                box.start.x(), box.start.y(),
+                box.dimension.width, box.dimension.height
+            )
+        );
+
+        this.gravity = -20;
         this.initKeymap();
+
         this.initHitbox();
 
         CharacterFactory.configurePlayer(this, this.name)
 
-        // this.playSound = new SoundFX({masterVolume: 0.8});
+// IMPORTANT: engine only auto-adds e.hitbox, so we must spawn this extra one:
+
+        this.setupCombatHitboxes();
+
+    }
+
+    /**
+     * Sets up the players attack and body hitboxes, adds it to the game engine. Sets the dynamic hitboxes.
+     */
+    setupCombatHitboxes() {
+        this.type = "player";
+        this._alreadyHit = new Set();
+        this._clashed = new Set();
+
+        this.hitbox.kind = "body";
+        this.hitbox.enabled = true;
+
+        this.attackHitbox = new Hitbox(this, new Rectangle2D(0, 0, 1, 1));
+
+        this.attackHitbox.kind = "attack";
+        this.attackHitbox.enabled = false;
+
+        this.game.spawnDynamicHitbox(this.attackHitbox);
+
+        this.attackHitbox.resolveIntersection = this.onAttackHitboxIntersection.bind(this);
+    }
+
+    /**
+     *
+     * @param {PlayerOne, PlayerTwo} players
+     */
+    onAttackHitboxIntersection(players) {
+        const attacker = players.subject.parent;
+        const otherHb = players.other;
+        const victim = otherHb.parent;
+
+        if (victim.type !== "player") return;
+        if (victim === attacker) return;
+        if (attacker.state !== Player.states.ATTACK) return;
+
+        // once clashed, never damage
+        if (attacker._clashed.has(victim) || victim._clashed.has(attacker)) return;
+
+        if (otherHb.kind === "attack") {
+            attacker._clashed.add(victim);
+            victim._clashed.add(attacker);
+
+            attacker.attackHitbox.enabled = false;
+            victim.attackHitbox.enabled = false;
+
+            this.swordCollide();
+            return;
+        }
+
+        if (otherHb.kind !== "body") return;
+        if (attacker._alreadyHit.has(victim)) return;
+
+        const bothAttacking = attacker.attackHitbox.enabled && victim.attackHitbox.enabled;
+
+        // ⚠️ Only works if intersects exists; see note below
+        const swordsOverlap =
+            bothAttacking &&
+            attacker.attackHitbox.bounds.intersects?.(victim.attackHitbox.bounds);
+
+        if (swordsOverlap) {
+            attacker._clashed.add(victim);
+            victim._clashed.add(attacker);
+
+            attacker.attackHitbox.enabled = false;
+            victim.attackHitbox.enabled = false;
+
+            this.swordCollide();
+            return;
+        }
+
+        // Damage
+        victim.setPlayerHealth?.(10);
+        victim.attackHitbox.enabled = false;
+        attacker._alreadyHit.add(victim);
+    }
+
+
+    swordCollide() {
+        // set physics to push character back
+
+        console.log("Sword collided")
+        SoundFX.play("swordCollide1")
     }
 
     initKeymap() {
@@ -97,14 +200,7 @@ export class Player extends Character {
     };
 
     initHitbox() {
-        let box = this.drawingProperties.bounds;
-        this.hitbox = new Hitbox(
-            this,
-            new Rectangle2D(
-                box.start.x(), box.start.y(),
-                box.dimension.width, box.dimension.height
-            )
-        );
+
         this.hitbox.resolveIntersection = (properties) => {
             if (properties.other.parent === this) {
                 return;
@@ -121,6 +217,7 @@ export class Player extends Character {
         }
     }
 
+
     /**
      * Sets the acceleration for this character
      * @param acceleration
@@ -135,7 +232,9 @@ export class Player extends Character {
 
             this.constantAcceleration[this.facing] = acceleration;
 
+
         }
+
     }
 
     /**
@@ -150,16 +249,20 @@ export class Player extends Character {
      * Initiates an attack
      */
     swing() {
-        if (!this.stateLock) {
-            console.log("swing");
-            this.lastState = this.state;
-            this.state = Player.states.ATTACK;
-            this.stateLock = true;
-            const swordSwingFx = getCharacterData(this.name).swordSound
-            SoundFX.play(swordSwingFx)
-        }
+        if (this.stateLock) return;
 
+        this.lastState = this.state;
+        this.state = Player.states.ATTACK;
+        this.stateLock = true;
+
+        this._clashed.clear();
+        this._alreadyHit.clear();
+        this.updateAttackHitboxBounds();
+        this.attackHitbox.enabled = true;
+
+        SoundFX.play(getCharacterData(this.name).swordSound);
     }
+
 
     /**
      * causes this player to jump
@@ -168,19 +271,19 @@ export class Player extends Character {
         if (!this.stateLock) {
             if (this.onGround) {
                 this.onGround = false;
-                this.physics.velocity.y = 25;
+                this.physics.velocity.y = this.gravity * -1 + 3;
             }
         }
     }
 
     update() {
         this.physics.acceleration.x = 0;
-        this.physics.acceleration.y = -2.5;
+        this.physics.acceleration.y = this.gravity;
 
         // for (let key in this.game.keys) this.keymapper.sendKeyEvent(this.game.keys[key]);
 
         for (let k in this.game.keys) {
-            console.log("Player got event:", this.game.keys[k].type, this.game.keys[k].code);
+            // console.log("Player got event:", this.game.keys[k].type, this.game.keys[k].code);
             this.keymapper.sendKeyEvent(this.game.keys[k]);
         }
 
@@ -204,6 +307,27 @@ export class Player extends Character {
         }
 
         super.update();
+    }
+
+    updateAttackHitboxBounds() {
+        const box = this.drawingProperties.bounds;
+        const w = box.dimension.width;
+        const h = box.dimension.height;
+
+        const dimX = w * 0.60;
+        const dimY = h * 0.60;
+
+        const startY = box.start.y() - h * 0.20;
+
+        let startX;
+        if (this.facing === Character.DIRECTION.RIGHT) {
+            startX = box.start.x() + w * 0.60;
+        } else {
+            startX = box.start.x() - dimX * 0.60; // push it to the left of the body
+        }
+
+        this.attackHitbox.bounds.setStart(startX, startY);
+        this.attackHitbox.bounds.setDimension(dimX, dimY);
     }
 
 }
