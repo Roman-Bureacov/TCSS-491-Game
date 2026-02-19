@@ -72,6 +72,8 @@ export class Player extends Character {
             [DIRECTIONS.LEFT]: 0,
             [DIRECTIONS.RIGHT]: 0,
         };
+        this.physics.velocityMax.x = 5;
+        this.physics.velocityMax.y = 10;
         this.lastState = this.state;
 
         this.gravity = -20;
