@@ -5,14 +5,13 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="a08718b8-ac73-4cb8-b286-185a0b662aef" name="Changes" comment="workspace">
-      <change afterPath="$PROJECT_DIR$/Game/assets/music/backgroundMusic1.mp3" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Game/hudHelper.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Game/menu.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Game/style.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_1_21_2026_3_10_PM__Changes_1.xml" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Game/PhysicsEntity.js" beforeDir="false" afterPath="$PROJECT_DIR$/Game/PhysicsEntity.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Game/assets/music/background_Music_1.mp3" beforeDir="false" afterPath="$PROJECT_DIR$/Game/assets/music/backgroundMusic2.mp3" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Game/assets/music/time_for_adventure.mp3" beforeDir="false" afterPath="$PROJECT_DIR$/Game/assets/music/timeForAdventure.mp3" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Game/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/Game/index.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Game/main.js" beforeDir="false" afterPath="$PROJECT_DIR$/Game/main.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Game/playerOne.js" beforeDir="false" afterPath="$PROJECT_DIR$/Game/playerOne.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Game/soundFX.js" beforeDir="false" afterPath="$PROJECT_DIR$/Game/soundFX.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -41,13 +40,10 @@
     &quot;assignee&quot;: &quot;Kjw072892&quot;
   }
 }</component>
-  <component name="GithubDefaultAccount">
-    <option name="defaultAccountId" value="7c31b2cc-9487-4d7d-9c64-5fe5c3dc777a" />
-  </component>
   <component name="GithubPullRequestsUISettings">{
   &quot;selectedUrlAndAccountId&quot;: {
     &quot;url&quot;: &quot;https://github.com/Roman-Bureacov/TCSS-491-Game.git&quot;,
-    &quot;accountId&quot;: &quot;190c2852-ffa4-4492-a865-bb0e1c0aa158&quot;
+    &quot;accountId&quot;: &quot;80123cb2-6f3a-456a-9018-f06fa56cff4a&quot;
   },
   &quot;recentNewPullRequestHead&quot;: {
     &quot;server&quot;: {
@@ -74,11 +70,15 @@
   </component>
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
+    "JavaScript Debug.index.html.executor": "Run",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
     "RunOnceActivity.git.unshallow": "true",
     "RunOnceActivity.typescript.service.memoryLimit.init": "true",
     "disable.download.node.interpreter.editor.notification": "true",
-    "git-widget-placeholder": "main",
+    "git-widget-placeholder": "parker",
     "ignore.virus.scanning.warn.message": "true",
+    "javascript.preferred.runtime.type.id": "node",
     "kotlin-language-version-configured": "true",
     "last_opened_file_path": "C:/Users/Kassi/OneDrive/Computer/Documents/GitHub/TCSS-491-Game/Game/assets/music",
     "node.js.detected.package.eslint": "true",
@@ -104,11 +104,18 @@
       <recent name="C:\Users\Kassi\OneDrive\Computer\Documents\GitHub\TCSS-491-Game\Game\assets\tileset" />
     </key>
   </component>
+  <component name="RunManager">
+    <configuration name="main.js" type="NodeJSConfigurationType" nameIsGenerated="true" path-to-js-file="main.js" working-dir="$PROJECT_DIR$/Game">
+      <EXTENSION ID="com.intellij.javascript.debugger.execution.StartBrowserRunConfigurationExtension">
+        <browser with-js-debugger="true" />
+      </EXTENSION>
+      <method v="2" />
+    </configuration>
+  </component>
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
-        <option value="bundled-jdk-9823dce3aa75-fbdcb00ec9e3-intellij.indexing.shared.core-IU-251.26927.53" />
-        <option value="bundled-js-predefined-d6986cc7102b-09060db00ec0-JavaScript-IU-251.26927.53" />
+        <option value="bundled-js-predefined-d6986cc7102b-9b0f141eb926-JavaScript-WS-253.30387.83" />
       </set>
     </attachedChunks>
   </component>
@@ -123,6 +130,8 @@
       <workItem from="1769155658563" duration="3452000" />
       <workItem from="1769453776203" duration="4839000" />
       <workItem from="1769459092903" duration="26940000" />
+      <workItem from="1769629979429" duration="2682000" />
+      <workItem from="1770658538249" duration="3824000" />
     </task>
     <task id="LOCAL-00001" summary="Added a sample arena, background music, character sound fx, sword sound fx, background images">
       <option name="closed" value="true" />

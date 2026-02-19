@@ -88,46 +88,55 @@ export const global = {
 }
 
 
-// The output of the character name for each player.
-const character1 = "warriorWoman"; //CHARACTER_SELECTOR.getPlayerCharacter()[0] //player 1 character
-const character2 = "guy2"; //CHARACTER_SELECTOR.getPlayerCharacter()[1] //player 2 character
+// Preload all character assets
+Object.values(getAllCharacterData()).forEach(character => {
+    ASSET_MANAGER.queueDownload(character.img);
+});
 
-// The output of the arena object for the game.
-const arena = arenas.arena2; //ARENA_SELECTOR.getArena()
+// Wait for menu selections and then start the game
+window.addEventListener('gameStart', async (event) => {
+    const { character1, character2, arena: arenaName } = event.detail;
+    const arena = arenas[arenaName];
 
-const character1Img = getCharacter(character1).img;
-const character2Img = getCharacter(character2).img;
+    // Update HUD with selected characters
+    if (window.hudSystem) {
+        window.hudSystem.updateCharacterName(1, character1);
+        window.hudSystem.updateCharacterName(2, character2);
+        window.hudSystem.resetHealth();
+        window.hudSystem.updateRound(1);
+        window.hudSystem.updateTimer(99);
+    }
 
-// queue the image path for download.
-ASSET_MANAGER.queueDownload(character1Img);
-ASSET_MANAGER.queueDownload(character2Img);
+    ASSET_MANAGER.downloadAll(async () => {
+        const canvas = document.getElementById("gameWorld");
+        const ctx = canvas.getContext("2d");
+        ctx.imageSmoothingEnabled = false;
+        canvas.tabIndex = 1;
+        canvas.focus();
 
-ASSET_MANAGER.downloadAll(async () => {
-    const canvas = document.getElementById("gameWorld");
-    const ctx = canvas.getContext("2d");
-    ctx.imageSmoothingEnabled = false;
-    canvas.tabIndex = 1;
-    canvas.focus();
+        const playerOne = new PlayerOne(gameEngine, ASSET_MANAGER, character1, arena.playerOnePos[0], arena.playerOnePos[1]);
+        const playerTwo = new PlayerTwo(gameEngine, ASSET_MANAGER, character2, arena.playerTwoPos[0], arena.playerTwoPos[1]);
 
+        const arena1TileMap = await setArenaAssets(arena);
 
-    const playerOne = new PlayerOne(gameEngine, ASSET_MANAGER, character1, arena.playerOnePos[0], arena.playerOnePos[1]);
-    const playerTwo = new PlayerTwo(gameEngine, ASSET_MANAGER, character2, arena.playerTwoPos[0], arena.playerTwoPos[1]);
+        gameEngine.init(ctx);
 
+        //Add new Arenas/sprite entities.
+        gameEngine.addEntity(arena1TileMap);
 
-    const arena1TileMap = await setArenaAssets(arena);
+        //Add new Player Entity
+        gameEngine.addEntity(playerOne);
+        gameEngine.addEntity(playerTwo)
 
-    gameEngine.init(ctx);
+        // Start the gameEngine
+        gameEngine.start();
+        new SoundFX().play(arena.backgroundSound);
 
-    //Add new Arenas/sprite entities.
-    gameEngine.addEntity(arena1TileMap);
-
-    //Add new Player Entity
-    gameEngine.addEntity(playerOne);
-    gameEngine.addEntity(playerTwo)
-
-    // Start the gameEngine
-    gameEngine.start();
-    new SoundFX().play(arena.backgroundSound);
+        // Start game timer
+        if (window.hudSystem) {
+            window.hudSystem.startTimer(99);
+        }
+    });
 });
 
 /**
