@@ -37,12 +37,9 @@ export class ArenaFactory {
         switch (name) {
             case this.arenas.BASIC :
                 text = AssetManager.getText("arena/basic.txt");
-                SoundFX.play("backgroundMusic2")
-                
                 break;
             case this.arenas.ARENA2:
                 text = AssetManager.getText("arena/arena2.txt")
-                SoundFX.play("backgroundMusic1")
                 break;
             default: throw new Error("Unknown arena name " + name);
         }

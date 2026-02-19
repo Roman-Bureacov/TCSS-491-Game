@@ -266,6 +266,7 @@ on line ${this.token.line}
 
         console.log(this.parameters)
         let compiledArena = [];
+        let player = 1;
         // we now have enough information to build the arena
         let rowSpacing = (1.0 * this.parameters.height) / this.parameters.rows;
         let colSpacing = (1.0 * this.parameters.width) / this.parameters.columns;
@@ -294,6 +295,26 @@ on line ${this.token.line}
                     );
 
                     compiledArena.push(tile);
+                } else if (this.have(Token.TYPES.ASTR)) {
+                    let startX = this.parameters.originX + c * colSpacing;
+                    let startY = this.parameters.originY - r * rowSpacing;
+                    switch (player++) {
+                        case 1:
+                            this.arenaProps.playerAStart.x = startX;
+                            this.arenaProps.playerAStart.y = startY;
+                            break;
+                        case 2:
+                            this.arenaProps.playerBStart.x = startX;
+                            this.arenaProps.playerBStart.y = startY;
+                            break;
+                        default:
+                            throw new Error(
+`
+more than 2 player initial locations defined 
+found ${this.token.type} at line ${this.token.line} 
+`
+                            )
+                    }
                 } else {
                     this.mustBe(Token.TYPES.DOT);
                 }
