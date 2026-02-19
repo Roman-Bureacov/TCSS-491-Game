@@ -27,6 +27,12 @@ AssetManager.queueDownload("character/guy2/Guy2.png");
 AssetManager.queueDownload("character/warriorWoman/warriorWoman.png");
 AssetManager.queueDownload("character/samurai/samurai1.png")
 AssetManager.queueDownload("character/samurai/samurai2.png")
+AssetManager.queueDownload("character/gangsters/Gangsters.png")
+AssetManager.queueDownload("character/skeleton/skeleton.png")
+AssetManager.queueDownload("character/monk/monk.png")
+AssetManager.queueDownload("character/minotaur/minotaur.png")
+AssetManager.queueDownload("character/mage/mage.png")
+AssetManager.queueDownload("character/ninja/monk.png")
 AssetManager.queueDownload("tileset/Industrial_Tileset/1_Industrial_Tileset_1.png")
 AssetManager.queueDownload("tileset/Industrial_Tileset/1_Industrial_Tileset_1B.png")
 AssetManager.queueDownload("background/background03.jpeg");
@@ -49,8 +55,8 @@ AssetManager.downloadAll(async () => {
     const tilePane = new Pane();
     const forePane = new Pane();
 
-    const character1 = CHARACTER_NAMES.SAMURAI_B;
-    const character2 = CHARACTER_NAMES.SAMURAI_A;
+    const character1 = CHARACTER_NAMES.MONK;
+    const character2 = CHARACTER_NAMES.SAMURAI_B;
     const playerOne = PlayerFactory.makePlayer(
         character1,
         PlayerFactory.PLAYER_TYPES.ONE,
