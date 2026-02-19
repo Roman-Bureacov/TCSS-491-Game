@@ -92,7 +92,7 @@ export class CharacterConfigurator {
             },
             {
                 state : S.JUMP,
-                facing: Character.DIRECTION.LEFT,
+                facing: DIRECTIONS.LEFT,
                 frames: data.jumpR,
                 isReversed: true,
                 duration: 1,
@@ -100,7 +100,7 @@ export class CharacterConfigurator {
             },
             {
                 state : S.JUMP,
-                facing: Character.DIRECTION.RIGHT,
+                facing: DIRECTIONS.RIGHT,
                 frames: data.jumpR,
                 isReversed: false,
                 duration: 1,
@@ -108,13 +108,14 @@ export class CharacterConfigurator {
             },
             {
                 state:S.DEAD,
-                facing: Character.DIRECTION.RIGHT,
+                facing: DIRECTIONS.RIGHT,
                 frames:data.deadR,
+                isReversed: false,
                 duration: 1,
             },
             {
                 state:S.DEAD,
-                facing: Character.DIRECTION.LEFT,
+                facing: DIRECTIONS.LEFT,
                 frames:data.deadR,
                 isReversed: true,
                 duration: 1,

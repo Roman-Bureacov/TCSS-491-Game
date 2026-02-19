@@ -49,7 +49,7 @@ AssetManager.downloadAll(async () => {
     const tilePane = new Pane();
     const forePane = new Pane();
 
-    const character1 = CHARACTER_NAMES.GUY;
+    const character1 = CHARACTER_NAMES.SAMURAI_B;
     const character2 = CHARACTER_NAMES.SAMURAI_A;
     const playerOne = PlayerFactory.makePlayer(
         character1,

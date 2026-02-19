@@ -65,7 +65,7 @@ export class Player extends Character {
         this.state = Player.states.IDLE;
         this.physics.velocityMax.x = 10;
 
-        // Knockback / hitstun control
+        // Knockback / hit control
         this.knockbackTimer = 0;      // seconds remaining
         this.knockbackDuration = 0.12; // tune (0.08–0.20)
         this.knockbackStrength = 1.5;   // tune for push distance
@@ -98,7 +98,7 @@ export class Player extends Character {
         this.hitbox.kind = HITBOX_TYPE.BODY; // <-- duplicated fragment
         this.hitbox.enabled = true;
 
-        this.attackHitbox = new Hitbox(this, new Rectangle2D(-1, 0, 1, 1));
+        this.attackHitbox = new Hitbox(this, new Rectangle2D(0, 0, .05, 1));
 
         this.attackHitbox.kind = HITBOX_TYPE.ATTACK;
         this.attackHitbox.enabled = false;
@@ -148,7 +148,7 @@ export class Player extends Character {
         if (attacker._alreadyHit.has(victim)) return;
 
         const bothAttacking = attacker.attackHitbox.enabled && victim.attackHitbox.enabled;
-        
+
         const swordsOverlap =
             bothAttacking &&
             attacker.attackHitbox.bounds.intersects?.(victim.attackHitbox.bounds);
@@ -429,16 +429,16 @@ export class Player extends Character {
         const w = box.dimension.width;
         const h = box.dimension.height;
 
-        const dimX = w * 0.60;
-        const dimY = h * 0.60;
+        const dimX = w ;
+        const dimY = h ;
 
         const startY = box.start.y() - h * 0.20;
 
         let startX;
         if (this.facing === DIRECTIONS.RIGHT) {
-            startX = box.start.x() + w * 0.60;
+            startX = box.start.x() - w * .20;
         } else {
-            startX = box.start.x() - dimX * 0.60; // push it to the left of the body
+            startX = box.start.x() - dimX * 0.20; // push it to the left of the body
         }
 
         this.attackHitbox.bounds.setStart(startX, startY);
