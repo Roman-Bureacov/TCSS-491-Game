@@ -19,6 +19,8 @@ const CHARACTER_DATA = {
         attackDur: 0.5,
         scale:1,
         swordSound: "quickSwordSwoosh2",
+        gender: "male",
+
 
     },
     
@@ -40,11 +42,13 @@ const CHARACTER_DATA = {
         attackDur: 0.5,
         scale:1,
         swordSound: "quickSwordSwoosh2",
+        gender: "male",
+
 
     },
     
     warriorWoman: {
-        img: "./character/warriorWoman/warriorWoman.png",
+        img: "character/warriorWoman/warriorWoman.png",
         numRow: 5,
         numCol: 24,
         moveR: [[1,0],[1,1],[1,2],[1,3],[1,4],[1,5],[1,6],[1,7]],
@@ -61,10 +65,11 @@ const CHARACTER_DATA = {
         attackDur: 0.5,
         scale:2.5,
         swordSound: "heavySwordSwoosh1",
+        gender: "female",
     },
 
     knight: {
-        img: "./assets/character/knight/knight.png",
+        img: "character/knight/knight.png",
         numRow: 12,
         numCol: 16,
         moveR: [[2,0],[2,1],[2,2],[2,3],[2,4],[2,5],[2,6]],
@@ -85,10 +90,12 @@ const CHARACTER_DATA = {
         attackDur: 0.5,
         scale: 2.5,
         swordSound: "heavySwordSwoosh1",
+        gender: "male",
+
     },
 
-    samurai: {
-        img: "./assets/character/samurai/samurai1.png",
+    samurai1: {
+        img: "character/samurai/samurai1.png",
         numRow: 10,
         numCol: 18,
         moveR: [[2,0],[2,1],[2,2],[2,3],[2,4],[2,5],[2,6],[2,7]],
@@ -109,11 +116,13 @@ const CHARACTER_DATA = {
         attackDur: 0.5,
         scale:2.5,
         swordSound: "heavySwordSwoosh1",
+        gender: "male",
+
 
     },
 
     samurai2: {
-        img: "./assets/character/samurai/samurai2.png",
+        img: "character/samurai/samurai2.png",
         numRow: 10,
         numCol: 12,
         moveR: [[2,0],[2,1],[2,2],[2,3],[2,4],[2,5],[2,6],[2,7]],
@@ -134,6 +143,8 @@ const CHARACTER_DATA = {
         attackDur: 0.5,
         scale:2.5,
         swordSound: "heavySwordSwoosh1",
+        gender: "male",
+
 
     }
 

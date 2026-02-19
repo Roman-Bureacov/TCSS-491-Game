@@ -7,8 +7,6 @@ import {KeyMapper} from "./engine/keymapper.js";
 import {getCharacterData} from "./entity/characterData.js";
 import {Spritesheet} from "./entity/animation.js";
 import {Player} from "./entity/player.js";
-import {SoundFX} from "./engine/soundFX.js";
-
 
 
 export class PlayerOne extends Player {
@@ -19,8 +17,6 @@ export class PlayerOne extends Player {
 
         super(game, spritesheet, scale, scale, startPosX, startPosY, Character.DIRECTION.RIGHT, characterName)
 
-        this.playerHealth = 100;
-        
         this.setupKeymap();
     }
 
@@ -37,24 +33,5 @@ export class PlayerOne extends Player {
             [KeyMapper.getName("KeyW", false)]: "jump"
         };
     }
-
-    getPlayerHealth() {
-        return this.playerHealth;
-    }
-
-    setPlayerHealth(damage) {
-        this.playerHealth -= damage;
-        // this.swordCollide();
-
-        console.log("Player 2 hit player 1");
-        
-        
-        if (this.getPlayerHealth() <= 0) {
-            console.log("Player 2 won");
-        }
-    }
-
-    
-
 
 }

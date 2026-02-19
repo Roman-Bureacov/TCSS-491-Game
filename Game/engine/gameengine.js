@@ -95,12 +95,17 @@ export class GameEngine {
 
     start() {
         this.running = true;
+
         const gameLoop = () => {
+            if (!this.running) return;      // <- stop scheduling frames
+
             this.loop();
-            requestAnimFrame(gameLoop, this.ctx.canvas);
+            this._rafId = requestAnimFrame(gameLoop, this.ctx.canvas);
         };
-        gameLoop();
-    };
+
+        this._rafId = requestAnimFrame(gameLoop, this.ctx.canvas);
+    }
+
 
     startInput() {
 
@@ -302,7 +307,7 @@ export class GameEngine {
                     otherEndX: props.subjectEndX,
                     otherEndY: props.subjectEndY,
                 });
-                
+
             }
         }
 

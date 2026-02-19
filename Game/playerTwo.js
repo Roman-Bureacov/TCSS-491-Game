@@ -36,20 +36,5 @@ export class PlayerTwo extends Player {
         };
     }
 
-    getPlayerHealth() {
-        return this.playerHealth;
-    }
-
-    setPlayerHealth(damage) {
-        this.playerHealth -= damage;
-
-        console.log("Player 1 hit player 2");
-        if (this.getPlayerHealth() === 0) {
-            console.log("Player 1 won");
-
-            // Set endGame
-        }
-    }
-
 }
 

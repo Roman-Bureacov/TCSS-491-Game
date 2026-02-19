@@ -11,6 +11,7 @@ import {PlayerOne} from "./playerOne.js";
 import {PlayerTwo} from "./playerTwo.js";
 
 import { SoundFX } from "./engine/soundFX.js";
+import {getCharacterData} from "./entity/characterData.js";
 
 const gameEngine = new GameEngine(undefined, undefined);
 const CANVAS = document.querySelector('#gameWorld');
@@ -28,6 +29,7 @@ export const global = {
 AssetManager.queueDownload("character/guy1/Guy.png");
 AssetManager.queueDownload("character/guy2/Guy2.png");
 AssetManager.queueDownload("character/warriorWoman/warriorWoman.png");
+AssetManager.queueDownload("character/samurai/samurai1.png")
 AssetManager.queueDownload("tileset/Industrial_Tileset/1_Industrial_Tileset_1.png")
 AssetManager.queueDownload("tileset/Industrial_Tileset/1_Industrial_Tileset_1B.png")
 AssetManager.queueDownload("background/background03.jpeg");
@@ -43,6 +45,8 @@ AssetManager.downloadAll(async () => {
     ctx.imageSmoothingEnabled = false;
     canvas.tabIndex = 1;
     canvas.focus();
+    
+    console.log(AssetManager.getAsset("character/warriorWoman/warriorWoman.png"))
 
     const world = new World();
 
@@ -51,16 +55,11 @@ AssetManager.downloadAll(async () => {
     const forePane = new Pane();
 
     const character1 = CharacterFactory.names.guy; //CHARACTER_SELECTOR.getPlayerCharacter()[0] //player 1 character
-    const character2 = CharacterFactory.names.guy2; //CHARACTER_SELECTOR.getPlayerCharacter()[0] //player 1 character
+    const character2 = CharacterFactory.names.samurai1; //CHARACTER_SELECTOR.getPlayerCharacter()[0] //player 1 character
 
-    // create brand-new characters
-    // const playerOne = new PlayerOne(gameEngine, AssetManager, character1, 0, 100, 1)
     const playerOne = new PlayerOne(gameEngine, AssetManager, character1, -1, 0, 1)
     const playerTwo =  new PlayerTwo(gameEngine, AssetManager, character2, 1, 0, 1)
-    // give them keymaps...
-    // assignKeymap(PLAYER.ONE, playerOne);
-    // assignKeymap(PLAYER.TWO, playerTwo);
-    // assignKeymap(PLAYER.ONE, playerOne);
+
 
     // make the background
     const backgroundAsset = AssetManager.getAsset("background/background03.jpeg");

@@ -9,7 +9,7 @@ import {CharacterFactory} from "./characterFactory.js";
 import {Hitbox, HitboxOp} from "../engine/hitbox.js";
 import {TileEntity} from "./tileEntity.js";
 import {Rectangle2D} from "../engine/primitives.js";
-import {SoundFX} from "../engine/soundFX.js";
+import {SoundFX as SoundFx, SoundFX} from "../engine/soundFX.js";
 import {getCharacterData} from "./characterData.js";
 
 
@@ -75,6 +75,13 @@ export class Player extends Character {
         this.physics.velocityMax.x = 10;
         this.name = name;
 
+        // Knockback / hitstun control
+        this.knockbackTimer = 0;      // seconds remaining
+        this.knockbackDuration = 0.12; // tune (0.08–0.20)
+        this.knockbackStrength = 1.5;   // tune for push distance
+        this.knockbackLift = 0.5;      // optional small vertical bump
+
+
         this.constantAcceleration = {
             [Character.DIRECTION.LEFT]: 0,
             [Character.DIRECTION.RIGHT]: 0,
@@ -98,8 +105,6 @@ export class Player extends Character {
 
         CharacterFactory.configurePlayer(this, this.name)
 
-// IMPORTANT: engine only auto-adds e.hitbox, so we must spawn this extra one:
-
         this.setupCombatHitboxes();
 
     }
@@ -115,7 +120,7 @@ export class Player extends Character {
         this.hitbox.kind = "body";
         this.hitbox.enabled = true;
 
-        this.attackHitbox = new Hitbox(this, new Rectangle2D(0, 0, 1, 1));
+        this.attackHitbox = new Hitbox(this, new Rectangle2D(-1, 0, 1, 1));
 
         this.attackHitbox.kind = "attack";
         this.attackHitbox.enabled = false;
@@ -139,16 +144,25 @@ export class Player extends Character {
         if (attacker.state !== Player.states.ATTACK) return;
 
         // once clashed, never damage
-        if (attacker._clashed.has(victim) || victim._clashed.has(attacker)) return;
+        if (attacker._clashed.has(victim)) return;
 
         if (otherHb.kind === "attack") {
+            const victimIsAttacking =
+                victim.state === Player.states.ATTACK && victim.attackHitbox.enabled;
+            if (!victimIsAttacking) return;
+
             attacker._clashed.add(victim);
             victim._clashed.add(attacker);
 
             attacker.attackHitbox.enabled = false;
             victim.attackHitbox.enabled = false;
 
-            this.swordCollide();
+            SoundFX.play("swordCollide8")
+
+            // PUSH BOTH BACK
+            attacker.applyKnockbackFrom(victim);
+            victim.applyKnockbackFrom(attacker);
+
             return;
         }
 
@@ -157,7 +171,7 @@ export class Player extends Character {
 
         const bothAttacking = attacker.attackHitbox.enabled && victim.attackHitbox.enabled;
 
-        // ⚠️ Only works if intersects exists; see note below
+        // nly works if intersects exists; see note below
         const swordsOverlap =
             bothAttacking &&
             attacker.attackHitbox.bounds.intersects?.(victim.attackHitbox.bounds);
@@ -169,7 +183,6 @@ export class Player extends Character {
             attacker.attackHitbox.enabled = false;
             victim.attackHitbox.enabled = false;
 
-            this.swordCollide();
             return;
         }
 
@@ -177,14 +190,83 @@ export class Player extends Character {
         victim.setPlayerHealth?.(10);
         victim.attackHitbox.enabled = false;
         attacker._alreadyHit.add(victim);
+        console.log(attacker.name, ": ", attacker.playerHealth)
+        console.log(victim.name, ": ", victim.playerHealth)
     }
 
 
-    swordCollide() {
-        // set physics to push character back
+    applyKnockbackFrom(other, strength = this.knockbackStrength) {
+        // Direction: push away from the other player
+        const dir = (this.objectX() < other.objectX()) ? -1 : 1;
 
-        console.log("Sword collided")
-        SoundFX.play("swordCollide1")
+        // Cancel player-driven acceleration so they slide back cleanly
+        this.constantAcceleration[Character.DIRECTION.LEFT] = 0;
+        this.constantAcceleration[Character.DIRECTION.RIGHT] = 0;
+
+        // Set a short timer during which we don't zero velocity.x in update()
+        this.knockbackTimer = this.knockbackDuration;
+
+        // Apply the impulse
+        this.physics.velocity.x = dir * strength;
+
+        // Optional: little "pop" so it feels like impact
+        // Only if you're on ground or you want it always
+        if (this.onGround) {
+            this.physics.velocity.y = Math.max(this.physics.velocity.y, this.knockbackLift);
+            this.onGround = false;
+        }
+    }
+
+    setPlayerHealth(damage) {
+        this.playerHealth -= damage;
+
+
+        if (this.playerHealth === 0) {
+
+            let rnd_int = Math.floor(Math.random() * 5) + 1;
+            switch (getCharacterData(this.name).gender) {
+
+                case "female": {
+                    const sound = `femaleDeath${rnd_int}`
+                    SoundFX.play(sound)
+                    break;
+
+                }
+
+                case "male": {
+                    const sound = `maleDeath${rnd_int}`
+                    SoundFX.play(sound)
+                    break;
+                }
+            }
+
+
+            SoundFx.stop();
+
+            SoundFx.play("victory");
+
+            setTimeout(() => {
+                this.game.running = false;
+            }, 1000);
+
+        } else if (this.playerHealth > 0) {
+            let rnd_int = Math.floor(Math.random() * 7) + 1;
+            switch (getCharacterData(this.name).gender) {
+
+                case "female": {
+                    const sound = `femaleHurt${rnd_int}`
+                    SoundFX.play(sound)
+                    break;
+
+                }
+
+                case "male": {
+                    const sound = `maleHurt${rnd_int}`
+                    SoundFX.play(sound)
+                    break;
+                }
+            }
+        }
     }
 
     initKeymap() {
@@ -251,6 +333,8 @@ export class Player extends Character {
     swing() {
         if (this.stateLock) return;
 
+        console.log(this.name, ": New Swing action")
+
         this.lastState = this.state;
         this.state = Player.states.ATTACK;
         this.stateLock = true;
@@ -259,6 +343,8 @@ export class Player extends Character {
         this._alreadyHit.clear();
         this.updateAttackHitboxBounds();
         this.attackHitbox.enabled = true;
+
+        console.log(this.physics.position.y)
 
         SoundFX.play(getCharacterData(this.name).swordSound);
     }
@@ -274,10 +360,10 @@ export class Player extends Character {
                 this.physics.velocity.y = this.gravity * -1 + 3;
             }
         }
+
     }
 
     update() {
-        this.physics.acceleration.x = 0;
         this.physics.acceleration.y = this.gravity;
 
         // for (let key in this.game.keys) this.keymapper.sendKeyEvent(this.game.keys[key]);
@@ -289,10 +375,11 @@ export class Player extends Character {
 
         switch (this.state) {
             case Player.states.ATTACK :
-                this.physics.velocity.x = 0;
 
                 break;
             case Player.states.MOVE :
+                this.physics.acceleration.x = 0;
+
                 this.physics.acceleration.x =
                     this.constantAcceleration[Character.DIRECTION.LEFT]
                     + this.constantAcceleration[Character.DIRECTION.RIGHT];
