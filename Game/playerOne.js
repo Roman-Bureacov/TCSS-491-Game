@@ -14,7 +14,7 @@ export class PlayerOne extends Player {
     constructor(game, assetManager, characterName, startPosX, startPosY, scale = 1, dimX = 1, dimY = 1) {
 
         const spritesheet = new Spritesheet(assetManager.getAsset(getCharacterData(characterName).img), getCharacterData(characterName).numRow, getCharacterData(characterName).numCol);
-        super(game, spritesheet, scale,dimX, dimY, startPosX, startPosY, Character.DIRECTION.RIGHT, characterName);
+        super(game, spritesheet,dimX, dimY, startPosX, startPosY, Character.DIRECTION.RIGHT, characterName);
 
 
         this.setupKeymap();

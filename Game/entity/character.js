@@ -40,8 +40,6 @@ export class Character extends DynamicEntity {
      */
     stateLock = false;
 
-    static DIRECTION = DIRECTIONS;
-
     /**
      * The state of this character as per the states this character may exhibit.
      * @Type {string}
@@ -52,7 +50,7 @@ export class Character extends DynamicEntity {
      * The
      * @type {string}
      */
-    facing = Character.DIRECTION.RIGHT;
+    facing = DIRECTIONS.RIGHT;
 
 
     /**

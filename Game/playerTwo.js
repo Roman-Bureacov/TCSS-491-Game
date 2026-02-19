@@ -16,7 +16,7 @@ export class PlayerTwo extends Player {
 
         const spritesheet = new Spritesheet(assetManager.getAsset(getCharacterData(characterName).img), getCharacterData(characterName).numRow, getCharacterData(characterName).numCol)
 
-        super(game, spritesheet, scale,dimX, dimY, startPosX, startPosY, Character.DIRECTION.LEFT, characterName)
+        super(game, spritesheet,dimX, dimY, startPosX, startPosY, Character.DIRECTION.LEFT, characterName)
 
 
 

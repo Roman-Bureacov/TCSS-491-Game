@@ -1,7 +1,22 @@
 'use strict';
 
+/**
+ * The possible character names
+ * @readonly
+ * @enum {string}
+ */
+
+export const CHARACTER_NAMES = Object.freeze({
+    GUY: "guy1",
+    GUY2: "guy2",
+    WARRIOR_WOMAN: "warriorWoman",
+    KNIGHT : "knight",
+    SAMURAI_A: "samurai1",
+    SAMURAI_B: "samurai2",
+})
+
 const CHARACTER_DATA = {
-    guy1: {
+    [CHARACTER_NAMES.GUY] : {
         img: "character/guy1/Guy.png",
         numRow: 3,
         numCol: 14,
@@ -25,8 +40,8 @@ const CHARACTER_DATA = {
 
 
     },
-
-    guy2: {
+    
+    [CHARACTER_NAMES.GUY2]: {
         img: "character/guy2/Guy2.png",
         numRow: 3,
         numCol: 14,
@@ -50,8 +65,8 @@ const CHARACTER_DATA = {
 
 
     },
-
-    warriorWoman: {
+    
+    [CHARACTER_NAMES.WARRIOR_WOMAN]: {
         img: "character/warriorWoman/warriorWoman.png",
         numRow: 5,
         numCol: 24,
@@ -74,7 +89,7 @@ const CHARACTER_DATA = {
         gender: "female",
     },
 
-    knight: {
+    [CHARACTER_NAMES.KNIGHT]: {
         img: "character/knight/knight.png",
         numRow: 12,
         numCol: 16,
@@ -127,7 +142,7 @@ const CHARACTER_DATA = {
 
     },
 
-    samurai2: {
+    [CHARACTER_NAMES.SAMURAI_B]: {
         img: "character/samurai/samurai2.png",
         numRow: 10,
         numCol: 12,
