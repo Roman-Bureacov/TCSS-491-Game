@@ -8,7 +8,7 @@ import {KeyMapper} from "../engine/keymapper.js";
 import {Hitbox, HITBOX_TYPE, HitboxOp} from "../engine/hitbox.js";
 import {TileEntity} from "./tileEntity.js";
 import {Rectangle2D} from "../engine/primitives.js";
-import {SoundFX as SoundFx, SoundFX} from "../engine/soundFX.js";
+import {SoundFX} from "../engine/soundFX.js";
 import {getCharacterData} from "./characterData.js";
 import {DIRECTIONS} from "../engine/constants.js";
 
@@ -220,9 +220,9 @@ export class Player extends Character {
             }
 
 
-            SoundFx.stop();
+            SoundFX.stop();
 
-            SoundFx.play("victory");
+            SoundFX.play("victory");
 
             setTimeout(() => {
                 this.game.running = false;
