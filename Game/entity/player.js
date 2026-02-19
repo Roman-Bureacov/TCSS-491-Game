@@ -5,12 +5,12 @@ A concrete implementation of the character class
 import {Character} from "./character.js"
 import {Spritesheet} from "./animation.js";
 import {KeyMapper} from "../engine/keymapper.js";
-import {CharacterFactory} from "./characterFactory.js";
 import {Hitbox, HitboxOp} from "../engine/hitbox.js";
 import {TileEntity} from "./tileEntity.js";
 import {Rectangle2D} from "../engine/primitives.js";
 import {SoundFX as SoundFx, SoundFX} from "../engine/soundFX.js";
 import {getCharacterData} from "./characterData.js";
+import {DIRECTIONS} from "../engine/constants.js";
 
 /**
  * Concrete implementation of the character.
@@ -51,22 +51,16 @@ export class Player extends Character {
      * @param {number} dimY the positive dimension of this character
      * @param {number} [startX=0] the starting x position
      * @param {number} [startY=0] the starting y position
-     * @param facingDir The starting direction of the players.
-     * @param name The name of the character.
      */
     constructor(game, spritesheet,
                 dimX = 1, dimY = 1,
-                startX = 0, startY = 0, facingDir, name) {
+                startX = 0, startY = 0) {
         super(game, spritesheet, dimX, dimY, startX, startY);
-
 
         this.playerHealth = 100;
 
-
-        this.facing = facingDir;
         this.state = Player.states.IDLE;
         this.physics.velocityMax.x = 10;
-        this.name = name;
 
         // Knockback / hitstun control
         this.knockbackTimer = 0;      // seconds remaining
@@ -74,20 +68,16 @@ export class Player extends Character {
         this.knockbackStrength = 1.5;   // tune for push distance
         this.knockbackLift = 0.5;      // optional small vertical bump
 
-
         this.constantAcceleration = {
-            [Character.DIRECTION.LEFT]: 0,
-            [Character.DIRECTION.RIGHT]: 0,
+            [DIRECTIONS.LEFT]: 0,
+            [DIRECTIONS.RIGHT]: 0,
         };
         this.lastState = this.state;
 
         this.gravity = -20;
+
         this.initKeymap();
-
         this.initHitbox();
-
-        CharacterFactory.configurePlayer(this, this.name)
-
         this.setupCombatHitboxes();
 
     }
@@ -154,7 +144,11 @@ export class Player extends Character {
 
         const bothAttacking = attacker.attackHitbox.enabled && victim.attackHitbox.enabled;
 
-        // nly works if intersects exists; see note below
+        // nly works if intersects exists; see note below // <-- Note? what note? I saw there was an emoji here earlier
+        // ^^^ we need to be careful if we're copy-pasting LLM-generated code
+        // LLM very-well likely doesn't understand the full scope of this project
+        // always reach out to ask if you're stumped how to implement something
+        // I can explain this project better than the text-predicting LLM
         const swordsOverlap =
             bothAttacking &&
             attacker.attackHitbox.bounds.intersects?.(victim.attackHitbox.bounds);
@@ -183,8 +177,8 @@ export class Player extends Character {
         const dir = (this.objectX() < other.objectX()) ? -1 : 1;
 
         // Cancel player-driven acceleration so they slide back cleanly
-        this.constantAcceleration[Character.DIRECTION.LEFT] = 0;
-        this.constantAcceleration[Character.DIRECTION.RIGHT] = 0;
+        this.constantAcceleration[DIRECTIONS.LEFT] = 0;
+        this.constantAcceleration[DIRECTIONS.RIGHT] = 0;
 
         // Set a short timer during which we don't zero velocity.x in update()
         this.knockbackTimer = this.knockbackDuration;
@@ -258,8 +252,8 @@ export class Player extends Character {
             "move right": () => this.move(800),
             "move left": () => this.move(-800),
             "attack": () => this.swing(),
-            "stop right": () => this.stopMoving(Character.DIRECTION.RIGHT),
-            "stop left": () => this.stopMoving(Character.DIRECTION.LEFT),
+            "stop right": () => this.stopMoving(DIRECTIONS.RIGHT),
+            "stop left": () => this.stopMoving(DIRECTIONS.LEFT),
             "jump": () => this.jump(),
         };
     };
@@ -298,7 +292,7 @@ export class Player extends Character {
      */
     move(acceleration) {
         if (!this.setState(Player.states.MOVE)) {
-            const newFacing = acceleration < 0 ? Character.DIRECTION.LEFT : Character.DIRECTION.RIGHT;
+            const newFacing = acceleration < 0 ? DIRECTIONS.LEFT : DIRECTIONS.RIGHT;
             if (newFacing !== this.facing) {
                 this.physics.velocity.x = 0;
                 this.facing = newFacing;
@@ -373,8 +367,8 @@ export class Player extends Character {
                 this.physics.acceleration.x = 0;
 
                 this.physics.acceleration.x =
-                    this.constantAcceleration[Character.DIRECTION.LEFT]
-                    + this.constantAcceleration[Character.DIRECTION.RIGHT];
+                    this.constantAcceleration[DIRECTIONS.LEFT]
+                    + this.constantAcceleration[DIRECTIONS.RIGHT];
 
                 if (this.physics.acceleration.x === 0) {
                     this.setState(Player.states.IDLE);
@@ -399,7 +393,7 @@ export class Player extends Character {
         const startY = box.start.y() - h * 0.20;
 
         let startX;
-        if (this.facing === Character.DIRECTION.RIGHT) {
+        if (this.facing === DIRECTIONS.RIGHT) {
             startX = box.start.x() + w * 0.60;
         } else {
             startX = box.start.x() - dimX * 0.60; // push it to the left of the body

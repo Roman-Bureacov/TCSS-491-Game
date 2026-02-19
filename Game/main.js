@@ -4,14 +4,11 @@ import {AssetManager} from "./assets/assetmanager.js";
 import {StaticEntity} from "./entity/entity.js";
 import {Spritesheet} from "./entity/animation.js";
 import {Camera, Pane, Render, World} from "./engine/render/Render.js";
-import {CharacterFactory as CharacterFactory} from "./entity/characterFactory.js";
 import {ArenaFactory} from "./arena/arenaFactory.js";
-import {assignKeymap, PLAYER} from "./entity/keymapAssigner.js";
-import {PlayerOne} from "./playerOne.js";
-import {PlayerTwo} from "./playerTwo.js";
 
-import { SoundFX } from "./engine/soundFX.js";
-import {getCharacterData} from "./entity/characterData.js";
+import {SoundFX} from "./engine/soundFX.js";
+import {CHARACTER_NAMES} from "./entity/characterData.js";
+import {PlayerFactory} from "./entity/Players/PlayerFactory.js";
 
 const gameEngine = new GameEngine(undefined, undefined);
 const CANVAS = document.querySelector('#gameWorld');
@@ -54,11 +51,20 @@ AssetManager.downloadAll(async () => {
     const tilePane = new Pane();
     const forePane = new Pane();
 
-    const character1 = CharacterFactory.names.guy; //CHARACTER_SELECTOR.getPlayerCharacter()[0] //player 1 character
-    const character2 = CharacterFactory.names.samurai1; //CHARACTER_SELECTOR.getPlayerCharacter()[0] //player 1 character
-
-    const playerOne = new PlayerOne(gameEngine, AssetManager, character1, -1, 0, 1)
-    const playerTwo =  new PlayerTwo(gameEngine, AssetManager, character2, 1, 0, 1)
+    const character1 = CHARACTER_NAMES.GUY;
+    const character2 = CHARACTER_NAMES.SAMURAI_A;
+    const playerOne = PlayerFactory.makePlayer(
+        character1,
+        PlayerFactory.PLAYER_TYPES.ONE,
+        gameEngine,
+        -1, 0,
+        1, 1)
+    const playerTwo = PlayerFactory.makePlayer(
+        character2,
+        PlayerFactory.PLAYER_TYPES.TWO,
+        gameEngine,
+        1, 0,
+        1, 1);
 
 
     // make the background

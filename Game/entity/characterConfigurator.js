@@ -4,6 +4,7 @@ import {Animator} from "./animation.js";
 import {Player} from "./player.js";
 import {Character} from "./character.js";
 import {getCharacterData} from "./characterData.js";
+import {DIRECTIONS} from "../engine/constants.js";
 
 /**
  * Factory class that makes characters.
@@ -11,19 +12,7 @@ import {getCharacterData} from "./characterData.js";
  * @author Kassie Whitney
  * @author Roman Bureacov
  */
-export class CharacterFactory {
-
-    /**
-     * The mapping of character names.
-     * @type {Readonly<string: string>}
-     */
-    static names = Object.freeze({
-        guy: "guy1",
-        guy2: "guy2",
-        warriorWoman: "warriorWoman",
-        samurai1: "samurai1",
-        samurai2: "samurai2"
-    })
+export class CharacterConfigurator {
 
 
     constructor() {
@@ -38,24 +27,24 @@ export class CharacterFactory {
      *
      * @author Kassie Whitney
      */
-    static configurePlayer(player, name) {
+    static attachAnimators(player, name) {
         let data = getCharacterData(name);
 
         console.log(data)
         
-        let S = player.constructor.states
+        let S = Player.states
 
         const animations = [
             {
                 state: S.MOVE,
-                facing: Character.DIRECTION.RIGHT,
+                facing: DIRECTIONS.RIGHT,
                 frames: data.moveR,
                 duration: data.moveDur,
                 isLooping: true
             },
             {
                 state: S.MOVE,
-                facing: Character.DIRECTION.LEFT,
+                facing: DIRECTIONS.LEFT,
                 frames: data.moveR,
                 isReversed: true,
                 duration: data.moveDur,
@@ -63,14 +52,14 @@ export class CharacterFactory {
             },
             {
                 state: S.IDLE,
-                facing: Character.DIRECTION.RIGHT,
+                facing: DIRECTIONS.RIGHT,
                 frames: data.idleR,
                 duration: data.idleDur,
                 isLooping: true
             },
             {
                 state: S.IDLE,
-                facing: Character.DIRECTION.LEFT,
+                facing: DIRECTIONS.LEFT,
                 frames: data.idleR,
                 isReversed: true,
                 duration: data.idleDur,
@@ -78,7 +67,7 @@ export class CharacterFactory {
             },
             {
                 state: S.ATTACK,
-                facing: Character.DIRECTION.RIGHT,
+                facing: DIRECTIONS.RIGHT,
                 frames: data.attackR,
                 duration: data.attackDur,
                 callback: () => {
@@ -90,7 +79,7 @@ export class CharacterFactory {
             },
             {
                 state: S.ATTACK,
-                facing: Character.DIRECTION.LEFT,
+                facing: DIRECTIONS.LEFT,
                 frames: data.attackR,
                 isReversed: true,
                 duration: data.attackDur,
