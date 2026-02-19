@@ -4,6 +4,9 @@ dimension:
 | matrix: 12 rows by 32 columns
 | size: 14 by 6
 | tiles: auto
+detail:
+| background: "background/background03.jpeg"
+| music: "backgroundMusic2"
 arena:
 ................................
 .......ABBBC........ABBBC.......

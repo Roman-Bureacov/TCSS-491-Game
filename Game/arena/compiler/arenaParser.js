@@ -1,6 +1,19 @@
 import {TileFactory} from "../tileFactory.js";
 import {ArenaScanner} from "./arenaScanner.js";
 import {Token} from "./Token.js";
+import {StaticEntity} from "../../entity/entity.js";
+import {Spritesheet} from "../../entity/animation.js";
+import {AssetManager} from "../../assets/assetmanager.js";
+
+
+/**
+ * @typedef ArenaProperties an object representing what the arena has
+ * @property {{x: number, y: number}} [playerAStart] the starting position of a player
+ * @property {{x: number, y: number}} [playerBStart] the starting position of a player
+ * @property {TileEntity[]} tiles the list of tiles in this arena
+ * @property {StaticEntity} background the background static entity
+ * @property {string} music the music name for this arena
+ */
 
 /**
  * The parser for building arenas based on text
@@ -26,6 +39,12 @@ export class ArenaParser {
     }
 
     /**
+     * The arena properties to return
+     * @type {ArenaProperties}
+     */
+    arenaProps;
+
+    /**
      * @type {Token}
      */
     token;
@@ -37,28 +56,36 @@ export class ArenaParser {
     previous;
 
     /**
-     * The built arena
-     * @type TileEntity[]
-     */
-    compiledArena = [];
-
-    /**
      * Constructs a new arena parser
      * @param {string} text the text to parse
      */
     constructor(text) {
         this.scanner = new ArenaScanner(text);
+
+        this.arenaProps = {
+            playerAStart: {
+                x: undefined,
+                y: undefined,
+            },
+            playerBStart: {
+                x: undefined,
+                y: undefined,
+            },
+            tiles: undefined,
+            background: undefined,
+            music: undefined,
+        }
     }
 
     /**
      * Builds an arena based on text
      *
-     * @return {TileEntity[]} the set of tiles representing the arena
+     * @return {ArenaProperties} the properties pertaining to the arena
      */
     buildArena() {
         this.root();
 
-        return this.compiledArena;
+        return this.arenaProps;
     }
 
     /**
@@ -75,6 +102,7 @@ export class ArenaParser {
     specifiers() {
         this.setSpecifier();
         this.dimensionSpecifier();
+        this.arenaDetailSpecifier();
     }
 
     /**
@@ -123,6 +151,43 @@ export class ArenaParser {
         this.mustBe(Token.TYPES.NUMBER)
         this.parameters.originY = sign * parseFloat(this.token.image);
 
+    }
+
+    arenaDetailSpecifier() {
+        this.mustBe(Token.TYPES.DETAIL);
+        this.mustBe(Token.TYPES.COLN);
+
+        this.mustBe(Token.TYPES.PIPE);
+        this.mustBe(Token.TYPES.BACKGROUND);
+        this.mustBe(Token.TYPES.COLN);
+        this.mustBe(Token.TYPES.STR)
+        // build this tile
+        let path = this.token.image.replaceAll("\"", "");
+
+        let asset = AssetManager.getAsset(path)
+        if (asset === undefined) throw new Error(`
+Could not fetch asset "${path}"
+on line ${this.token.line}
+`
+        );
+
+        let spritesheet = new Spritesheet(asset, 1, 1);
+
+        this.arenaProps.background = new StaticEntity(
+            spritesheet,
+            spritesheet.image.width,
+            spritesheet.image.height
+        );
+
+        this.mustBe(Token.TYPES.PIPE);
+        this.mustBe(Token.TYPES.MUSIC);
+        this.mustBe(Token.TYPES.COLN);
+        this.mustBe(Token.TYPES.STR)
+        // make this string
+        path = this.token.image.replaceAll("\"", "");
+        // TODO: is there a way to make sure this file exists considering it is loaded outside of AssetManager?
+        // TODO: error check?
+        this.arenaProps.music = path;
     }
 
     /**
@@ -200,6 +265,7 @@ export class ArenaParser {
         this.mustBe(Token.TYPES.COLN);
 
         console.log(this.parameters)
+        let compiledArena = [];
         // we now have enough information to build the arena
         let rowSpacing = (1.0 * this.parameters.height) / this.parameters.rows;
         let colSpacing = (1.0 * this.parameters.width) / this.parameters.columns;
@@ -227,14 +293,16 @@ export class ArenaParser {
                         this.parameters.tileHeight
                     );
 
-                    this.compiledArena.push(tile);
+                    compiledArena.push(tile);
                 } else {
-                    this.mustBe(Token.TYPES.PERIOD);
+                    this.mustBe(Token.TYPES.DOT);
                 }
             }
         }
 
         this.mustBe(Token.TYPES.END);
+
+        this.arenaProps.tiles = compiledArena;
 
     }
 

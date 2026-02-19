@@ -94,16 +94,15 @@ AssetManager.downloadAll(async () => {
     world.addPane(forePane);
 
 // create the arena (array of TileEntity)
-    const arena = ArenaFactory.makeArena(ArenaFactory.arenas.ARENA2);
+    const arena = ArenaFactory.makeArena(ArenaFactory.arenas.BASIC);
 
+    console.log(arena);
 // add tiles to the pane
-    for (const item of arena) {
-        tilePane.addDrawable(item);
-    }
+    arena.tiles.forEach(t => tilePane.addDrawable(t));
 
 // Add entities
     gameEngine.addDynamicEntity(playerOne, playerTwo);
-    arena.forEach(e => gameEngine.addStaticEntity(e));
+    arena.tiles.forEach(e => gameEngine.addStaticEntity(e));
 
     gameEngine.render = renderer;
     gameEngine.focus.playerA = playerOne;

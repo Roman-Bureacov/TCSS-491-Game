@@ -29,7 +29,7 @@ export class ArenaFactory {
      * Creates an arena
      *
      * @param {string} name the arena name
-     * @return {TileEntity[]} the collection of static entities that make up this arena
+     * @return {ArenaProperties} the collection of static entities that make up this arena
      */
     static makeArena(name) {
         let text;

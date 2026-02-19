@@ -26,7 +26,10 @@ export class ArenaScanner {
         "origin" : Token.TYPES.ORIGIN,
         "default" : Token.TYPES.DEFAULT,
         "auto" : Token.TYPES.AUTO,
-        "tiles" : Token.TYPES.TILES
+        "tiles" : Token.TYPES.TILES,
+        "detail" : Token.TYPES.DETAIL,
+        "background" : Token.TYPES.BACKGROUND,
+        "music" : Token.TYPES.MUSIC,
     }
 
     /**
@@ -52,6 +55,9 @@ export class ArenaScanner {
         }
 
         switch (this.ch) {
+            case "*":
+                this.nextCh()
+                return new Token(Token.TYPES.ASTR, "*", this.line);
             case ":":
                 this.nextCh()
                 return new Token(Token.TYPES.COLN, ":", this.line);
@@ -60,7 +66,7 @@ export class ArenaScanner {
                 return new Token(Token.TYPES.PIPE, "|", this.line);
             case ".":
                 this.nextCh()
-                return new Token(Token.TYPES.PERIOD, ".", this.line);
+                return new Token(Token.TYPES.DOT, ".", this.line);
             case "-":
                 this.nextCh()
                 return new Token(Token.TYPES.MINS, "-", this.line);
@@ -69,7 +75,11 @@ export class ArenaScanner {
                 return new Token(Token.TYPES.COMMA, ",", this.line);
             // now it's either a number or text
             default:
-                if (this.regexTextLetter.test(this.ch)) {
+                if (this.ch === "\"") {
+                    let str = this.buildStr();
+                    return new Token(Token.TYPES.STR, str, this.line)
+                } else if (this.regexTextLetter.test(this.ch)) {
+                    // build text
                     let str = this.buildText();
                     let type = this.reservedWords[str];
                     if (type === undefined)
@@ -78,13 +88,32 @@ export class ArenaScanner {
                         return new Token(type, str, this.line);
 
                 } else if (this.regexDigit.test(this.ch)) {
+                    // build number
                     return new Token(Token.TYPES.NUMBER, this.buildNumber(), this.line);
                 } else if (this.regexLetter.test(this.ch)) {
+                    // build letter
                     let image = this.ch;
                     this.nextCh()
                     return new Token(Token.TYPES.LETTER, image, this.line);
                 } else throw new Error(`(line ${this.line}) Unexpected token: ${this.ch}`);
         }
+    }
+
+    /**
+     * Builds a string from the input
+     * @return {string} the image
+     */
+    buildStr() {
+        let str = this.ch;
+        this.nextCh();
+        while (this.ch !== "\"") {
+            str = str.concat(this.ch);
+            this.nextCh();
+        }
+        str = str.concat(this.ch);
+        this.nextCh();
+
+        return str;
     }
 
     /**
