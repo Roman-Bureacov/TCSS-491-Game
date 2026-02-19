@@ -106,6 +106,25 @@ As an example:
 
 This will mean that every tile placed is 1 unit wide and 2 units tall.
 
+## `detail` specifier
+
+The detail specifier is optional, but if it exists, it must appear after
+the dimension specifier.
+
+It's purpose is to provide information as to what the background image
+asset is, and what the music asset is.
+
+If the `detail` specifier exists, both background asset and music name
+must be specified
+
+As an example:
+
+```
+detail:
+| background: "background/background03.jpeg"
+| music: "backgroundMusic2"
+```
+
 # `Arena` map
 
 The arena map is an extension of the properties outlined prior.
@@ -141,6 +160,11 @@ arena:
 .ABBBBBBC.
 end
 ```
+
+Note that there is an optional symbol `*` which may be used to specify where 
+to place characters.
+
+There may only be either 0 or up to 2 of these symbols at a time.
 
 # Examples
 
