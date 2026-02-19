@@ -68,3 +68,7 @@ const CHARACTER_DATA = {
 export function getCharacter(theCharacter) {
     return CHARACTER_DATA[theCharacter];
 }
+
+export function getAllCharacter() {
+    return CHARACTER_DATA;
+}

@@ -7,7 +7,7 @@ import {parseTxtToMap} from "./arenaFactory.js";
 import {TileMap} from "./arenaFactory.js";
 import {PlayerOne} from "./playerOne.js";
 import {PlayerTwo} from "./playerTwo.js";
-import {getCharacter} from "./characterData.js";
+import {getCharacter, getAllCharacter} from "./characterData.js";
 import {SoundFX} from "./soundFX.js";
 
 const gameEngine = new GameEngine();
@@ -89,7 +89,7 @@ export const global = {
 
 
 // Preload all character assets
-Object.values(getAllCharacterData()).forEach(character => {
+Object.values(getAllCharacter()).forEach(character => {
     ASSET_MANAGER.queueDownload(character.img);
 });
 
