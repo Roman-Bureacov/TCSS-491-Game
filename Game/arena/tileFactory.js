@@ -3,9 +3,6 @@ this file has code for creating tiles
 
  */
 
-import {StaticEntity} from "../entity/entity.js";
-import {AssetManager} from "../assets/assetmanager.js";
-import {Spritesheet} from "../entity/animation.js";
 import {IndustrialTileFactory} from "./tilesets/industrialTileSet.js";
 import {IndustrialBTileFactory} from "./tilesets/industrialBTileSet.js";
 

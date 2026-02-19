@@ -4,8 +4,6 @@
  * @author Roman Bureacov
  */
 
-import {global} from "../main.js";
-
 export class KeyMapper {
 
     /**

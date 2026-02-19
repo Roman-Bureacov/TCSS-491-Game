@@ -1,5 +1,5 @@
 import test from "node:test";
-import { strictEqual, notStrictEqual } from "node:assert/strict";
+import {notStrictEqual, strictEqual} from "node:assert/strict";
 import {Hitbox, HitboxOp} from "../Game/engine/hitbox.js";
 import {Rectangle2D} from "../Game/engine/primitives.js";
 import {SpaceObject} from "../Game/engine/render/Render.js";

@@ -1,5 +1,5 @@
 import test from "node:test";
-import { strictEqual } from "node:assert/strict";
+import {strictEqual} from "node:assert/strict";
 import {Matrix, MatrixOp} from "../Matrix/Matrix.js";
 
 /**
