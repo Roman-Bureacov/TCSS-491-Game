@@ -1,0 +1,182 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Arena Fighters</title>
+    <link href="style.css" rel="stylesheet"/>
+</head>
+<body>
+
+<!-- Main Menu Screen -->
+<div id="mainMenu" class="menu-screen">
+    <div class="menu-container">
+        <h1 class="game-title">ARENA FIGHTERS</h1>
+
+        <div class="character-selection">
+            <div class="player-select">
+                <h3>Player 1</h3>
+                <div class="character-options">
+                    <button class="character-btn" data-player="1" data-character="guy1">
+                        <div class="char-preview"></div>
+                        <span>Warrior</span>
+                    </button>
+                    <button class="character-btn" data-player="1" data-character="guy2">
+                        <div class="char-preview"></div>
+                        <span>Knight</span>
+                    </button>
+                    <button class="character-btn" data-player="1" data-character="warriorWoman">
+                        <div class="char-preview"></div>
+                        <span>Valkyrie</span>
+                    </button>
+                </div>
+                <div class="selected-character" id="p1Selected">Select Character</div>
+            </div>
+
+            <div class="vs-divider">VS</div>
+
+            <div class="player-select">
+                <h3>Player 2</h3>
+                <div class="character-options">
+                    <button class="character-btn" data-player="2" data-character="guy1">
+                        <div class="char-preview"></div>
+                        <span>Warrior</span>
+                    </button>
+                    <button class="character-btn" data-player="2" data-character="guy2">
+                        <div class="char-preview"></div>
+                        <span>Knight</span>
+                    </button>
+                    <button class="character-btn" data-player="2" data-character="warriorWoman">
+                        <div class="char-preview"></div>
+                        <span>Valkyrie</span>
+                    </button>
+                </div>
+                <div class="selected-character" id="p2Selected">Select Character</div>
+            </div>
+        </div>
+
+        <div class="arena-selection">
+            <h3>Select Arena</h3>
+            <div class="arena-options">
+                <button class="arena-btn selected" data-arena="arena1">
+                    <span>New Temple</span>
+                </button>
+                <button class="arena-btn" data-arena="arena2">
+                    <span>Temple Ruins</span>
+                </button>
+            </div>
+        </div>
+
+        <button id="startGameBtn" class="start-btn" disabled>START GAME</button>
+
+        <button id="instructionsBtn" class="instructions-btn">CONTROLS</button>
+    </div>
+</div>
+
+<!-- Instructions Overlay -->
+<div id="instructionsOverlay" class="overlay hidden">
+    <div class="instructions-panel">
+        <h2>Game Controls</h2>
+        <div class="controls-grid">
+            <div class="player-controls">
+                <h3>Player 1</h3>
+                <div class="control-item">
+                    <span class="key">A</span>
+                    <span class="action">Move Left</span>
+                </div>
+                <div class="control-item">
+                    <span class="key">D</span>
+                    <span class="action">Move Right</span>
+                </div>
+                <div class="control-item">
+                    <span class="key">S</span>
+                    <span class="action">Attack</span>
+                </div>
+                <div class="control-item">
+                    <span class="key">1</span>
+                    <span class="action">Switch Character</span>
+                </div>
+            </div>
+            <div class="player-controls">
+                <h3>Player 2</h3>
+                <div class="control-item">
+                    <span class="key">←</span>
+                    <span class="action">Move Left</span>
+                </div>
+                <div class="control-item">
+                    <span class="key">→</span>
+                    <span class="action">Move Right</span>
+                </div>
+                <div class="control-item">
+                    <span class="key">↓</span>
+                    <span class="action">Attack</span>
+                </div>
+                <div class="control-item">
+                    <span class="key">2</span>
+                    <span class="action">Switch Character</span>
+                </div>
+            </div>
+        </div>
+        <button id="closeInstructionsBtn" class="close-btn">CLOSE</button>
+    </div>
+</div>
+
+<!-- Game Screen -->
+<div id="gameScreen" class="hidden">
+    <div id="gameWrap">
+        <!-- HUD Top Bar -->
+        <div class="hud-container">
+            <div class="player-hud player-1-hud">
+                <div class="player-info">
+                    <div class="character-portrait" id="p1Portrait"></div>
+                    <div class="player-details">
+                        <div class="player-name">Player 1</div>
+                        <div class="character-name" id="p1CharName">Warrior</div>
+                    </div>
+                </div>
+                <div class="health-container">
+                    <div class="health-bar-bg">
+                        <div class="health-bar" id="p1Health"></div>
+                    </div>
+                    <div class="health-text" id="p1HealthText">100%</div>
+                </div>
+            </div>
+
+            <div class="center-hud">
+                <div class="timer" id="gameTimer">99</div>
+                <div class="round-info" id="roundInfo">ROUND 1</div>
+            </div>
+
+            <div class="player-hud player-2-hud">
+                <div class="health-container">
+                    <div class="health-bar-bg">
+                        <div class="health-bar" id="p2Health"></div>
+                    </div>
+                    <div class="health-text" id="p2HealthText">100%</div>
+                </div>
+                <div class="player-info">
+                    <div class="player-details">
+                        <div class="player-name">Player 2</div>
+                        <div class="character-name" id="p2CharName">Knight</div>
+                    </div>
+                    <div class="character-portrait" id="p2Portrait"></div>
+                </div>
+            </div>
+        </div>
+
+        <canvas id="gameWorld" width="1024" height="768"
+                style="background: white; border: 1px solid black"
+                tabindex="0" autofocus></canvas>
+
+        <!-- Bottom instruction hint -->
+        <div class="game-hint">
+            Press 1 or 2 to switch characters
+        </div>
+    </div>
+</div>
+
+<!-- Menu and Game Logic Script -->
+<script type="module" src="./menu.js"></script>
+<!-- Main Game Script -->
+<script type="module" src="./main.js"></script>
+</body>
+</html>
