@@ -74,7 +74,7 @@ export class Animator {
     }
 
     currentFrameNumber() {
-        return Math.floor(this.elapsedTime / this.frameDelay);
+        return Math.min(Math.floor(this.elapsedTime / this.frameDelay), this.frames.length - 1);
     }
 
     reset() {

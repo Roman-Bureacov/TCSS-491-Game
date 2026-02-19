@@ -11,25 +11,36 @@ export class Token {
     static TYPES = Object.freeze({
         NUMBER : "<number>",
         TEXT : "<text>",
-        DIMENSION : "Dimension",
-        SET : "Set",
+        LETTER : "<letter>",
+        STR : "\"<any>\"",
+
         COLN : "Colon",
         PIPE : "Pipe",
-        PERIOD : "Period",
+        DOT : "Dot",
+        COMMA : "Comma",
+        MINS : "Minus",
+        ASTR : "Asterisk",
+
         BY : "By",
-        LETTER : "<letter>",
+        ORIGIN : "Origin",
+
+        SET : "Set",
+
         MATRIX : "Matrix",
         SIZE : "Size",
         ARENA : "Arena",
+        END : "End",
         ROWS : "Rows",
         COLS : "Columns",
-        END : "End",
-        ORIGIN : "Origin",
-        COMMA : "Comma",
-        MINS : "Minus",
+        DIMENSION : "Dimension",
+
         DEFAULT : "Default",
         AUTO : "Auto",
         TILES : "Tiles",
+
+        DETAIL: "detail",
+        BACKGROUND: "background",
+        MUSIC: "music",
     })
 
     /**

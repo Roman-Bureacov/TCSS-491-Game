@@ -5,10 +5,10 @@ A concrete implementation of the character class
 import {Character} from "./character.js"
 import {Spritesheet} from "./animation.js";
 import {KeyMapper} from "../engine/keymapper.js";
-import {Hitbox, HitboxOp} from "../engine/hitbox.js";
+import {Hitbox, HITBOX_TYPE, HitboxOp} from "../engine/hitbox.js";
 import {TileEntity} from "./tileEntity.js";
 import {Rectangle2D} from "../engine/primitives.js";
-import {SoundFX as SoundFx, SoundFX} from "../engine/soundFX.js";
+import {SoundFX} from "../engine/soundFX.js";
 import {getCharacterData} from "./characterData.js";
 import {DIRECTIONS} from "../engine/constants.js";
 
@@ -92,12 +92,12 @@ export class Player extends Character {
         this._alreadyHit = new Set();
         this._clashed = new Set();
 
-        this.hitbox.kind = "body";
+        this.hitbox.kind = HITBOX_TYPE.BODY; // <-- duplicated fragment
         this.hitbox.enabled = true;
 
         this.attackHitbox = new Hitbox(this, new Rectangle2D(-1, 0, 1, 1));
 
-        this.attackHitbox.kind = "attack";
+        this.attackHitbox.kind = HITBOX_TYPE.ATTACK;
         this.attackHitbox.enabled = false;
 
         this.game.spawnDynamicHitbox(this.attackHitbox);
@@ -121,7 +121,7 @@ export class Player extends Character {
         // once clashed, never damage
         if (attacker._clashed.has(victim)) return;
 
-        if (otherHb.kind === "attack") {
+        if (otherHb.kind === HITBOX_TYPE.ATTACK) {
             const victimIsAttacking =
                 victim.state === Player.states.ATTACK && victim.attackHitbox.enabled;
             if (!victimIsAttacking) return;
@@ -141,7 +141,7 @@ export class Player extends Character {
             return;
         }
 
-        if (otherHb.kind !== "body") return;
+        if (otherHb.kind !== HITBOX_TYPE.BODY) return;
         if (attacker._alreadyHit.has(victim)) return;
 
         const bothAttacking = attacker.attackHitbox.enabled && victim.attackHitbox.enabled;
@@ -220,15 +220,16 @@ export class Player extends Character {
             }
 
 
-            SoundFx.stop();
+            SoundFX.stop();
 
-            SoundFx.play("victory");
+            SoundFX.play("victory");
 
             setTimeout(() => {
                 this.game.running = false;
             }, 1000);
 
         } else if (this.playerHealth > 0) {
+            // this should be an object that this Player calls on, not a lookup
             let rnd_int = Math.floor(Math.random() * 7) + 1;
             switch (getCharacterData(this.name).gender) {
 
@@ -270,6 +271,7 @@ export class Player extends Character {
                 box.dimension.width, box.dimension.height
             )
         );
+        this.hitbox.kind = HITBOX_TYPE.BODY;
 
         this.hitbox.resolveIntersection = (properties) => {
             if (properties.other.parent === this) {
@@ -279,6 +281,7 @@ export class Player extends Character {
                 if (this.objectY() - this.physics.position.y > 0) {
                     // this entity was push up, therefore we must be on the ground
                     this.onGround = true;
+                    this.physics.velocity.y = Math.max(0, this.physics.velocity.y);
                 }
 
                 this.physics.position.x = this.objectX();

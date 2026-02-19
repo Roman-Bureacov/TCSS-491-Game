@@ -19,6 +19,12 @@ import {DIRECTIONS} from "./constants.js";
  * @property {number} otherEndY the end y coordinate of the testee hitbox
  */
 
+export const HITBOX_TYPE = Object.freeze({
+    BODY : "body",
+    ATTACK : "attack",
+    TILE : "tile",
+})
+
 /**
  * Class that represents a hitbox on the x and y plane
  *
@@ -36,15 +42,14 @@ export class Hitbox {
      * 
      * @type {boolean}
      */
-    enabled = true;   // NEW
+    enabled = true;
 
     /**
      * Differentiates between a body hitbox and an attack hitbox as well as a tile hitbox.
      * 
      * @type {string}
      */
-    kind = "body";    // NEW: "body" | "attack" | "tile" etc.
-
+    kind = undefined;
 
     /**
      * If this hitbox has expired.
