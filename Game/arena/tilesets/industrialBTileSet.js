@@ -1,7 +1,6 @@
 import {AssetManager} from "../../assets/assetmanager.js";
 import {Spritesheet} from "../../entity/animation.js";
-import {StaticEntity} from "../../entity/entity.js";
-import {alphabetize, standardizeNames} from "../tileFactory.js";
+import {alphabetize} from "../tileFactory.js";
 import {TileEntity} from "../../entity/tileEntity.js";
 
 /**

@@ -7,9 +7,9 @@ The system has renderable objects, `Drawable`s, which provide the means
 on where to draw themselves as well as.
  */
 
-import { Matrix, MatrixOp } from "../../../Matrix/Matrix.js";
+import {Matrix, MatrixOp} from "../../../Matrix/Matrix.js";
 import {Rectangle2D} from "../primitives.js";
-import { DrawingProperties } from "./drawing.js";
+import {DrawingProperties} from "./drawing.js";
 
 /**
  * An object in world space.

@@ -1,5 +1,6 @@
 import {Animator, Spritesheet} from "./animation.js";
 import {DynamicEntity} from "./entity.js";
+
 import {DIRECTIONS} from "../engine/constants.js";
 
 /**
@@ -39,8 +40,6 @@ export class Character extends DynamicEntity {
      */
     stateLock = false;
 
-    static DIRECTION = DIRECTIONS;
-
     /**
      * The state of this character as per the states this character may exhibit.
      * @Type {string}
@@ -51,7 +50,7 @@ export class Character extends DynamicEntity {
      * The
      * @type {string}
      */
-    facing = Character.DIRECTION.RIGHT;
+    facing = DIRECTIONS.RIGHT;
 
 
     /**
@@ -100,13 +99,12 @@ export class Character extends DynamicEntity {
         // are we switching animations?
         if (!anim) return; // no animation for this state+facing
 
-        if (anim !== this.currentAnimation) {
-            if (this.currentAnimation) this.currentAnimation.reset();
-            this.currentAnimation = anim;
-            if (this.currentAnimation) this.currentAnimation.reset();
-
-        }
         this.currentAnimation.update(tick);
+
+        if (anim !== this.currentAnimation) {
+            this.currentAnimation = anim;
+            this.currentAnimation.reset();
+        }
         this.drawingProperties.spriteRow = this.currentAnimation.currentFrame.row;
         this.drawingProperties.spriteCol = this.currentAnimation.currentFrame.col;
         this.drawingProperties.isReversed = this.currentAnimation.reversed;

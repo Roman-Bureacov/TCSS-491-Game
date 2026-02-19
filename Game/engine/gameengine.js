@@ -30,8 +30,8 @@ export class GameEngine {
      * @type {{playerA: Player, playerB: Player}}
      */
     focus = {
-        playerA : undefined,
-        playerB : undefined,
+        playerA: undefined,
+        playerB: undefined,
     }
 
     /**
@@ -55,8 +55,8 @@ export class GameEngine {
          * @type {{dynamic: DynamicEntity[], static: StaticEntity[]}}
          */
         this.entities = {
-            dynamic : [],
-            static : []
+            dynamic: [],
+            static: []
         }
 
         /**
@@ -70,8 +70,8 @@ export class GameEngine {
          * @type {{dynamic: Hitbox[], static: Hitbox[]}}
          */
         this.hitboxes = {
-            dynamic : [],
-            static : []
+            dynamic: [],
+            static: []
         }
 
         // Information on the input
@@ -95,19 +95,24 @@ export class GameEngine {
 
     start() {
         this.running = true;
+
         const gameLoop = () => {
+            if (!this.running) return;      // <- stop scheduling frames
+
             this.loop();
-            requestAnimFrame(gameLoop, this.ctx.canvas);
+            this._rafId = requestAnimFrame(gameLoop, this.ctx.canvas);
         };
-        gameLoop();
-    };
+
+        this._rafId = requestAnimFrame(gameLoop, this.ctx.canvas);
+    }
+
 
     startInput() {
 
-        const getXandY = e => ({
-            x: e.clientX - this.ctx.canvas.getBoundingClientRect().left,
-            y: e.clientY - this.ctx.canvas.getBoundingClientRect().top
-        });
+        // const getXandY = e => ({
+        //     x: e.clientX - this.ctx.canvas.getBoundingClientRect().left,
+        //     y: e.clientY - this.ctx.canvas.getBoundingClientRect().top
+        // });
         //
         // this.ctx.canvas.addEventListener("mousemove", e => {
         //     if (this.options.debugging) {
@@ -116,12 +121,12 @@ export class GameEngine {
         //     this.mouse = getXandY(e);
         // });
         //
-        this.ctx.canvas.addEventListener("click", e => {
-            if (this.options.debugging) {
-                console.log("CLICK", getXandY(e));
-            }
-            this.click = getXandY(e);
-        });
+        // this.ctx.canvas.addEventListener("click", e => {
+        //     if (this.options.debugging) {
+        //         console.log("CLICK", getXandY(e));
+        //     }
+        //     this.click = getXandY(e);
+        // });
         //
         // this.ctx.canvas.addEventListener("wheel", e => {
         //     if (this.options.debugging) {
@@ -150,9 +155,9 @@ export class GameEngine {
 
             this.keys[event.code] = event;
 
-            if (this.options.debugging) {
-                console.log(event);
-            }
+            // if (this.options.debugging) {
+            //     console.log(event);
+            // }
 
         };
 
@@ -238,7 +243,7 @@ export class GameEngine {
             // theta FOV is the arctan of the canvas width over the focal length
             const lookWidth = Math.abs(lookX - lookStart.get(0, 0));
             const lookHeight = Math.abs(lookY - lookStart.get(1, 0));
-            const lookRadius = Math.sqrt(lookWidth**2 + lookHeight**2);
+            const lookRadius = Math.sqrt(lookWidth ** 2 + lookHeight ** 2);
             const canvas = this.render.camera.getCanvas();
             const newDepth = lookRadius / (canvas.right * 2 / this.render.camera.focalLength);
 
@@ -270,17 +275,57 @@ export class GameEngine {
      * Find any and all intersections between dynamic hitboxes and every other hitbox
      */
     detectIntersections() {
-        this.hitboxes.dynamic.forEach( h1 => {
-            this.hitboxes.dynamic.forEach( h2 => {
-                let properties = h1.intersects(h2);
-                if (properties) h1.resolveIntersection(properties);
-            });
-            this.hitboxes.static.forEach( h2 => {
-                let properties = h1.intersects(h2);
-                if (properties) h1.resolveIntersection(properties);
-            })
-        })
+        const dyn = this.hitboxes.dynamic;
+        const stat = this.hitboxes.static;
+
+        // dynamic vs dynamic (unique pairs only)
+        for (let i = 0; i < dyn.length; i++) {
+            const h1 = dyn[i];
+            if (h1.expired || h1.enabled === false) continue;
+
+            for (let j = i + 1; j < dyn.length; j++) {
+                const h2 = dyn[j];
+                if (h2.expired || h2.enabled === false) continue;
+
+                // same parent => ignore (prevents self-hitboxes hitting each other if you add multiple)
+                if (h1.parent === h2.parent) continue;
+
+                const props = h1.intersects(h2);
+                if (!props) continue;
+
+                // let both respond
+                h1.resolveIntersection(props);
+                h2.resolveIntersection({
+                    subject: h2,
+                    other: h1,
+                    subjectStartX: props.otherStartX,
+                    subjectStartY: props.otherStartY,
+                    subjectEndX: props.otherEndX,
+                    subjectEndY: props.otherEndY,
+                    otherStartX: props.subjectStartX,
+                    otherStartY: props.subjectStartY,
+                    otherEndX: props.subjectEndX,
+                    otherEndY: props.subjectEndY,
+                });
+
+            }
+        }
+
+        // dynamic vs static
+        for (let i = 0; i < dyn.length; i++) {
+            const h1 = dyn[i];
+            if (h1.expired || h1.enabled === false) continue;
+
+            for (let j = 0; j < stat.length; j++) {
+                const h2 = stat[j];
+                if (h2.expired || h2.enabled === false) continue;
+
+                const props = h1.intersects(h2);
+                if (props) h1.resolveIntersection(props);
+            }
+        }
     }
+
 
     /**
      * updates the dynamic hitboxes, removing them if they expired
@@ -297,10 +342,10 @@ export class GameEngine {
 
     /**
      * Core loop of the game engine, specifically looping:
-     * 
+     *
      *   1. update dynamic entities
      *   2. find hitbox intersections and resolve
-     *   3. update hitbox states 
+     *   3. update hitbox states
      *   4. draw
      */
     loop() {
