@@ -2,7 +2,7 @@
 
 root ::= specifiers arena
 
-specifiers ::= setSpecifier dimensionSpecifier arenaDetailsSpecifier
+specifiers ::= setSpecifier dimensionSpecifier [ arenaDetailsSpecifier ]
 
 setSpecifier ::= SET COLN TEXT
 

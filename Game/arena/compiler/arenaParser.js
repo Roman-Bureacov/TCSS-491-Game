@@ -8,11 +8,11 @@ import {AssetManager} from "../../assets/assetmanager.js";
 
 /**
  * @typedef ArenaProperties an object representing what the arena has
- * @property {{x: number, y: number}} [playerAStart] the starting position of a player
- * @property {{x: number, y: number}} [playerBStart] the starting position of a player
+ * @property {{x: number | undefined, y: number | undefined}} playerAStart the starting position of a player
+ * @property {{x: number | undefined, y: number | undefined}} playerBStart the starting position of a player
  * @property {TileEntity[]} tiles the list of tiles in this arena
- * @property {StaticEntity} background the background static entity
- * @property {string} music the music name for this arena
+ * @property {StaticEntity} [background] the background static entity
+ * @property {string} [music] the music name for this arena
  */
 
 /**
@@ -102,7 +102,7 @@ export class ArenaParser {
     specifiers() {
         this.setSpecifier();
         this.dimensionSpecifier();
-        this.arenaDetailSpecifier();
+        if (this.see(Token.TYPES.DETAIL)) this.arenaDetailSpecifier();
     }
 
     /**

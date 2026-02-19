@@ -82,10 +82,19 @@ AssetManager.downloadAll(async () => {
 // create the arena (array of TileEntity)
 
     // build arena
+
+    /*
+    TRY THIS:
+        change the arena between BASIC and ARENA2
+
+        have a look at the files basic.txt and arena2.txt
+
+        the `detail` specifier is optional (hence all the undefined checks below)
+     */
     const arena = ArenaFactory.makeArena(ArenaFactory.arenas.BASIC);
 
-    // TODO: how might we make the music persistent (that is, play only when focused?
-    SoundFX.play(arena.music);
+    // TODO: how might we make the music persistent (that is, play only when focused?)
+    if (arena.music) SoundFX.play(arena.music);
 
     console.log(arena);
     // add tiles to the pane
@@ -94,29 +103,20 @@ AssetManager.downloadAll(async () => {
     // Add entities
     gameEngine.addDynamicEntity(playerOne, playerTwo);
     arena.tiles.forEach(e => gameEngine.addStaticEntity(e));
+    // NOTE: the null-coalescing operators here are for demonstration purposes
+    // when we get a more proper idea, remove them
+    // they're here only to showcase
     playerOne.setPosition(
-        arena.playerAStart.x,
-        arena.playerAStart.y
+        arena.playerAStart.x ?? playerOne.objectX(),
+        arena.playerAStart.y ?? playerOne.objectY()
     );
     playerTwo.setPosition(
-        arena.playerBStart.x,
-        arena.playerBStart.y
+        arena.playerBStart.x ?? playerTwo.objectX(),
+        arena.playerBStart.y ?? playerTwo.objectY()
     )
 
-    // make the background
-    const backgroundDrawable = arena.background;
-    // now position the background...
-
-    backgroundDrawable.drawingProperties.bounds.setDimensionAspect(
-        30,
-        backgroundDrawable.spritesheet.image.width
-            / backgroundDrawable.spritesheet.image.height
-    );
-    backgroundDrawable.drawingProperties.bounds.setStart( // move drawing
-        -backgroundDrawable.drawingProperties.bounds.dimension.width / 2,
-        backgroundDrawable.drawingProperties.bounds.dimension.height / 2,
-    );
-    backgroundPane.addDrawable(backgroundDrawable);
+    // make the background...
+    addBackground(arena, backgroundPane);
 
     // set up game engine
     gameEngine.render = renderer;
@@ -136,3 +136,24 @@ AssetManager.downloadAll(async () => {
     gameEngine.start();
 });
 
+/**
+ * Merely for demonstration purposes
+ * @param {ArenaProperties} arena
+ * @param {Pane} bg
+ */
+const addBackground = (arena, bg) => {
+    const backgroundDrawable = arena.background;
+    if (backgroundDrawable === undefined) return;
+
+    // position background
+    backgroundDrawable.drawingProperties.bounds.setDimensionAspect(
+        30,
+        backgroundDrawable.spritesheet.image.width
+        / backgroundDrawable.spritesheet.image.height
+    );
+    backgroundDrawable.drawingProperties.bounds.setStart( // move drawing
+        -backgroundDrawable.drawingProperties.bounds.dimension.width / 2,
+        backgroundDrawable.drawingProperties.bounds.dimension.height / 2,
+    );
+    bg.addDrawable(backgroundDrawable);
+}
