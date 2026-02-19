@@ -88,16 +88,6 @@ export class Player extends Character {
         };
         this.lastState = this.state;
 
-
-        let box = this.drawingProperties.bounds;
-        this.hitbox = new Hitbox(
-            this,
-            new Rectangle2D(
-                box.start.x(), box.start.y(),
-                box.dimension.width, box.dimension.height
-            )
-        );
-
         this.gravity = -20;
         this.initKeymap();
 
@@ -282,6 +272,15 @@ export class Player extends Character {
     };
 
     initHitbox() {
+
+        let box = this.drawingProperties.bounds;
+        this.hitbox = new Hitbox(
+            this,
+            new Rectangle2D(
+                box.start.x(), box.start.y(),
+                box.dimension.width, box.dimension.height
+            )
+        );
 
         this.hitbox.resolveIntersection = (properties) => {
             if (properties.other.parent === this) {
