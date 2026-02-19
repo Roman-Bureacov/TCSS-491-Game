@@ -24,10 +24,13 @@ export class Player extends Character {
      * @readonly
      * @enum {string}
      */
+
     static states = Object.freeze({
         MOVE: "move ",
         ATTACK: "attack ",
         IDLE: "idle ",
+        JUMP: "jump",
+        DEAD: "dead",
     });
 
     /**
@@ -62,7 +65,7 @@ export class Player extends Character {
         this.state = Player.states.IDLE;
         this.physics.velocityMax.x = 10;
 
-        // Knockback / hitstun control
+        // Knockback / hit control
         this.knockbackTimer = 0;      // seconds remaining
         this.knockbackDuration = 0.12; // tune (0.08–0.20)
         this.knockbackStrength = 1.5;   // tune for push distance
@@ -95,7 +98,7 @@ export class Player extends Character {
         this.hitbox.kind = HITBOX_TYPE.BODY; // <-- duplicated fragment
         this.hitbox.enabled = true;
 
-        this.attackHitbox = new Hitbox(this, new Rectangle2D(-1, 0, 1, 1));
+        this.attackHitbox = new Hitbox(this, new Rectangle2D(0, 0, .05, 1));
 
         this.attackHitbox.kind = HITBOX_TYPE.ATTACK;
         this.attackHitbox.enabled = false;
@@ -146,11 +149,6 @@ export class Player extends Character {
 
         const bothAttacking = attacker.attackHitbox.enabled && victim.attackHitbox.enabled;
 
-        // nly works if intersects exists; see note below // <-- Note? what note? I saw there was an emoji here earlier
-        // ^^^ we need to be careful if we're copy-pasting LLM-generated code
-        // LLM very-well likely doesn't understand the full scope of this project
-        // always reach out to ask if you're stumped how to implement something
-        // I can explain this project better than the text-predicting LLM
         const swordsOverlap =
             bothAttacking &&
             attacker.attackHitbox.bounds.intersects?.(victim.attackHitbox.bounds);
@@ -197,10 +195,11 @@ export class Player extends Character {
     }
 
     setPlayerHealth(damage) {
-        this.playerHealth -= damage;
 
 
         if (this.playerHealth === 0) {
+
+            this.playerHealth -= 1;
 
             let rnd_int = Math.floor(Math.random() * 5) + 1;
             switch (getCharacterData(this.name).gender) {
@@ -224,12 +223,15 @@ export class Player extends Character {
 
             SoundFX.play("victory");
 
-            setTimeout(() => {
-                this.game.running = false;
-            }, 1000);
+            this.die();
+
+            // setTimeout(() => {
+            //     this.game.running = false;
+            // }, 1000);
 
         } else if (this.playerHealth > 0) {
-            // this should be an object that this Player calls on, not a lookup
+            this.playerHealth -= damage;
+
             let rnd_int = Math.floor(Math.random() * 7) + 1;
             switch (getCharacterData(this.name).gender) {
 
@@ -282,6 +284,20 @@ export class Player extends Character {
                     // this entity was push up, therefore we must be on the ground
                     this.onGround = true;
                     this.physics.velocity.y = Math.max(0, this.physics.velocity.y);
+                }
+                if (this.objectY() - this.physics.position.y > 0) {
+                    this.onGround = true;
+
+                    //if we were jumping, unlock and return to idle/move
+                    if (this.state === Player.states.JUMP) {
+                        this.stateLock = false;
+
+                        const ax =
+                            this.constantAcceleration[DIRECTIONS.LEFT] +
+                            this.constantAcceleration[DIRECTIONS.RIGHT];
+
+                        this.state = (ax !== 0) ? Player.states.MOVE : Player.states.IDLE;
+                    }
                 }
 
                 this.physics.position.x = this.objectX();
@@ -349,8 +365,19 @@ export class Player extends Character {
             if (this.onGround) {
                 this.onGround = false;
                 this.physics.velocity.y = this.gravity * -1 + 3;
+                this.state = Player.states.JUMP;
             }
         }
+
+    }
+
+    /**
+     * Triggers dying animation.
+     */
+    die() {
+
+        this.state = Player.states.DEAD;
+        this.stateLock = true;
 
     }
 
@@ -365,6 +392,11 @@ export class Player extends Character {
         }
 
         switch (this.state) {
+            case Player.states.JUMP:
+                this.physics.acceleration.x =
+                    this.constantAcceleration[DIRECTIONS.LEFT] +
+                    this.constantAcceleration[DIRECTIONS.RIGHT];
+                break;
             case Player.states.ATTACK :
 
                 break;
@@ -382,6 +414,11 @@ export class Player extends Character {
             case Player.states.IDLE :
                 this.physics.velocity.x = 0;
                 break;
+
+            case Player.states.DEAD:
+                this.physics.velocity.x = 0;
+                this.physics.velocity.y = 0;
+                break;
         }
 
         super.update();
@@ -392,16 +429,16 @@ export class Player extends Character {
         const w = box.dimension.width;
         const h = box.dimension.height;
 
-        const dimX = w * 0.60;
-        const dimY = h * 0.60;
+        const dimX = w ;
+        const dimY = h ;
 
         const startY = box.start.y() - h * 0.20;
 
         let startX;
         if (this.facing === DIRECTIONS.RIGHT) {
-            startX = box.start.x() + w * 0.60;
+            startX = box.start.x() - w * .20;
         } else {
-            startX = box.start.x() - dimX * 0.60; // push it to the left of the body
+            startX = box.start.x() - dimX * 0.20; // push it to the left of the body
         }
 
         this.attackHitbox.bounds.setStart(startX, startY);

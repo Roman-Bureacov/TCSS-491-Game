@@ -89,6 +89,36 @@ export class CharacterConfigurator {
                     player.state = player.lastState;
                 }
 
+            },
+            {
+                state : S.JUMP,
+                facing: DIRECTIONS.LEFT,
+                frames: data.jumpR,
+                isReversed: true,
+                duration: 1,
+
+            },
+            {
+                state : S.JUMP,
+                facing: DIRECTIONS.RIGHT,
+                frames: data.jumpR,
+                isReversed: false,
+                duration: 1,
+
+            },
+            {
+                state:S.DEAD,
+                facing: DIRECTIONS.RIGHT,
+                frames:data.deadR,
+                isReversed: false,
+                duration: 1,
+            },
+            {
+                state:S.DEAD,
+                facing: DIRECTIONS.LEFT,
+                frames:data.deadR,
+                isReversed: true,
+                duration: 1,
             }
         ];
 
