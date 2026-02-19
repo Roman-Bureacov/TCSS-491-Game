@@ -7,16 +7,16 @@ import {getCharacterData} from "./characterData.js";
 import {DIRECTIONS} from "../engine/constants.js";
 
 /**
- * Factory class that makes characters.
+ * Configuration class that makes characters.
  *
  * @author Kassie Whitney
  * @author Roman Bureacov
  */
 export class CharacterConfigurator {
-
+    // formerly Character Factory
 
     constructor() {
-        throw new Error("Cannot instantiate factory (anti-pattern)");
+        throw new Error("Cannot instantiate configurator (anti-pattern)");
     }
 
 
