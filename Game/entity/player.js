@@ -5,10 +5,10 @@ A concrete implementation of the character class
 import {Character} from "./character.js"
 import {Spritesheet} from "./animation.js";
 import {KeyMapper} from "../engine/keymapper.js";
-import {Hitbox, HitboxOp} from "../engine/hitbox.js";
+import {Hitbox, HITBOX_TYPE, HitboxOp} from "../engine/hitbox.js";
 import {TileEntity} from "./tileEntity.js";
 import {Rectangle2D} from "../engine/primitives.js";
-import {SoundFX as SoundFx, SoundFX} from "../engine/soundFX.js";
+import {SoundFX} from "../engine/soundFX.js";
 import {getCharacterData} from "./characterData.js";
 import {DIRECTIONS} from "../engine/constants.js";
 
@@ -50,7 +50,6 @@ export class Player extends Character {
      *
      * @param {GameEngine} game the game
      * @param {Spritesheet} spritesheet the spritesheet representing this character
-     * @param {number} scale The scale to which to set the charter by
      * @param {number} dimX the positive dimension of this character
      * @param {number} dimY the positive dimension of this character
      * @param {number} [startX=0] the starting x position
@@ -76,6 +75,8 @@ export class Player extends Character {
             [DIRECTIONS.LEFT]: 0,
             [DIRECTIONS.RIGHT]: 0,
         };
+        this.physics.velocityMax.x = 5;
+        this.physics.velocityMax.y = 10;
         this.lastState = this.state;
 
         this.gravity = -20;
@@ -94,12 +95,12 @@ export class Player extends Character {
         this._alreadyHit = new Set();
         this._clashed = new Set();
 
-        this.hitbox.kind = "body";
+        this.hitbox.kind = HITBOX_TYPE.BODY; // <-- duplicated fragment
         this.hitbox.enabled = true;
 
         this.attackHitbox = new Hitbox(this, new Rectangle2D(-1, 0, 1, 1));
 
-        this.attackHitbox.kind = "attack";
+        this.attackHitbox.kind = HITBOX_TYPE.ATTACK;
         this.attackHitbox.enabled = false;
 
         this.game.spawnDynamicHitbox(this.attackHitbox);
@@ -123,7 +124,7 @@ export class Player extends Character {
         // once clashed, never damage
         if (attacker._clashed.has(victim)) return;
 
-        if (otherHb.kind === "attack") {
+        if (otherHb.kind === HITBOX_TYPE.ATTACK) {
             const victimIsAttacking =
                 victim.state === Player.states.ATTACK && victim.attackHitbox.enabled;
             if (!victimIsAttacking) return;
@@ -143,12 +144,11 @@ export class Player extends Character {
             return;
         }
 
-        if (otherHb.kind !== "body") return;
+        if (otherHb.kind !== HITBOX_TYPE.BODY) return;
         if (attacker._alreadyHit.has(victim)) return;
 
         const bothAttacking = attacker.attackHitbox.enabled && victim.attackHitbox.enabled;
-
-        // nly works if intersects exists; see note below
+        
         const swordsOverlap =
             bothAttacking &&
             attacker.attackHitbox.bounds.intersects?.(victim.attackHitbox.bounds);
@@ -219,9 +219,9 @@ export class Player extends Character {
             }
 
 
-            SoundFx.stop();
+            SoundFX.stop();
 
-            SoundFx.play("victory");
+            SoundFX.play("victory");
 
             this.die();
 
@@ -273,6 +273,7 @@ export class Player extends Character {
                 box.dimension.width, box.dimension.height
             )
         );
+        this.hitbox.kind = HITBOX_TYPE.BODY;
 
         this.hitbox.resolveIntersection = (properties) => {
             if (properties.other.parent === this) {
@@ -282,6 +283,7 @@ export class Player extends Character {
                 if (this.objectY() - this.physics.position.y > 0) {
                     // this entity was push up, therefore we must be on the ground
                     this.onGround = true;
+                    this.physics.velocity.y = Math.max(0, this.physics.velocity.y);
                 }
                 if (this.objectY() - this.physics.position.y > 0) {
                     this.onGround = true;
@@ -291,8 +293,8 @@ export class Player extends Character {
                         this.stateLock = false;
 
                         const ax =
-                            this.constantAcceleration[Character.DIRECTION.LEFT] +
-                            this.constantAcceleration[Character.DIRECTION.RIGHT];
+                            this.constantAcceleration[DIRECTIONS.LEFT] +
+                            this.constantAcceleration[DIRECTIONS.RIGHT];
 
                         this.state = (ax !== 0) ? Player.states.MOVE : Player.states.IDLE;
                     }
@@ -392,8 +394,8 @@ export class Player extends Character {
         switch (this.state) {
             case Player.states.JUMP:
                 this.physics.acceleration.x =
-                    this.constantAcceleration[Character.DIRECTION.LEFT] +
-                    this.constantAcceleration[Character.DIRECTION.RIGHT];
+                    this.constantAcceleration[DIRECTIONS.LEFT] +
+                    this.constantAcceleration[DIRECTIONS.RIGHT];
                 break;
             case Player.states.ATTACK :
 

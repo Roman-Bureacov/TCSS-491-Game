@@ -33,7 +33,7 @@ export class PhysicsEntity {
      * The absolute maximum velocity vector for this entity
      * @type {{x: number, y: number}}
      */
-    velocityMax = {x: 5, y: 10};
+    velocityMax = {x: 1, y: 1};
 
     constructor() {
 

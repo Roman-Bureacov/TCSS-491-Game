@@ -1,5 +1,5 @@
 import {StaticEntity} from "./entity.js";
-import {Hitbox} from "../engine/hitbox.js"
+import {Hitbox, HITBOX_TYPE} from "../engine/hitbox.js"
 import {Rectangle2D} from "../engine/primitives.js";
 
 /**
@@ -31,7 +31,7 @@ export class TileEntity extends StaticEntity {
         super(spritesheet);
         
         this.hitbox = new Hitbox(this, new Rectangle2D(0, 0, dimX, dimY));
-        this.hitbox.kind = "tile";
+        this.hitbox.kind = HITBOX_TYPE.TILE;
         this.hitbox.enabled = true;
     }
 

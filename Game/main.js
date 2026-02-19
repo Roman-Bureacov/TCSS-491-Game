@@ -1,8 +1,6 @@
 import {GameEngine} from "./engine/gameengine.js"
 import {AssetManager} from "./assets/assetmanager.js";
 
-import {StaticEntity} from "./entity/entity.js";
-import {Spritesheet} from "./entity/animation.js";
 import {Camera, Pane, Render, World} from "./engine/render/Render.js";
 import {ArenaFactory} from "./arena/arenaFactory.js";
 
@@ -15,6 +13,7 @@ const CANVAS = document.querySelector('#gameWorld');
 window.DEBUG = {
     engine: gameEngine,
     assets: AssetManager,
+    soundfx: SoundFX,
 }
 
 export const global = {
@@ -65,18 +64,6 @@ AssetManager.downloadAll(async () => {
         1, 0,
         1, 1);
 
-
-    // make the background
-    const backgroundAsset = AssetManager.getAsset("background/background03.jpeg");
-    const backgroundDrawable = new StaticEntity(new Spritesheet(backgroundAsset, 1, 1));
-    // now position the background...
-    backgroundDrawable.drawingProperties.bounds.setDimensionAspect(30, 2250 / 2975)
-    backgroundDrawable.drawingProperties.bounds.setStart(
-        -backgroundDrawable.drawingProperties.bounds.dimension.width / 2,
-        backgroundDrawable.drawingProperties.bounds.dimension.height / 2,
-    );
-
-
     // now we need a camera
     const camera = new Camera(canvas.width, canvas.height);
     camera.setDepth(5);
@@ -85,7 +72,6 @@ AssetManager.downloadAll(async () => {
     gameEngine.init(ctx);
 
     // compile the world
-    backgroundPane.addDrawable(backgroundDrawable);
     forePane.addDrawable(playerOne, playerTwo);
 
     world.addPane(backgroundPane);
@@ -93,17 +79,45 @@ AssetManager.downloadAll(async () => {
     world.addPane(forePane);
 
 // create the arena (array of TileEntity)
-    const arena = ArenaFactory.makeArena(ArenaFactory.arenas.ARENA2);
 
-// add tiles to the pane
-    for (const item of arena) {
-        tilePane.addDrawable(item);
-    }
+    // build arena
 
-// Add entities
+    /*
+    TRY THIS:
+        change the arena between BASIC and ARENA2
+
+        have a look at the files basic.txt and arena2.txt
+
+        the `detail` specifier is optional (hence all the undefined checks below)
+     */
+    const arena = ArenaFactory.makeArena(ArenaFactory.arenas.BASIC);
+
+    // TODO: how might we make the music persistent (that is, play only when focused?)
+    if (arena.music) SoundFX.play(arena.music);
+
+    console.log(arena);
+    // add tiles to the pane
+    arena.tiles.forEach(t => tilePane.addDrawable(t));
+
+    // Add entities
     gameEngine.addDynamicEntity(playerOne, playerTwo);
-    arena.forEach(e => gameEngine.addStaticEntity(e));
+    arena.tiles.forEach(e => gameEngine.addStaticEntity(e));
+    // NOTE: the null-coalescing operators here are for demonstration purposes
+    // when we get a more proper idea, remove them
+    // they're here only to showcase
+    playerOne.setPosition(
+        arena.playerAStart.x ?? playerOne.objectX(),
+        arena.playerAStart.y ?? playerOne.objectY()
+    );
+    playerTwo.setPosition(
+        arena.playerBStart.x ?? playerTwo.objectX(),
+        arena.playerBStart.y ?? playerTwo.objectY()
+    )
 
+    // make the background...
+    addBackground(arena, backgroundPane);
+
+    // set up game engine
     gameEngine.render = renderer;
     gameEngine.focus.playerA = playerOne;
     gameEngine.focus.playerB = playerTwo;
@@ -113,19 +127,7 @@ AssetManager.downloadAll(async () => {
         char1: playerOne,
         char2: playerTwo,
         world: world,
-        soundFX: SoundFX,
         renderer: renderer,
-        pane: forePane,
-        renderLoop: true,
-        date: new Date(),
-        loop: async function () {
-            while (window.DEBUG.render.renderLoop) {
-                let time = Date.now();
-                window.DEBUG.render.renderer.render(ctx);
-                await new Promise(requestAnimationFrame);
-                console.log("Frame time: " + (Date.now() - time) + " ms");
-            }
-        },
         context: ctx,
     }
 
@@ -133,3 +135,24 @@ AssetManager.downloadAll(async () => {
     gameEngine.start();
 });
 
+/**
+ * Merely for demonstration purposes
+ * @param {ArenaProperties} arena
+ * @param {Pane} bg
+ */
+const addBackground = (arena, bg) => {
+    const backgroundDrawable = arena.background;
+    if (backgroundDrawable === undefined) return;
+
+    // position background
+    backgroundDrawable.drawingProperties.bounds.setDimensionAspect(
+        30,
+        backgroundDrawable.spritesheet.image.width
+        / backgroundDrawable.spritesheet.image.height
+    );
+    backgroundDrawable.drawingProperties.bounds.setStart( // move drawing
+        -backgroundDrawable.drawingProperties.bounds.dimension.width / 2,
+        backgroundDrawable.drawingProperties.bounds.dimension.height / 2,
+    );
+    bg.addDrawable(backgroundDrawable);
+}

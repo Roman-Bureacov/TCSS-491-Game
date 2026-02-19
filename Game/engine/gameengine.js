@@ -9,6 +9,12 @@ import {Point} from "./primitives.js";
 export class GameEngine {
 
     /**
+     * The maximum time step for the game to run in (30 fps) in milliseconds
+     * @type {Number}
+     */
+    static MAX_SIM_STEP = 1/60 * 1000;
+
+    /**
      * The renderer for this engine
      * @type Render
      */
@@ -33,6 +39,18 @@ export class GameEngine {
         playerA: undefined,
         playerB: undefined,
     }
+
+    /**
+     * The last time stamp recorder in ms
+     * @type {number}
+     */
+    lastTimeStamp = Date.now();
+
+    /**
+     * The accumulated time in ms
+     * @type {number}
+     */
+    accumulatedTime = 0;
 
     /**
      * Constructs a game engine
@@ -74,23 +92,17 @@ export class GameEngine {
             static: []
         }
 
-        // Information on the input
-        this.click = null;
-        this.mouse = null;
-        this.wheel = null;
-
         // Options and the Details
         this.options = options || {
             debugging: true,
         };
 
-        this.render = renderer
+        this.render = renderer;
     };
 
     init(ctx) {
         this.ctx = ctx;
         this.startInput();
-        this.timer = new Timer();
     };
 
     start() {
@@ -99,11 +111,18 @@ export class GameEngine {
         const gameLoop = () => {
             if (!this.running) return;      // <- stop scheduling frames
 
-            this.loop();
-            this._rafId = requestAnimFrame(gameLoop, this.ctx.canvas);
+            const now = Date.now();
+            const frameTime = now - this.lastTimeStamp;
+            this.lastTimeStamp = now;
+
+            this.loop(frameTime);
+
+            // this._rafId = requestAnimFrame(gameLoop, this.ctx.canvas);
+            window.requestAnimationFrame(gameLoop);
         };
 
-        this._rafId = requestAnimFrame(gameLoop, this.ctx.canvas);
+        // this._rafId = requestAnimFrame(gameLoop, this.ctx.canvas);
+        window.requestAnimationFrame(gameLoop);
     }
 
 
@@ -347,33 +366,61 @@ export class GameEngine {
      *   2. find hitbox intersections and resolve
      *   3. update hitbox states
      *   4. draw
+     *
+     * @param {number} dt the time step in milliseconds
      */
-    loop() {
-        this.clockTick = this.timer.tick();
-        this.updateEntities();
-        this.detectIntersections();
-        this.updateHitboxes();
-        this.draw();
+    loop(dt) {
+
+        // what's this?
+        // see: https://www.gafferongames.com/post/fix_your_timestep/
+        this.accumulatedTime += dt;
+        let maxSteps = 10;
+
+        while (
+            this.accumulatedTime >= GameEngine.MAX_SIM_STEP
+            && maxSteps > 0
+        ) {
+            this.clockTick = GameEngine.MAX_SIM_STEP / 1000;
+            this.updateEntities();
+            this.detectIntersections();
+            this.updateHitboxes();
+
+            this.accumulatedTime -= GameEngine.MAX_SIM_STEP;
+            maxSteps--;
+        }
         this.keys = {};
+
+        if (maxSteps === 0) {
+            console.log(`
+Warning: took too many steps updating.
+simulation behind ${
+    Math.floor(this.accumulatedTime / GameEngine.MAX_SIM_STEP)
+} step(s).
+Truncating...
+            `);
+            this.accumulatedTime %= GameEngine.MAX_SIM_STEP;
+        }
+
+        this.draw()
     };
 
 }
-
-/** Creates an alias for requestAnimationFrame for backwards compatibility */
-window.requestAnimFrame = (() => {
-    return window.requestAnimationFrame ||
-        window.webkitRequestAnimationFrame ||
-        window.mozRequestAnimationFrame ||
-        window.oRequestAnimationFrame ||
-        window.msRequestAnimationFrame ||
-        /**
-         * Compatibility for requesting animation frames in older browsers
-         * @param {Function} callback Function
-         * @param {DOM} element DOM ELEMENT
-         */
-        ((callback, element) => {
-            window.setTimeout(callback, 1000 / 60);
-        });
-})();
+//
+// /** Creates an alias for requestAnimationFrame for backwards compatibility */
+// window.requestAnimFrame = (() => {
+//     return window.requestAnimationFrame ||
+//         window.webkitRequestAnimationFrame ||
+//         window.mozRequestAnimationFrame ||
+//         window.oRequestAnimationFrame ||
+//         window.msRequestAnimationFrame ||
+//         /**
+//          * Compatibility for requesting animation frames in older browsers
+//          * @param {Function} callback Function
+//          * @param {DOM} element DOM ELEMENT
+//          */
+//         ((callback, element) => {
+//             window.setTimeout(callback, 1000 / 60);
+//         });
+// })();
 
 // KV Le was here :)

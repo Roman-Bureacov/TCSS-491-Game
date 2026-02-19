@@ -141,7 +141,7 @@ export class Rectangle2D {
      * @param {number} aspect the aspect ratio
      */
     setDimensionAspect(dimX, aspect) {
-        this.setDimension(dimX, dimX * aspect);
+        this.setDimension(dimX, dimX * (1 / aspect));
     }
 
 }

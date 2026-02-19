@@ -2,7 +2,7 @@
 
 root ::= specifiers arena
 
-specifiers ::= setSpecifier dimensionSpecifier
+specifiers ::= setSpecifier dimensionSpecifier [ arenaDetailsSpecifier ]
 
 setSpecifier ::= SET COLN TEXT
 
@@ -11,6 +11,10 @@ dimensionSpecifier ::= DIMENSION COLN
     PIPE matrixSpecifier
     PIPE worldSpecifier
     PIPE tileSpecifier
+
+arenaDetailsSpecifier ::=  DETAIL COLN
+    PIPE BACKGROUND COLN STR
+    PIPE MUSIC COLN STR
 
 originSpecifier ::= ORIGIN COLN [MINS] NUMBER
 
@@ -24,4 +28,4 @@ sizeSpecific ::= NUMBER BY NUMBER
 
 arena ::= ARENA COLN { arenaSymbol } END
 
-arenaSymbol ::= LETTER | PERIOD
+arenaSymbol ::= LETTER | DOT | ASTR
