@@ -12,18 +12,6 @@ import {Rectangle2D} from "../engine/primitives.js";
 import {SoundFX as SoundFx, SoundFX} from "../engine/soundFX.js";
 import {getCharacterData} from "./characterData.js";
 
-
-/**
- * Enum representing the possible states of player characters
- * @readonly
- * @enum {string}
- */
-export const PlayerStates = Object.freeze({
-    MOVE: "move ",
-    ATTACK: "attack ",
-    IDLE: "idle ",
-});
-
 /**
  * Concrete implementation of the character.
  *
@@ -32,10 +20,15 @@ export const PlayerStates = Object.freeze({
 export class Player extends Character {
 
     /**
-     * The states that this player may exhibit
-     * @type {Readonly<{MOVE: string, ATTACK: string, IDLE: string}>}
+     * Enum representing the possible states of player characters
+     * @readonly
+     * @enum {string}
      */
-    static states = PlayerStates;
+    static states = Object.freeze({
+        MOVE: "move ",
+        ATTACK: "attack ",
+        IDLE: "idle ",
+    });
 
     /**
      * The keymapper for this player
