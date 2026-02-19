@@ -281,7 +281,7 @@ export class Player extends Character {
                 if (this.objectY() - this.physics.position.y > 0) {
                     // this entity was push up, therefore we must be on the ground
                     this.onGround = true;
-                    this.physics.velocity.y = Math.min(0, this.physics.velocity.y);
+                    this.physics.velocity.y = Math.max(0, this.physics.velocity.y);
                 }
 
                 this.physics.position.x = this.objectX();
