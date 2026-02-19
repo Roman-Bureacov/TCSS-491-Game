@@ -100,6 +100,35 @@ export class CharacterFactory {
                     player.state = player.lastState;
                 }
 
+            },
+            {
+                state : S.JUMP,
+                facing: Character.DIRECTION.LEFT,
+                frames: data.jumpR,
+                isReversed: true,
+                duration: 1,
+
+            },
+            {
+                state : S.JUMP,
+                facing: Character.DIRECTION.RIGHT,
+                frames: data.jumpR,
+                isReversed: false,
+                duration: 1,
+
+            },
+            {
+                state:S.DEAD,
+                facing: Character.DIRECTION.RIGHT,
+                frames:data.deadR,
+                duration: 1,
+            },
+            {
+                state:S.DEAD,
+                facing: Character.DIRECTION.LEFT,
+                frames:data.deadR,
+                isReversed: true,
+                duration: 1,
             }
         ];
 

@@ -7,7 +7,6 @@ import {KeyMapper} from "./engine/keymapper.js";
 import {getCharacterData} from "./entity/characterData.js";
 import {Spritesheet} from "./entity/animation.js";
 import {Player} from "./entity/player.js";
-import {SoundFX} from "./engine/soundFX.js";
 
 
 export class PlayerTwo extends Player {
@@ -17,7 +16,9 @@ export class PlayerTwo extends Player {
 
         const spritesheet = new Spritesheet(assetManager.getAsset(getCharacterData(characterName).img), getCharacterData(characterName).numRow, getCharacterData(characterName).numCol)
 
-        super(game, spritesheet, scale, scale, startPosX, startPosY, Character.DIRECTION.LEFT, characterName)
+        super(game, spritesheet, scale,dimX, dimY, startPosX, startPosY, Character.DIRECTION.LEFT, characterName)
+
+
 
         this.setupKeymap();
 

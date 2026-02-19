@@ -22,6 +22,8 @@ export const PlayerStates = Object.freeze({
     MOVE: "move ",
     ATTACK: "attack ",
     IDLE: "idle ",
+    JUMP: "jump",
+    DEAD: "dead",
 });
 
 /**
@@ -33,7 +35,7 @@ export class Player extends Character {
 
     /**
      * The states that this player may exhibit
-     * @type {Readonly<{MOVE: string, ATTACK: string, IDLE: string}>}
+     * @type {Readonly<{MOVE: string, ATTACK: string, IDLE: string, JUMP: string, DEAD: string}>}
      */
     static states = PlayerStates;
 
@@ -54,6 +56,7 @@ export class Player extends Character {
      *
      * @param {GameEngine} game the game
      * @param {Spritesheet} spritesheet the spritesheet representing this character
+     * @param {number} scale The scale to which to set the charter by
      * @param {number} dimX the positive dimension of this character
      * @param {number} dimY the positive dimension of this character
      * @param {number} [startX=0] the starting x position
@@ -61,11 +64,12 @@ export class Player extends Character {
      * @param facingDir The starting direction of the players.
      * @param name The name of the character.
      */
-    constructor(game, spritesheet,
+    constructor(game, spritesheet, scale,
                 dimX = 1, dimY = 1,
                 startX = 0, startY = 0, facingDir, name) {
         super(game, spritesheet, dimX, dimY, startX, startY);
 
+        // this.drawingProperties.bounds.setDimension(dimX*scale, dimY*scale)
 
         this.playerHealth = 100;
 
@@ -218,11 +222,12 @@ export class Player extends Character {
     }
 
     setPlayerHealth(damage) {
-        this.playerHealth -= damage;
 
 
         if (this.playerHealth === 0) {
-
+            
+            this.playerHealth-=1;
+            
             let rnd_int = Math.floor(Math.random() * 5) + 1;
             switch (getCharacterData(this.name).gender) {
 
@@ -245,11 +250,15 @@ export class Player extends Character {
 
             SoundFx.play("victory");
 
-            setTimeout(() => {
-                this.game.running = false;
-            }, 1000);
+            this.die();
+
+            // setTimeout(() => {
+            //     this.game.running = false;
+            // }, 1000);
 
         } else if (this.playerHealth > 0) {
+            this.playerHealth -= damage;
+            
             let rnd_int = Math.floor(Math.random() * 7) + 1;
             switch (getCharacterData(this.name).gender) {
 
@@ -291,6 +300,20 @@ export class Player extends Character {
                 if (this.objectY() - this.physics.position.y > 0) {
                     // this entity was push up, therefore we must be on the ground
                     this.onGround = true;
+                }
+                if (this.objectY() - this.physics.position.y > 0) {
+                    this.onGround = true;
+
+                    //if we were jumping, unlock and return to idle/move
+                    if (this.state === Player.states.JUMP) {
+                        this.stateLock = false;
+
+                        const ax =
+                            this.constantAcceleration[Character.DIRECTION.LEFT] +
+                            this.constantAcceleration[Character.DIRECTION.RIGHT];
+
+                        this.state = (ax !== 0) ? Player.states.MOVE : Player.states.IDLE;
+                    }
                 }
 
                 this.physics.position.x = this.objectX();
@@ -358,8 +381,19 @@ export class Player extends Character {
             if (this.onGround) {
                 this.onGround = false;
                 this.physics.velocity.y = this.gravity * -1 + 3;
+                this.state = Player.states.JUMP;
             }
         }
+
+    }
+
+    /**
+     * Triggers dying animation.
+     */
+    die() {
+
+        this.state = Player.states.DEAD;
+        this.stateLock = true;
 
     }
 
@@ -374,6 +408,11 @@ export class Player extends Character {
         }
 
         switch (this.state) {
+            case Player.states.JUMP:
+                this.physics.acceleration.x =
+                    this.constantAcceleration[Character.DIRECTION.LEFT] +
+                    this.constantAcceleration[Character.DIRECTION.RIGHT];
+                break;
             case Player.states.ATTACK :
 
                 break;
@@ -390,6 +429,11 @@ export class Player extends Character {
                 break;
             case Player.states.IDLE :
                 this.physics.velocity.x = 0;
+                break;
+
+            case Player.states.DEAD:
+                this.physics.velocity.x = 0;
+                this.physics.velocity.y = 0;
                 break;
         }
 

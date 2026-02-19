@@ -30,6 +30,7 @@ AssetManager.queueDownload("character/guy1/Guy.png");
 AssetManager.queueDownload("character/guy2/Guy2.png");
 AssetManager.queueDownload("character/warriorWoman/warriorWoman.png");
 AssetManager.queueDownload("character/samurai/samurai1.png")
+AssetManager.queueDownload("character/samurai/samurai2.png")
 AssetManager.queueDownload("tileset/Industrial_Tileset/1_Industrial_Tileset_1.png")
 AssetManager.queueDownload("tileset/Industrial_Tileset/1_Industrial_Tileset_1B.png")
 AssetManager.queueDownload("background/background03.jpeg");
@@ -46,19 +47,17 @@ AssetManager.downloadAll(async () => {
     canvas.tabIndex = 1;
     canvas.focus();
     
-    console.log(AssetManager.getAsset("character/warriorWoman/warriorWoman.png"))
-
     const world = new World();
 
     const backgroundPane = new Pane();
     const tilePane = new Pane();
     const forePane = new Pane();
 
-    const character1 = CharacterFactory.names.guy; //CHARACTER_SELECTOR.getPlayerCharacter()[0] //player 1 character
+    const character1 = CharacterFactory.names.samurai2; //CHARACTER_SELECTOR.getPlayerCharacter()[0] //player 1 character
     const character2 = CharacterFactory.names.samurai1; //CHARACTER_SELECTOR.getPlayerCharacter()[0] //player 1 character
 
-    const playerOne = new PlayerOne(gameEngine, AssetManager, character1, -1, 0, 1)
-    const playerTwo =  new PlayerTwo(gameEngine, AssetManager, character2, 1, 0, 1)
+    const playerOne = new PlayerOne(gameEngine, AssetManager, character1, -1, 0, getCharacterData(character1).scale)
+    const playerTwo =  new PlayerTwo(gameEngine, AssetManager, character2, 1, 0, getCharacterData(character2).scale)
 
 
     // make the background
