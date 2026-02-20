@@ -100,6 +100,10 @@ export class GameEngine {
         this.render = renderer;
     };
 
+    /**
+     * Initializes game input and context
+     * @param {CanvasRenderingContext2D} ctx
+     */
     init(ctx) {
         this.ctx = ctx;
         this.startInput();
