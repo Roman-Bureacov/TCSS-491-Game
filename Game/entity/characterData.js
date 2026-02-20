@@ -23,7 +23,7 @@ export const CHARACTER_NAMES = Object.freeze({
 
 /**
  * @typedef CharacterData
- * @property {Image} img
+ * @property {string} img
  * @property {number} numRow
  * @property {number} numCol
  * @property {[number, number][]} [moveL]
