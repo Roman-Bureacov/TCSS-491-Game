@@ -1,4 +1,10 @@
 /**
+ * @typedef FileAssetPaths
+ * @property {string} relativePath
+ * @property {string} absolutePath
+ */
+
+/**
  * Static class that manages assets
  *
  * @author (original author undocumented)
@@ -6,29 +12,41 @@
  */
 export class AssetManager {
 
+    /** @type {URL} the absolute path to the assets folder */
     static #root = new URL("./", import.meta.url);
 
     static {
+        /** @type {number} */
         this.successCount = 0;
+        /** @type {number} */
         this.errorCount = 0;
-        this.imageCache = [];
-        this.audioCache = [];
-        this.textCache = [];
+        /** @type {{string : Image}} */
+        this.imageCache = {};
+        /** @type {{string : Audio}} */
+        this.audioCache = {};
+        /** @type {{string : string}} */
+        this.textCache = {};
+        /** @type {string[]} */
         this.downloadQueue = [];
     }
 
+    /**
+     * Determines the absolute file path from the relative file
+     * @param {string} path the relative path from the assets folder to the file
+     * @return {string} the absolute path to the file
+     */
     static #resolve(path) {
         return new URL(path, AssetManager.#root).href;
     }
 
     /**
      * Queue the download of a file
-     * @param path the path relative to where the asset manager lives
+     * @param {string} path the path relative to where the asset manager lives
      */
     static queueDownload(path) {
         let resolvedPath = AssetManager.#resolve(path);
         console.log("Queueing " + resolvedPath);
-        this.downloadQueue.push([path, resolvedPath]);
+        this.downloadQueue.push(path);
     };
 
     /**
@@ -44,92 +62,76 @@ export class AssetManager {
      * @param callback the callback to fire when finished
      */
     static downloadAll(callback) {
-        // if (this.downloadQueue.length === 0) setTimeout(callback, 10);
 
         Promise.all(
-            this.downloadQueue.map(paths => new Promise((res, rej) => {
-
-                let [relativePath, absolutePath] = paths;
-
-                let file;
-                const successMsg = () => {
-                    this.successCount++;
-                    console.log("Loaded " + file.src);
-                    res(file);
-                };
-                const failMsg = () => {
-                    this.errorCount++;
-                    console.log("Error loading " + file.src);
-                    rej(file);
-                };
-
-                const ext = relativePath.split(".").pop().toLowerCase();
-                console.log("Loading... " + absolutePath);
-
-                switch(ext) {
-                    case "png":
-                    case "jpg":
-                    case "jpeg":
-                        file = new Image();
-                        file.src = absolutePath;
-                        file.onload = successMsg;
-                        file.onerror = failMsg;
-                        this.imageCache[relativePath] = file;
-                        break;
-                    case "mp3":
-                    case "wav":
-                        file = new Audio();
-                        file.src = absolutePath;
-                        file.onloadeddata = successMsg;
-                        file.onerror = failMsg;
-                        this.audioCache[relativePath] = file;
-                        break;
-                    case "txt":
-                        fetch(absolutePath)
-                            .then(resp => resp.text())
-                            .then(text => {
-                                this.successCount++;
-                                this.textCache[relativePath] = text;
-                                res(text);
-                            })
-                            .catch(err => {
-                                this.errorCount++;
-                                rej(err);
-                            })
-                        break;
-                    default:
-                        rej("Unknown file extension: " + ext);
-                }
-
-            }))
+            this.downloadQueue.map(path => this.downloadOne(path))
         ).then(callback);
 
-        // same function above as below
-
-        /*
-        for (let i = 0; i < this.downloadQueue.length; i++) {
-            const img = new Image();
-
-            const path = this.downloadQueue[i];
-            console.log(path);
-
-            img.addEventListener("load", () => {
-                console.log("Loaded " + img.src);
-                this.successCount++;
-                if (this.isDone()) callback();
-            });
-
-            img.addEventListener("error", () => {
-                console.log("Error loading " + img.src);
-                this.errorCount++;
-                if (this.isDone()) callback();
-            });
-
-            img.src = path;
-            this.cache[path] = img;
-        }
-         */
     };
+
+    /**
+     * Downloads a single file
+     *
+     * @param {string} relativePath the relative path to the file from the assets folder
+     * @return {Promise<void>} the promise for downloading the file
+     */
+    static async downloadOne(relativePath) {
+        return new Promise((res, rej) => {
+
+            const absolutePath = this.#resolve(relativePath);
+
+            let file;
+            const successMsg = () => {
+                this.successCount++;
+                console.log("Loaded " + file.src);
+                res(file);
+            };
+            const failMsg = () => {
+                this.errorCount++;
+                console.log("Error loading " + file.src);
+                rej(file);
+            };
+
+            const ext = relativePath.split(".").pop().toLowerCase();
+            console.log("Loading... " + absolutePath);
+
+            switch(ext) {
+                case "png":
+                case "jpg":
+                case "jpeg":
+                    file = new Image();
+                    file.src = absolutePath;
+                    file.onload = successMsg;
+                    file.onerror = failMsg;
+                    this.imageCache[relativePath] = file;
+                    break;
+                case "mp3":
+                case "wav":
+                    file = new Audio();
+                    file.src = absolutePath;
+                    file.onloadeddata = successMsg;
+                    file.onerror = failMsg;
+                    this.audioCache[relativePath] = file;
+                    break;
+                case "txt":
+                    fetch(absolutePath)
+                        .then(resp => resp.text())
+                        .then(text => {
+                            this.successCount++;
+                            this.textCache[relativePath] = text;
+                            res(text);
+                        })
+                        .catch(err => {
+                            this.errorCount++;
+                            rej(err);
+                        })
+                    break;
+                default:
+                    rej("Unknown file extension: " + ext);
+            }
+
+        })
+    }
 
     /**
      * gets the asset from this manager
@@ -146,7 +148,7 @@ export class AssetManager {
      * @returns {Audio}
      */
     static getAudio(path) {
-        return this.audioCache[AssetManager.#root + path];
+        return this.audioCache[path];
     };
 
     /**
