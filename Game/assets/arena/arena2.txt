@@ -1,4 +1,4 @@
-set: industrialb
+set: "tileset/Industrial_Tileset/1_Industrial_Tileset_1B.png"
 dimension:
 | origin: -7, 1.5
 | matrix: 12 rows by 32 columns

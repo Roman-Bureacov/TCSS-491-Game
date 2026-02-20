@@ -6,6 +6,7 @@
  */
 
 import {ArenaFactory} from "./arenaFactory.js";
+import {TILESET_NAMES} from "./tileData.js";
 
 /**
  *
@@ -15,10 +16,11 @@ export const arenaData = {
     [ArenaFactory.ARENAS.BASIC] : {
         backgroundAssetName : "",
         arenaAssetName : "",
-        tileSetPath : "",
+        tileSetPath : TILESET_NAMES.INDUSTRIAL,
     },
     [ArenaFactory.ARENAS.ARENA2] : {
         backgroundAssetName : "",
         arenaAssetName : "",
+        tileSetPath : TILESET_NAMES.INDUSTRIALB,
     }
 }

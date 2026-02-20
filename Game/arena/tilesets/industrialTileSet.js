@@ -9,6 +9,7 @@ import {TileEntity} from "../../entity/tileEntity.js";
  * Builds tiles with respect to `1_Industrial_Tileset_1.png`
  *
  * @author Roman Bureacov
+ * @deprecated
  */
 export class IndustrialTileFactory {
 

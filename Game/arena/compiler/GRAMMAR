@@ -4,7 +4,7 @@ root ::= specifiers arena
 
 specifiers ::= setSpecifier dimensionSpecifier [ arenaDetailsSpecifier ]
 
-setSpecifier ::= SET COLN TEXT
+setSpecifier ::= SET COLN STR
 
 dimensionSpecifier ::= DIMENSION COLN
     PIPE originSpecifier

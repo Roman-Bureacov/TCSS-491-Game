@@ -5,6 +5,10 @@ this file has code for creating tiles
 
 import {IndustrialTileFactory} from "./tilesets/industrialTileSet.js";
 import {IndustrialBTileFactory} from "./tilesets/industrialBTileSet.js";
+import {TileEntity} from "../entity/tileEntity.js";
+import {Spritesheet} from "../entity/animation.js";
+import {AssetManager} from "../assets/assetmanager.js";
+import {tileData} from "./tileData.js";
 
 /**
  * A static factory class that makes static tile objects.
@@ -14,32 +18,79 @@ import {IndustrialBTileFactory} from "./tilesets/industrialBTileSet.js";
 export class TileFactory {
 
     /**
-     * The enumeration of the tile set names.
-     * @readonly
-     * @enum {string}
+     * the collection of spritesheets
+     * @type {{string : Spritesheet[]}}
      */
-    static setName = Object.freeze( {
-        INDUSTRIAL : "industrial",
-        INDUSTRIALB: "industrialb",
-    })
+    static spritesheetCache = {}
+
+    /**
+     * the mapping of alphabetic characters to an index
+     * @type {{string : number}}
+     * @readonly
+     */
+    static alphaNumber = {}
+
+    static {
+        const tileAlphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+
+        for (let i = 0; i < tileAlphabet.length; i++) {
+            this.alphaNumber[tileAlphabet.charAt(i)] = i;
+        }
+    }
 
     constructor() {
         throw new Error("Cannot instantiate factory (anti-pattern)");
     }
 
     /**
-     * Constructs a tile static entity
+     * Creates a tile entity
+     *
+     * @see {TILESET_NAMES}
+     *
      * @param {string} setName the name of the tile set
-     * @param {string} tileName the name of tile type
-     * @return {TileEntity} the tile entity
+     * @param {string} name the alphabetic tile name
+     * @return {TileEntity} the resulting tile entity
      */
-    static makeTile(setName, tileName) {
-        switch (setName) {
-            case TileFactory.setName.INDUSTRIAL:
-                return IndustrialTileFactory.makeTile(tileName);
-            case TileFactory.setName.INDUSTRIALB:
-                return IndustrialBTileFactory.makeTile(tileName);
-        }
+    static makeTile(setName, name) {
+        let tile = new TileEntity(TileFactory.getSpritesheet(setName))
+        let data = tileData[setName];
+        let row = Math.floor(TileFactory.alphaNumber[name] / data.rows);
+        let col = TileFactory.alphaNumber[name] % data.rows;
+        tile.drawingProperties.spriteRow = row;
+        tile.drawingProperties.spriteCol = col;
+
+        return tile;
+    }
+
+    /**
+     * Gets the spritesheet object associated with the set
+     *
+     * @see {TILESET_NAMES}
+     *
+     * @param {string} setName
+     * @return {Spritesheet}
+     */
+    static getSpritesheet(setName) {
+        let spritesheet = TileFactory.spritesheetCache[setName];
+        if (spritesheet) return spritesheet;
+
+        TileFactory.makeSpritesheet(setName);
+        return TileFactory.spritesheetCache[setName];
+    }
+
+    /**
+     * Creates a spritesheet and puts it in the cache
+     *
+     * @see {TILESET_NAMES}
+     *
+     * @param {string} setName
+     */
+    static makeSpritesheet(setName) {
+        const data = tileData[setName];
+        TileFactory.spritesheetCache[setName] = new Spritesheet(
+            AssetManager.getAsset(setName),
+            data.rows, data.cols
+        )
     }
 }
 

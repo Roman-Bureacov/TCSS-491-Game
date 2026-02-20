@@ -111,8 +111,8 @@ export class ArenaParser {
     setSpecifier() {
         this.mustBe(Token.TYPES.SET);
         this.mustBe(Token.TYPES.COLN);
-        this.mustBe(Token.TYPES.TEXT);
-        this.parameters.set = this.token.image;
+        this.mustBe(Token.TYPES.STR);
+        this.parameters.set = ArenaParser.stripQuotes(this.token.image);
     }
 
     /**
@@ -162,7 +162,7 @@ export class ArenaParser {
         this.mustBe(Token.TYPES.COLN);
         this.mustBe(Token.TYPES.STR)
         // build this tile
-        let path = this.token.image.replaceAll("\"", "");
+        let path = ArenaParser.stripQuotes(this.token.image);
 
         let asset = AssetManager.getAsset(path)
         if (asset === undefined) throw new Error(`
@@ -184,7 +184,7 @@ on line ${this.token.line}
         this.mustBe(Token.TYPES.COLN);
         this.mustBe(Token.TYPES.STR)
         // make this string
-        path = this.token.image.replaceAll("\"", "");
+        path = ArenaParser.stripQuotes(this.token.image);
         // TODO: is there a way to make sure this file exists considering it is loaded outside of AssetManager?
         // TODO: error check?
         this.arenaProps.music = path;
@@ -329,6 +329,14 @@ found ${this.token.type} at line ${this.token.line}
 
     // --- helpers
 
+    /**
+     * Strips the start and end quotes from the string
+     * @param {string} str the string with quotes
+     * @return {string} the string without quotes
+     */
+    static stripQuotes(str) {
+        return str.replaceAll("\"", "");
+    }
 
     /**
      * Consumes the next token expects the token type from the scanner
