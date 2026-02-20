@@ -5,7 +5,6 @@
  * @readonly
  * @enum {string}
  */
-
 export const CHARACTER_NAMES = Object.freeze({
     GUY: "guy1",
     GUY2: "guy2",
@@ -22,6 +21,36 @@ export const CHARACTER_NAMES = Object.freeze({
 
 })
 
+/**
+ * @typedef CharacterData
+ * @property {Image} img
+ * @property {number} numRow
+ * @property {number} numCol
+ * @property {[number, number][]} [moveL]
+ * @property {[number, number][]} [moveR]
+ * @property {[number, number][]} [idleL]
+ * @property {[number, number][]} [idleR]
+ * @property {[number, number][]} [deadL]
+ * @property {[number, number][]} [deadR]
+ * @property {[number, number][]} [attackL]
+ * @property {[number, number][]} [attackR]
+ * @property {[number, number][]} [jumpL]
+ * @property {[number, number][]} [jumpR]
+ * @property {number} movePadY // TODO: do we need this?
+ * @property {number} idlePadY // TODO: do we need this?
+ * @property {number} attackPadY // TODO: do we need this?
+ * @property {number} idleDur
+ * @property {number} moveDur
+ * @property {number} attackDur
+ * @property {number} scale // TODO: do we need this?
+ * @property {string} swordSound
+ * @property {string} gender
+ */
+
+/**
+ *
+ * @type {{[key: CHARACTER_NAMES] : CharacterData}}
+ */
 const CHARACTER_DATA = {
     [CHARACTER_NAMES.GUY] : {
         img: "character/guy1/Guy.png",
