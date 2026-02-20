@@ -4,6 +4,7 @@ import {KeyMapper} from "../engine/keymapper.js";
  * Assigns the keymap to a character based on the name specified
  * @author Roman Bureacov
  *
+ * @deprecated
  * @param {string} name a string name for the player
  * @param {Player} player the player to assign an input map keymap to
  */
@@ -38,6 +39,7 @@ export const assignKeymap = (name, player) => {
 /**
  * The enum of valid names for `assignKeymap`
  *
+ * @deprecated
  * @enum {string}
  */
 export const PLAYER = Object.freeze({
