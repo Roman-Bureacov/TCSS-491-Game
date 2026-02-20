@@ -46,14 +46,14 @@ class SpaceObject {
 
     /**
      * Sets the scale for this space object in the world
-     * @param {number} [dimX] the x scale, object scale x if undefined
-     * @param {number} [dimY] the y scale, object scale y if undefined
-     * @param {number} [dimZ] the z scale, object scale z if undefined
+     * @param {number} [scaleX] the x scale, object scale x if undefined
+     * @param {number} [scaleY] the y scale, object scale y if undefined
+     * @param {number} [scaleZ] the z scale, object scale z if undefined
      */
-    setObjectScale(dimX = undefined, dimY = undefined, dimZ = undefined) {
-        if (dimX !== undefined) this.transform.set(0, 0, dimX);
-        if (dimY !== undefined) this.transform.set(1, 1, dimX);
-        if (dimZ !== undefined) this.transform.set(2, 2, dimX);
+    setObjectScale(scaleX = undefined, scaleY = undefined, scaleZ = undefined) {
+        if (scaleX !== undefined) this.transform.set(0, 0, scaleX);
+        if (scaleY !== undefined) this.transform.set(1, 1, scaleX);
+        if (scaleZ !== undefined) this.transform.set(2, 2, scaleX);
     }
 
     /**
