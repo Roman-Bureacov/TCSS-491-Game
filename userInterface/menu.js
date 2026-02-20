@@ -1,11 +1,16 @@
 // Menu and HUD Management System
+import {launchGame} from "../Game/gamelauncher.js";
+import {CHARACTER_NAMES} from "../Game/entity/characterData.js";
+import {ArenaFactory} from "../Game/arena/arenaFactory.js";
+
 export class MenuSystem {
     constructor() {
+        this.gameCanvas = document.querySelector('#gameWorld');
         this.selectedCharacters = {
             player1: null,
             player2: null
         };
-        this.selectedArena = 'arena1';
+        this.selectedArena = ArenaFactory.ARENAS.BASIC;
         this.initializeMenu();
     }
 
@@ -31,9 +36,9 @@ export class MenuSystem {
                 // Update display
                 const displayElement = document.getElementById(`p${player}Selected`);
                 const characterNames = {
-                    'guy1': 'Warrior',
-                    'guy2': 'Knight',
-                    'warriorWoman': 'Valkyrie'
+                    [CHARACTER_NAMES.GUY] : 'Warrior',
+                    [CHARACTER_NAMES.GUY2]: 'Knight',
+                    [CHARACTER_NAMES.WARRIOR_WOMAN]: 'Valkyrie'
                 };
                 displayElement.textContent = characterNames[character];
 
@@ -47,6 +52,7 @@ export class MenuSystem {
             btn.addEventListener('click', (e) => {
                 const button = e.currentTarget;
                 const arena = button.dataset.arena;
+                console.log(button.dataset)
 
                 // Remove selected class from all arena buttons
                 document.querySelectorAll('.arena-btn').forEach(b => {
@@ -97,7 +103,12 @@ export class MenuSystem {
             arena: this.selectedArena
         };
 
-
+        launchGame({
+            playerOneCharacter: this.selectedCharacters.player1,
+            playerTwoCharacter: this.selectedCharacters.player2,
+            arenaName: this.selectedArena,
+            canvas: this.gameCanvas,
+        })
 
         // Dispatch event to signal game should start
         // window.dispatchEvent(new CustomEvent('gameStart', {
@@ -163,10 +174,10 @@ export class HUDSystem {
     }
 
     updateCharacterName(player, characterName) {
-        const characterNames = {
-            'guy1': 'Warrior',
-            'guy2': 'Knight',
-            'warriorWoman': 'Valkyrie'
+        const characterNames = { // TODO: this fragment is duplicated, maybe it could be simplified?
+            [CHARACTER_NAMES.GUY] : 'Warrior',
+            [CHARACTER_NAMES.GUY2]: 'Knight',
+            [CHARACTER_NAMES.WARRIOR_WOMAN]: 'Valkyrie'
         };
 
         const displayName = characterNames[characterName] || characterName;
