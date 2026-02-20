@@ -27,6 +27,12 @@ export class GameEngine {
     keys = {};
 
     /**
+     * The lock for key input (for when the engine needs to update the simulation)
+     * @type {boolean}
+     */
+    keyLock = false;
+
+    /**
      * The focus, what two players the camera will focus on
      * when the engine iterates.
      *
@@ -176,8 +182,9 @@ export class GameEngine {
 
         const acknowledge = (event) => {
 
-            this.keys[event.code] = event;
-
+            if (!this.keyLock) {
+                this.keys[event.code] = event;
+            }
             // if (this.options.debugging) {
             //     console.log(event);
             // }
@@ -379,6 +386,7 @@ export class GameEngine {
         // see: https://www.gafferongames.com/post/fix_your_timestep/
         this.accumulatedTime += dt;
         let maxSteps = 10;
+        this.keyLock = true; // lock the keys!
 
         while (
             this.accumulatedTime >= GameEngine.MAX_SIM_STEP
@@ -392,6 +400,8 @@ export class GameEngine {
             this.accumulatedTime -= GameEngine.MAX_SIM_STEP;
             maxSteps--;
         }
+
+        this.keyLock = false;
         this.keys = {};
 
         if (maxSteps === 0) {
