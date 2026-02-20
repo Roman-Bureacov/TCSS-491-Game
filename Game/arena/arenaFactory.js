@@ -28,7 +28,7 @@ export class ArenaFactory {
     /**
      * Creates an arena
      *
-     * @param {string} name the arena name
+     * @param {ARENAS} name the arena name
      * @return {ArenaProperties} the collection of static entities that make up this arena
      */
     static makeArena(name) {
