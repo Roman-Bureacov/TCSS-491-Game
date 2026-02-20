@@ -152,7 +152,7 @@ const addBackground = (arena, bg) => {
 
     // position background
     backgroundDrawable.drawingProperties.bounds.setDimensionAspect(
-        30,
+        75,
         backgroundDrawable.spritesheet.image.width
         / backgroundDrawable.spritesheet.image.height
     );
@@ -160,5 +160,6 @@ const addBackground = (arena, bg) => {
         -backgroundDrawable.drawingProperties.bounds.dimension.width / 2,
         backgroundDrawable.drawingProperties.bounds.dimension.height / 2,
     );
+    bg.setObjectPosition(0, 0, -10)
     bg.addDrawable(backgroundDrawable);
 }
