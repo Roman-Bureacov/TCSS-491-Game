@@ -30,8 +30,8 @@ export class PlayerFactory {
 
     /**
      * Constructs a player character
-     * @param {string} name the name of the character of the player
-     * @param {string} type what type of player this is
+     * @param {CHARACTER_NAMES} name the name of the character of the player
+     * @param {PLAYER_TYPES} type what type of player this is
      * @param {GameEngine} game the game engine the player will use
      * @param {number} initX the initial X
      * @param {number} initY the initial Y

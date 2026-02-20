@@ -96,7 +96,7 @@ AssetManager.downloadAll(async () => {
 
         the `detail` specifier is optional (hence all the undefined checks below)
      */
-    const arena = ArenaFactory.makeArena(ArenaFactory.arenas.BASIC);
+    const arena = ArenaFactory.makeArena(ArenaFactory.ARENAS.BASIC);
 
     // TODO: how might we make the music persistent (that is, play only when focused?)
     if (arena.music) SoundFX.play(arena.music);

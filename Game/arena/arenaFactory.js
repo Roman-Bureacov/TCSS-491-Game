@@ -16,7 +16,7 @@ export class ArenaFactory {
      * The enumeration of arena names
      * @enum {string}
      */
-    static arenas = Object.freeze({
+    static ARENAS = Object.freeze({
         BASIC : "basicArena",
         ARENA2: "arena2"
     });
@@ -35,10 +35,10 @@ export class ArenaFactory {
         let text;
 
         switch (name) {
-            case this.arenas.BASIC :
+            case this.ARENAS.BASIC :
                 text = AssetManager.getText("arena/basic.txt");
                 break;
-            case this.arenas.ARENA2:
+            case this.ARENAS.ARENA2:
                 text = AssetManager.getText("arena/arena2.txt")
                 break;
             default: throw new Error("Unknown arena name " + name);
