@@ -97,10 +97,12 @@ export class MenuSystem {
             arena: this.selectedArena
         };
 
+
+
         // Dispatch event to signal game should start
-        window.dispatchEvent(new CustomEvent('gameStart', {
-            detail: window.gameConfig
-        }));
+        // window.dispatchEvent(new CustomEvent('gameStart', {
+        //     detail: window.gameConfig
+        // }));
     }
 }
 
