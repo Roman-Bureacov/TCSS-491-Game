@@ -339,7 +339,7 @@ const CHARACTER_DATA = {
 /**
  * @typedef
  * @param {string}theCharacter
- * @returns {*}
+ * @returns {CharacterData}
  */
 export function getCharacterData(theCharacter) {
     return CHARACTER_DATA[theCharacter];
