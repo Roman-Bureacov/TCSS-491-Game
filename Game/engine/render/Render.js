@@ -34,14 +34,26 @@ class SpaceObject {
 
     /**
      * Sets the position for this space object in the world
-     * @param {number} x the x position
-     * @param {number} y the y position
-     * @param {number} z the z position
+     * @param {number} [x] the x position, object x if undefined
+     * @param {number} [y] the y position, object y if undefined
+     * @param {number} [z] the z position, object z if undefined
      */
-    setObjectPosition(x, y, z) {
-        this.transform.set(0, 3, x);
-        this.transform.set(1, 3, y);
-        this.transform.set(2, 3, z);
+    setObjectPosition(x = undefined, y = undefined, z = undefined) {
+        if (x !== undefined) this.transform.set(0, 3, x);
+        if (y !== undefined) this.transform.set(1, 3, y);
+        if (z !== undefined) this.transform.set(2, 3, z);
+    }
+
+    /**
+     * Sets the scale for this space object in the world
+     * @param {number} [dimX] the x scale, object scale x if undefined
+     * @param {number} [dimY] the y scale, object scale y if undefined
+     * @param {number} [dimZ] the z scale, object scale z if undefined
+     */
+    setObjectScale(dimX = undefined, dimY = undefined, dimZ = undefined) {
+        if (dimX !== undefined) this.transform.set(0, 0, dimX);
+        if (dimY !== undefined) this.transform.set(1, 1, dimX);
+        if (dimZ !== undefined) this.transform.set(2, 2, dimX);
     }
 
     /**
