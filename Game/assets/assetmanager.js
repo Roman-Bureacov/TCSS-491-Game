@@ -77,12 +77,13 @@ export class AssetManager {
      */
     static async downloadOne(relativePath) {
         return new Promise((res, rej) => {
+            if (!relativePath) rej(`bad file path: ${relativePath}`)
+
             if (
                 this.imageCache[relativePath]
                 || this.textCache[relativePath]
                 || this.audioCache[relativePath]
             ) { // this asset may or may not already exist
-                console.log(`Asset "${relativePath}" already loaded, skipping...`)
                 res(`Asset "${relativePath}" already loaded, skipping...`);
             }
             
