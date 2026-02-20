@@ -77,7 +77,7 @@ export class AssetManager {
      */
     static async downloadOne(relativePath) {
         return new Promise((res, rej) => {
-            if (!relativePath) rej(`bad file path: ${relativePath}`)
+            if (!relativePath) rej(`bad asset file path: ${relativePath}`)
 
             if (
                 this.imageCache[relativePath]
