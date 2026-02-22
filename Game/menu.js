@@ -183,17 +183,24 @@ export class HUDSystem {
         this.timer = duration;
         this.updateTimer(this.timer);
 
-        const timerInterval = setInterval(() => {
+        this._timerInterval = setInterval(() => {
             this.timer--;
             this.updateTimer(this.timer);
 
             if (this.timer <= 0) {
-                clearInterval(timerInterval);
+                clearInterval(this._timerInterval);
                 if (onComplete) onComplete();
             }
         }, 1000);
 
-        return timerInterval;
+        return this._timerInterval;
+    }
+
+    stopTimer() {
+        if (this._timerInterval) {
+            clearInterval(this._timerInterval);
+            this._timerInterval = null;
+        }
     }
 }
 
@@ -201,6 +208,36 @@ export class HUDSystem {
 document.addEventListener('DOMContentLoaded', () => {
     window.menuSystem = new MenuSystem();
     window.hudSystem = new HUDSystem();
+
+    // Winner screen buttons
+    document.getElementById('rematchBtn')?.addEventListener('click', () => {
+        // Hide winner screen and reload the page to restart
+        document.getElementById('winnerScreen')?.classList.remove('visible');
+        setTimeout(() => {
+            document.getElementById('winnerScreen')?.classList.add('hidden');
+            // Re-dispatch the same gameStart event to replay with same characters/arena
+            if (window._lastGameStartDetail) {
+                window.dispatchEvent(new CustomEvent('gameStart', { detail: window._lastGameStartDetail }));
+                // Reset health bars
+                if (window.hudSystem) {
+                    window.hudSystem.resetHealth();
+                    window.hudSystem.updateTimer(99);
+                    window.hudSystem.startTimer(99);
+                }
+            }
+        }, 400);
+    });
+
+    document.getElementById('mainMenuWinBtn')?.addEventListener('click', () => {
+        // Return to main menu
+        document.getElementById('winnerScreen')?.classList.remove('visible');
+        setTimeout(() => {
+            document.getElementById('winnerScreen')?.classList.add('hidden');
+            document.getElementById('gameScreen')?.classList.add('hidden');
+            document.getElementById('mainMenu')?.classList.remove('hidden');
+            location.reload(); // Full reload for clean state
+        }, 400);
+    });
 });
 
 // Make systems available globally

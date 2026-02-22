@@ -4,7 +4,17 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="a08718b8-ac73-4cb8-b286-185a0b662aef" name="Changes" comment="included a death animation for when the player looses. Still need to fix hitboxes though, its way infront of the player." />
+    <list default="true" id="a08718b8-ac73-4cb8-b286-185a0b662aef" name="Changes" comment="included a death animation for when the player looses. Still need to fix hitboxes though, its way infront of the player.">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Game/PhysicsEntity.js" beforeDir="false" afterPath="$PROJECT_DIR$/Game/PhysicsEntity.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Game/character.js" beforeDir="false" afterPath="$PROJECT_DIR$/Game/character.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Game/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/Game/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Game/main.js" beforeDir="false" afterPath="$PROJECT_DIR$/Game/main.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Game/menu.js" beforeDir="false" afterPath="$PROJECT_DIR$/Game/menu.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Game/playerOne.js" beforeDir="false" afterPath="$PROJECT_DIR$/Game/playerOne.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Game/playerTwo.js" beforeDir="false" afterPath="$PROJECT_DIR$/Game/playerTwo.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Game/style.css" beforeDir="false" afterPath="$PROJECT_DIR$/Game/style.css" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />

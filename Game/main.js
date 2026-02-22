@@ -96,6 +96,8 @@ Object.values(getAllCharacter()).forEach(character => {
 // Wait for menu selections and then start the game
 window.addEventListener('gameStart', async (event) => {
     const { character1, character2, arena: arenaName } = event.detail;
+    // Save for rematch
+    window._lastGameStartDetail = event.detail;
     const arena = arenas[arenaName];
 
     // Update HUD with selected characters
@@ -116,6 +118,37 @@ window.addEventListener('gameStart', async (event) => {
 
         const playerOne = new PlayerOne(gameEngine, ASSET_MANAGER, character1, arena.playerOnePos[0], arena.playerOnePos[1]);
         const playerTwo = new PlayerTwo(gameEngine, ASSET_MANAGER, character2, arena.playerTwoPos[0], arena.playerTwoPos[1]);
+
+        // Set the ground Y-level based on the arena floor so gravity lands correctly
+        const SPRITE_HEIGHT_OFFSET = 148; // approximate sprite height
+        playerOne.groundY = arena.floor - SPRITE_HEIGHT_OFFSET;
+        playerTwo.groundY = arena.floor - SPRITE_HEIGHT_OFFSET;
+
+        // Make sure they start on the ground (positions in arena are already near floor)
+        playerOne.position.y = playerOne.groundY;
+        playerTwo.position.y = playerTwo.groundY;
+        playerOne.isGrounded = true;
+        playerTwo.isGrounded = true;
+
+        // Wire opponent references so attacks deal damage
+        playerOne.opponent = playerTwo;
+        playerTwo.opponent = playerOne;
+
+        // Winner check – runs each frame
+        let gameOver = false;
+        const originalLoop = gameEngine.loop.bind(gameEngine);
+        gameEngine.loop = function() {
+            originalLoop();
+            if (!gameOver) {
+                if (playerOne.isDead) {
+                    gameOver = true;
+                    showWinnerScreen("Player 2");
+                } else if (playerTwo.isDead) {
+                    gameOver = true;
+                    showWinnerScreen("Player 1");
+                }
+            }
+        };
 
         const arena1TileMap = await setArenaAssets(arena);
 
@@ -197,4 +230,29 @@ async function setArenaAssets(arenaObj) {
     [arenaTilesetSheet, arenaMapTxt] = await Promise.all(setPromiseAndLoadArenaText(arenaObj.tileSet, arenaObj.map));
 
     return setTileMap(arenaTilesetSheet, arenaMapTxt, arenaObj.background, arenaObj.name, arenaObj.tileWidth, arenaObj.tileHeight, arenaObj.legend)
+}
+/**
+ * Shows the winner screen overlay
+ * @param {string} winnerName - "Player 1" or "Player 2"
+ */
+function showWinnerScreen(winnerName) {
+    // Stop game timer
+    if (window.hudSystem) {
+        window.hudSystem.stopTimer?.();
+    }
+
+    const overlay = document.getElementById('winnerScreen');
+    const title = document.getElementById('winnerTitle');
+    const subtitle = document.getElementById('winnerSubtitle');
+
+    if (overlay && title) {
+        title.textContent = `${winnerName} Wins!`;
+        subtitle.textContent = winnerName === "Player 1"
+            ? "🏆 Victory is yours, Champion!"
+            : "🏆 Flawless victory, Champion!";
+        overlay.classList.remove('hidden');
+
+        // Animate in
+        requestAnimationFrame(() => overlay.classList.add('visible'));
+    }
 }

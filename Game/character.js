@@ -68,6 +68,30 @@ export class Character extends PhysicsEntity {
     Spritesheet = null;
 
     /**
+     * Whether this character is currently on the ground
+     * @type {boolean}
+     */
+    isGrounded = false;
+
+    /**
+     * The Y coordinate of the surface the character stands on.
+     * @type {number}
+     */
+    groundY = 590;
+
+    /**
+     * Current health of this character (0–100)
+     * @type {number}
+     */
+    health = 100;
+
+    /**
+     * Whether this character is dead
+     * @type {boolean}
+     */
+    isDead = false;
+
+    /**
      * Creates a basic character
      * @param game the game engine
      * @param characterName the spritesheet image for this character
@@ -75,7 +99,32 @@ export class Character extends PhysicsEntity {
     constructor(game, characterName) {
         super();
         Object.assign(this, { game, characterName });
+    }
 
+    /**
+     * Initiates a jump if the character is on the ground
+     */
+    jump() {
+        if (this.isGrounded) {
+            this.velocity.y = -600;
+            this.isGrounded = false;
+        }
+    }
+
+    /**
+     * Applies damage to this character
+     * @param {number} amount - Damage amount (0–100)
+     * @param {number} playerNum - Player number (1 or 2) used for HUD updates
+     */
+    takeDamage(amount, playerNum) {
+        if (this.isDead) return;
+        this.health = Math.max(0, this.health - amount);
+        if (window.hudSystem) {
+            window.hudSystem.updateHealth(playerNum, this.health);
+        }
+        if (this.health <= 0) {
+            this.isDead = true;
+        }
     }
 
     /**
@@ -116,7 +165,20 @@ export class Character extends PhysicsEntity {
      * Updates this character
      */
     update() {
+        // Apply gravity when airborne
+        if (!this.isGrounded) {
+            this.velocity.y += PhysicsEntity.GRAVITY * this.game.clockTick;
+        }
+
         this.updatePhysics(this.game.clockTick);
+
+        // Ground collision: clamp to groundY and mark as grounded
+        if (this.position.y >= this.groundY) {
+            this.position.y = this.groundY;
+            this.velocity.y = 0;
+            this.isGrounded = true;
+        }
+
         // if dealing with acceleration, it may be useful to
         // always begin with an acceleration vector of 0
 

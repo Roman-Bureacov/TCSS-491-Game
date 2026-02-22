@@ -4,12 +4,16 @@ Some physics code
 Roman Bureacov
  */
 
+
 /**
  * A physics entity to be used by the physics engine
  *
  * @author Roman Bureacov
  */
 export class PhysicsEntity {
+
+    /** Gravitational acceleration applied each frame (pixels/s²) */
+    static GRAVITY = 1800;
 
     /**
      * The acceleration vector of this entity
@@ -62,4 +66,3 @@ export class PhysicsEntity {
         this.position.y += this.velocity.y * timeStep;
     }
 }
-

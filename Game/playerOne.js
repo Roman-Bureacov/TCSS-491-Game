@@ -46,6 +46,11 @@ export class PlayerOne extends Character {
         this.setupKeymap();
 
         this.playSound = new SoundFX({masterVolume: 0.8});
+
+        /** Reference to opponent player – set after construction */
+        this.opponent = null;
+        /** Cooldown flag to avoid rapid repeated damage in a single swing */
+        this._swingHit = false;
     }
 
     setupAnimation() {
@@ -128,6 +133,7 @@ export class PlayerOne extends Character {
             [KeyMapper.getName("KeyD", true)]: "move right",
             [KeyMapper.getName("KeyA", true)]: "move left",
             [KeyMapper.getName("KeyS", true)]: "attack",
+            [KeyMapper.getName("KeyW", true)]: "jump",
             [KeyMapper.getName("KeyD", false)]: "stop right",
             [KeyMapper.getName("KeyA", false)]: "stop left",
         };
@@ -136,6 +142,7 @@ export class PlayerOne extends Character {
             "move right": () => this.move(800),
             "move left": () => this.move(-800),
             "attack": () => this.swing(),
+            "jump": () => this.jump(),
             "stop right": () => this.stopMoving(Character.DIRECTION.RIGHT),
             "stop left": () => this.stopMoving(Character.DIRECTION.LEFT),
         };
@@ -174,10 +181,9 @@ export class PlayerOne extends Character {
             this.lastState = this.state;
             this.state = this.states.ATTACK;
             this.stateLock = true;
-            this.playSound.play(this.character.getCharacter().swordSound)
-
+            this._swingHit = false;
+            this.playSound.play(this.character.getCharacter().swordSound);
         }
-
     }
 
 
@@ -191,9 +197,17 @@ export class PlayerOne extends Character {
         if (this.position.x > global.CANVAS_W - 20) this.position.x = -75;
         else if (this.position.x < -75) this.position.x = global.CANVAS_W - 20;
 
-        ({
+        (({
             [this.states.ATTACK]: () => {
                 this.velocity.x = 0;
+                // Deal damage to opponent once per swing if in range
+                if (!this._swingHit && this.opponent) {
+                    const dx = Math.abs(this.position.x - this.opponent.position.x);
+                    if (dx < 120) {
+                        this._swingHit = true;
+                        this.opponent.takeDamage(12, 2);
+                    }
+                }
             },
             [this.states.MOVE]: () => {
                 this.acceleration.x =
@@ -207,7 +221,7 @@ export class PlayerOne extends Character {
             [this.states.IDLE]: () => {
                 this.velocity.x = 0;
             }
-        })[this.state]?.();
+        }))[this.state]?.();
 
         switch (this.state) {
             case this.states.ATTACK:

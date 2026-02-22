@@ -38,10 +38,15 @@ export class PlayerTwo extends Character {
         this.setupAnimation();
         this.setupKeymap();
         this.sound = new SoundFX({masterVolume:0.8});
+
+        /** Reference to opponent player – set after construction */
+        this.opponent = null;
+        /** Cooldown flag to avoid rapid repeated damage in a single swing */
+        this._swingHit = false;
     }
 
     setupAnimation() {
-      const moveR = this.character.getCharacter().moveR;
+        const moveR = this.character.getCharacter().moveR;
         const moveL = this.character.getCharacter().moveL;
         const movePad = this.character.getCharacter().movePadY;
         const idleR = this.character.getCharacter().idleR;
@@ -53,14 +58,14 @@ export class PlayerTwo extends Character {
         const idleDur = this.character.getCharacter().idleDur;
         const attackDur = this.character.getCharacter().attackDur;
         const moveDur = this.character.getCharacter().moveDur;
-               const scale = this.character.getCharacter().scale;
+        const scale = this.character.getCharacter().scale;
         console.log(idlePad)
         this.animations = {
             [this.states.MOVE + Character.DIRECTION.RIGHT]: new Animator(
                 this.spritesheet,
                 movePad,
                 scale,
-                moveR, 
+                moveR,
                 moveDur),
             [this.states.MOVE + Character.DIRECTION.LEFT]: new Animator(
                 this.spritesheet,
@@ -121,6 +126,7 @@ export class PlayerTwo extends Character {
             [KeyMapper.getName("ArrowRight", true)]: "move right",
             [KeyMapper.getName("ArrowLeft", true)]: "move left",
             [KeyMapper.getName("ArrowDown", true)]: "attack",
+            [KeyMapper.getName("ArrowUp", true)]: "jump",
             [KeyMapper.getName("ArrowRight", false)]: "stop right",
             [KeyMapper.getName("ArrowLeft", false)]: "stop left",
         };
@@ -129,6 +135,7 @@ export class PlayerTwo extends Character {
             "move right": () => this.move(800),
             "move left": () => this.move(-800),
             "attack": () => this.swing(),
+            "jump": () => this.jump(),
             "stop right": () => this.stopMoving(Character.DIRECTION.RIGHT),
             "stop left": () => this.stopMoving(Character.DIRECTION.LEFT),
         };
@@ -167,12 +174,13 @@ export class PlayerTwo extends Character {
             this.lastState = this.state;
             this.state = this.states.ATTACK;
             this.stateLock = true;
-            this.sound.play(this.character.getCharacter().swordSound)
+            this._swingHit = false;
+            this.sound.play(this.character.getCharacter().swordSound);
         }
     }
 
 
-   update() {
+    update() {
         super.update();
         this.acceleration.x = 0;
         this.acceleration.y = 0;
@@ -182,9 +190,17 @@ export class PlayerTwo extends Character {
         if (this.position.x > global.CANVAS_W - 20) this.position.x = -75;
         else if (this.position.x < -75) this.position.x = global.CANVAS_W - 20;
 
-        ({
+        (({
             [this.states.ATTACK]: () => {
                 this.velocity.x = 0;
+                // Deal damage to opponent once per swing if in range
+                if (!this._swingHit && this.opponent) {
+                    const dx = Math.abs(this.position.x - this.opponent.position.x);
+                    if (dx < 120) {
+                        this._swingHit = true;
+                        this.opponent.takeDamage(12, 1);
+                    }
+                }
             },
             [this.states.MOVE]: () => {
                 this.acceleration.x =
@@ -198,7 +214,7 @@ export class PlayerTwo extends Character {
             [this.states.IDLE]: () => {
                 this.velocity.x = 0;
             }
-        })[this.state]?.();
+        }))[this.state]?.();
 
         switch (this.state) {
             case this.states.ATTACK:

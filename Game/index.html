@@ -80,6 +80,10 @@
             <div class="player-controls">
                 <h3>Player 1</h3>
                 <div class="control-item">
+                    <span class="key">W</span>
+                    <span class="action">Jump</span>
+                </div>
+                <div class="control-item">
                     <span class="key">A</span>
                     <span class="action">Move Left</span>
                 </div>
@@ -98,6 +102,10 @@
             </div>
             <div class="player-controls">
                 <h3>Player 2</h3>
+                <div class="control-item">
+                    <span class="key">↑</span>
+                    <span class="action">Jump</span>
+                </div>
                 <div class="control-item">
                     <span class="key">←</span>
                     <span class="action">Move Left</span>
@@ -170,6 +178,19 @@
         <!-- Bottom instruction hint -->
         <div class="game-hint">
             Press 1 or 2 to switch characters
+        </div>
+    </div>
+</div>
+
+<!-- Winner Screen Overlay -->
+<div id="winnerScreen" class="overlay hidden">
+    <div class="winner-panel">
+        <div class="winner-trophy">🏆</div>
+        <h1 id="winnerTitle" class="winner-title">Player 1 Wins!</h1>
+        <p id="winnerSubtitle" class="winner-subtitle">Victory is yours, Champion!</p>
+        <div class="winner-buttons">
+            <button id="rematchBtn" class="winner-btn rematch-btn">⚔️ REMATCH</button>
+            <button id="mainMenuWinBtn" class="winner-btn menu-btn">🏠 MAIN MENU</button>
         </div>
     </div>
 </div>
