@@ -1,12 +1,29 @@
 // This game shell was happily modified from Googler Seth Ladd's "Bad Aliens" game and his Google IO talk in 2011
 
-import {Timer} from "./timer.js";
 import {Render} from "./render/Render.js";
 import {DynamicEntity} from "../entity/entity.js";
 import {MatrixOp} from "../../lib/Matrix/Matrix.js";
 import {Point} from "./primitives.js";
+import {PropertyChangeSupport} from "../../lib/propertychangesupport.js";
+import {Player} from "../entity/player.js";
+import {Character} from "../entity/character.js";
+import {PlayerOne} from "../entity/Players/playerOne.js";
 
+/**
+ * The game engine
+ * 
+ * @implements {PropertyChangeNotifier}
+ * @implements {PropertyChangeListener}
+ */
 export class GameEngine {
+
+    /**
+     *
+     * @enum {string}
+     */
+    static PROPERTIES = Object.freeze({
+        GAME_OVER: "GameEngine.GAME_OVER",
+    })
 
     /**
      * The maximum time step for the game to run in (30 fps) in milliseconds
@@ -67,6 +84,7 @@ export class GameEngine {
         // What you will use to draw
         // Documentation: https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D
         this.ctx = null;
+        this.PCS = new PropertyChangeSupport();
 
         // Everything that will be updated and drawn each frame
         /**
@@ -105,6 +123,30 @@ export class GameEngine {
 
         this.render = renderer;
     };
+
+    /**
+     * @inheritDoc
+     */
+    notify(prop, then ,now) {
+        switch (prop) {
+            case Player.PROPERTIES.DIED:
+                this.notifyListeners(GameEngine.PROPERTIES.GAME_OVER);
+                break;
+        }
+    }
+
+    /** @inheritDoc */
+    addPropertyListener(prop, listener) {
+        this.PCS.addPropertyListener(prop, listener);
+    }
+    /** @inheritDoc */
+    removePropertyListener(prop, listener) {
+        this.PCS.removePropertyListener(prop, listener);
+    }
+    /** @inheritDoc */
+    notifyListeners(prop, then = undefined, now = undefined) {
+        this.PCS.notifyListeners(prop, then, now);
+    }
 
     /**
      * Initializes game input and context
@@ -203,6 +245,10 @@ export class GameEngine {
         entity.map(e => {
             this.entities.dynamic.push(e);
             if (e.hitbox) this.hitboxes.dynamic.push(e.hitbox);
+
+            if (e instanceof Player) {
+                e.addPropertyListener(Player.PROPERTIES.DIED, this)
+            }
         });
 
     }

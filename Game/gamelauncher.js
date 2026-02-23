@@ -26,9 +26,10 @@ import {arenaData} from "./arena/arenaData.js";
  *
  * @author Roman Bureacov
  * @param {GameProperties} props the properties to start the game with
+ * @return {Promise} the promise instantiating the game
  */
 export const launchGame = (props) => {
-    downloadAssets(props) // first, before anything, we need to ensure the assets are available
+    return downloadAssets(props) // first, before anything, we need to ensure the assets are available
         .then( () => {
             const context = props.canvas.getContext("2d");
 
@@ -81,6 +82,8 @@ export const launchGame = (props) => {
             game.focus.playerB = playerTwo;
             game.init(context);
             game.start();
+
+            return game;
         });
 }
 

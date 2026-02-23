@@ -2,6 +2,7 @@
 import {launchGame} from "../Game/gamelauncher.js";
 import {CHARACTER_NAMES} from "../Game/entity/characterData.js";
 import {ArenaFactory} from "../Game/arena/arenaFactory.js";
+import {GameEngine} from "../Game/engine/gameengine.js";
 
 export class MenuSystem {
     constructor() {
@@ -103,12 +104,23 @@ export class MenuSystem {
             arena: this.selectedArena
         };
 
-        launchGame({
+        const game = launchGame({
             playerOneCharacter: this.selectedCharacters.player1,
             playerTwoCharacter: this.selectedCharacters.player2,
             arenaName: this.selectedArena,
             canvas: this.gameCanvas,
-        })
+        }).then((game) => {
+            // TODO: the listener attached needs to be a concrete class
+            //   (perhaps the `MenuSystem` itself implements `PropertyChangeListener`
+            //   from `propertychangesupport.js`?)
+            game.addPropertyListener(GameEngine.PROPERTIES.GAME_OVER, {
+                notify(prop, then, now) {
+                    if (prop === GameEngine.PROPERTIES.GAME_OVER) console.log("Game Over, player died");
+                }
+            })
+        });
+
+
 
         // Dispatch event to signal game should start
         // window.dispatchEvent(new CustomEvent('gameStart', {

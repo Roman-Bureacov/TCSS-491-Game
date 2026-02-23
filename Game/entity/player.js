@@ -20,11 +20,21 @@ import {DIRECTIONS} from "../engine/constants.js";
 export class Player extends Character {
 
     /**
+     * The possible properties to listen on
+     * @enum {string}
+     */
+    static PROPERTIES = Object.freeze({
+        /** the player was hit, sends old health and new health */
+        HIT : "Player.HIT",
+        /** the player has died, sends the player itself */
+        DIED : "Player.DIED",
+    })
+
+    /**
      * Enum representing the possible states of player characters
      * @readonly
      * @enum {string}
      */
-
     static states = Object.freeze({
         MOVE: "move ",
         ATTACK: "attack ",
@@ -378,6 +388,7 @@ export class Player extends Character {
 
         this.state = Player.states.DEAD;
         this.stateLock = true;
+        this.notifyListeners(Player.PROPERTIES.DIED)
 
     }
 

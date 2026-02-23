@@ -2,10 +2,12 @@ import {Animator, Spritesheet} from "./animation.js";
 import {DynamicEntity} from "./entity.js";
 
 import {DIRECTIONS} from "../engine/constants.js";
+import {PropertyChangeSupport} from "../../lib/propertychangesupport.js";
 
 /**
  * Creates a basic character
  *
+ * @implements {PropertyChangeNotifier}
  * @author Roman Bureacov
  */
 export class Character extends DynamicEntity {
@@ -56,7 +58,7 @@ export class Character extends DynamicEntity {
     /**
      * Creates a basic character
      * @param {GameEngine} game the game engine
-     * @param  {Spritesheet} spritesheet the character spritesheet
+     * @param {Spritesheet} spritesheet the character spritesheet
      * @param {number} [dimX=1] the positive x dimension of this entity
      * @param {number} [dimY=1] the positive y dimension of this entity
      * @param {number} [startX=0] the start x position
@@ -67,8 +69,10 @@ export class Character extends DynamicEntity {
                 startX = 0, startY = 0) {
         super(spritesheet, dimX, dimY, startX, startY);
         Object.assign(this, {game});
+        this.PCS = new PropertyChangeSupport();
 
     }
+
 
     /**
      * Sets up the animation for this sprite
@@ -143,5 +147,26 @@ export class Character extends DynamicEntity {
     setState(newState) {
         if (!this.stateLock) this.state = newState;
         return this.stateLock;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    addPropertyListener(prop, listener) {
+        this.PCS.addPropertyListener(prop, listener);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    notifyListeners(prop, then = undefined, now = undefined) {
+        this.PCS.notifyListeners(prop, then, now);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    removePropertyListener(prop, listener) {
+        this.PCS.removePropertyListener(prop, listener);
     }
 }
