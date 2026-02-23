@@ -2,7 +2,7 @@
 This file has the information for hitboxes
  */
 
-import {MatrixOp} from "../../Matrix/Matrix.js";
+import {MatrixOp} from "../../lib/Matrix/Matrix.js";
 import {DIRECTIONS} from "./constants.js";
 
 /**

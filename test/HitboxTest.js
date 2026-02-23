@@ -3,7 +3,7 @@ import {notStrictEqual, strictEqual} from "node:assert/strict";
 import {Hitbox, HitboxOp} from "../Game/engine/hitbox.js";
 import {Rectangle2D} from "../Game/engine/primitives.js";
 import {SpaceObject} from "../Game/engine/render/Render.js";
-import {MatrixOp} from "../Matrix/Matrix.js";
+import {MatrixOp} from "../lib/Matrix/Matrix.js";
 
 const parent = new SpaceObject();
 

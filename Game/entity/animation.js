@@ -2,7 +2,7 @@
 This code manages animation.
  */
 
-import {Matrix} from "../../Matrix/Matrix.js";
+import {Matrix} from "../../lib/Matrix/Matrix.js";
 
 /**
  * @typedef Frame

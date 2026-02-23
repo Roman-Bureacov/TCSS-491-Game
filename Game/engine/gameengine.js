@@ -3,7 +3,7 @@
 import {Timer} from "./timer.js";
 import {Render} from "./render/Render.js";
 import {DynamicEntity} from "../entity/entity.js";
-import {MatrixOp} from "../../Matrix/Matrix.js";
+import {MatrixOp} from "../../lib/Matrix/Matrix.js";
 import {Point} from "./primitives.js";
 
 export class GameEngine {

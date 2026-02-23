@@ -1,4 +1,4 @@
-import {Matrix} from "../../Matrix/Matrix.js";
+import {Matrix} from "../../lib/Matrix/Matrix.js";
 
 /**
  * This class represents points in 3D space. Points themselves are nothing more

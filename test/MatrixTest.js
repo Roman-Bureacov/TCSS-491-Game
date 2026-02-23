@@ -1,6 +1,6 @@
 import test from "node:test";
 import {strictEqual} from "node:assert/strict";
-import {Matrix, MatrixOp} from "../Matrix/Matrix.js";
+import {Matrix, MatrixOp} from "../lib/Matrix/Matrix.js";
 
 /**
  * Fills a matrix with incrementing values 1-9
