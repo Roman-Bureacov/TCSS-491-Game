@@ -118,21 +118,21 @@ export class GameEngine {
     start() {
         this.running = true;
 
-        const gameLoop = () => {
-            if (!this.running) return;      // <- stop scheduling frames
+        const gameLoop = (now) => {
+            if (!this.running) return;
 
-            const now = Date.now();
             const frameTime = now - this.lastTimeStamp;
             this.lastTimeStamp = now;
 
             this.loop(frameTime);
 
-            // this._rafId = requestAnimFrame(gameLoop, this.ctx.canvas);
+            // note that since the game relies on the `requestAnimationFrame`
+            // the game *will pause when the window isn't being drawn*
             window.requestAnimationFrame(gameLoop);
         };
 
-        // this._rafId = requestAnimFrame(gameLoop, this.ctx.canvas);
-        window.requestAnimationFrame(gameLoop);
+        this.lastTimeStamp = performance.now();
+        window.requestAnimationFrame(gameLoop); // accepts a function and passes in one argument (see doc)
     }
 
 
