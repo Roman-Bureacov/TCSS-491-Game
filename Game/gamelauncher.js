@@ -20,13 +20,16 @@ import {SoundFX} from "./engine/soundFX.js";
 import {AssetManager} from "./assets/assetmanager.js";
 import {getCharacterData} from "./entity/characterData.js";
 import {arenaData} from "./arena/arenaData.js";
+import {GameState} from "./engine/render/gamestates.js";
 
 /**
  * Tells the game to start with the specified parameters.
  *
+ * @see {GameState}
+ *
  * @author Roman Bureacov
  * @param {GameProperties} props the properties to start the game with
- * @return {Promise} the promise instantiating the game
+ * @return {Promise} the promise instantiating the `GameState` object
  */
 export const launchGame = (props) => {
     return downloadAssets(props) // first, before anything, we need to ensure the assets are available
@@ -83,7 +86,11 @@ export const launchGame = (props) => {
             game.init(context);
             game.start();
 
-            return game;
+            return new GameState(
+                game,
+                playerOne, playerTwo,
+                arena
+            );
         });
 }
 

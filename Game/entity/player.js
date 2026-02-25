@@ -24,9 +24,9 @@ export class Player extends Character {
      * @enum {string}
      */
     static PROPERTIES = Object.freeze({
-        /** the player was hit, sends old health and new health */
+        /** the player was hit, sends old health as then and new health as now */
         HIT : "Player.HIT",
-        /** the player has died, sends the player itself */
+        /** the player has died, sends the player itself as now */
         DIED : "Player.DIED",
     })
 

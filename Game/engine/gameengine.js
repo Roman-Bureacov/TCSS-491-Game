@@ -18,14 +18,6 @@ import {PlayerOne} from "../entity/Players/playerOne.js";
 export class GameEngine {
 
     /**
-     *
-     * @enum {string}
-     */
-    static PROPERTIES = Object.freeze({
-        GAME_OVER: "GameEngine.GAME_OVER",
-    })
-
-    /**
      * The maximum time step for the game to run in (30 fps) in milliseconds
      * @type {Number}
      */
@@ -245,10 +237,6 @@ export class GameEngine {
         entity.map(e => {
             this.entities.dynamic.push(e);
             if (e.hitbox) this.hitboxes.dynamic.push(e.hitbox);
-
-            if (e instanceof Player) {
-                e.addPropertyListener(Player.PROPERTIES.DIED, this)
-            }
         });
 
     }

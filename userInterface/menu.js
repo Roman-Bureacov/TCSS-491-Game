@@ -3,6 +3,7 @@ import {launchGame} from "../Game/gamelauncher.js";
 import {CHARACTER_NAMES} from "../Game/entity/characterData.js";
 import {ArenaFactory} from "../Game/arena/arenaFactory.js";
 import {GameEngine} from "../Game/engine/gameengine.js";
+import {GameState} from "../Game/engine/render/gamestates.js";
 
 export class MenuSystem {
     constructor() {
@@ -109,15 +110,30 @@ export class MenuSystem {
             playerTwoCharacter: this.selectedCharacters.player2,
             arenaName: this.selectedArena,
             canvas: this.gameCanvas,
-        }).then((game) => {
+        }).then((gameState) => {
             // TODO: the listener attached needs to be a concrete class
             //   (perhaps the `MenuSystem` itself implements `PropertyChangeListener`
             //   from `propertychangesupport.js`?)
-            game.addPropertyListener(GameEngine.PROPERTIES.GAME_OVER, {
+            const logger = {
                 notify(prop, then, now) {
-                    if (prop === GameEngine.PROPERTIES.GAME_OVER) console.log("Game Over, player died");
+                    switch (prop) {
+                        case GameState.PROPERTIES.GAME_OVER:
+                            console.log("Game Over, player died");
+                            break;
+                        case GameState.PROPERTIES.PAUSE_GAME:
+                            console.log("Game was paused");
+                            break;
+                        case GameState.PROPERTIES.RESUME_GAME:
+                            console.log("Game was resumed");
+                            break;
+                    }
                 }
-            })
+            }
+            window.GAMESTATE = gameState;
+
+            gameState.addPropertyListener(GameState.PROPERTIES.GAME_OVER, logger)
+            gameState.addPropertyListener(GameState.PROPERTIES.PAUSE_GAME, logger)
+            gameState.addPropertyListener(GameState.PROPERTIES.RESUME_GAME, logger)
         });
 
 
