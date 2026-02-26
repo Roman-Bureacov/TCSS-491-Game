@@ -41,7 +41,7 @@ export class Hitbox {
      * Flag for if the hitbox is enabled or disabled.
      *
      * Disabled hitboxes will continue to live in the game
-     * but won't do anything.
+     * but won't intersect with anything.
      *
      * @type {boolean}
      */
