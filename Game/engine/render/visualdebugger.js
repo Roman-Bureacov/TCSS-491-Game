@@ -34,15 +34,18 @@ export class EngineDebugger {
          * a simple flag for if we need to keep adding hitboxes
          * @type {boolean}
          */
-        this.addHitboxes = false;
-
+        this.hitboxVisibilityLoop = false;
+        /**
+         * A simple flag for if we need to keep adding drawable sprites
+         */
+        this.spriteVisibilityLoop = false;
     }
 
     showHitboxes() {
-        this.addHitboxes = true;
+        this.hitboxVisibilityLoop = true;
 
         const repeat = () => {
-            if (!this.addHitboxes) return;
+            if (!this.hitboxVisibilityLoop) return;
 
             for (let hitbox of this.game.hitboxes.dynamic) {
                 if (!this.gameplayPane.drawables.includes(hitbox)) {
@@ -68,7 +71,7 @@ export class EngineDebugger {
     }
 
     hideHitboxes() {
-        this.addHitboxes = false;
+        this.hitboxVisibilityLoop = false;
         this.gameplayPane.drawables
             .filter(d => d instanceof Hitbox)
             .map(h => {
@@ -76,6 +79,29 @@ export class EngineDebugger {
                     this.gameplayPane.drawables.indexOf(h),
                     1);
             })
+    }
+
+    showSpritesBoxes() {
+        this.spriteVisibilityLoop = true;
+
+        this.spriteBoxes = [];
+        this.game.entities.dynamic
+            .map(e => this.spriteBoxes.push(
+                new Hitbox(e, e.drawingProperties.bounds)
+            ))
+
+        this.spriteBoxes
+            .map(e => this.gameplayPane.drawables.push(e));
+    }
+
+    hideSpritesBoxes() {
+        this.spriteVisibilityLoop = false;
+
+        this.spriteBoxes
+            .forEach(b => this.gameplayPane.drawables.splice(
+                this.gameplayPane.drawables.indexOf(b),
+                1
+            ))
     }
 
 }
