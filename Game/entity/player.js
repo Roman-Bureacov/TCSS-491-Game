@@ -144,85 +144,13 @@ export class Player extends Character {
         this._alreadyHit = new Set();
         this._clashed = new Set();
 
-        this.attackHitbox = new Hitbox(this, new Rectangle2D(
+        this.attackHitbox = new AttackHitbox(this, new Rectangle2D(
             0, -this.hitbox.bounds.dimension.height * 0.1,
             .05, this.hitbox.bounds.dimension.height * 0.9
             ));
-        this.attackHitbox.kind = HITBOX_TYPE.ATTACK;
-        this.attackHitbox.resolveIntersection = this.onAttackHitboxIntersection.bind(this);
     }
 
-    /**
-     * The function used on response to intersection
-     *
-     * @param {IntersectionTestProperties} players
-     */
-    onAttackHitboxIntersection(players) {
-        const otherHb = players.other;
-        const other = otherHb.parent;
 
-        if (other instanceof TileEntity) {
-            console.log("Knocked back from tile");
-            this.physics.velocity.x += 1;
-        } else if (other instanceof Player) {
-
-        }
-
-        if (other.type !== "player") return;
-        if (other === attacker) return;
-        if (attacker.state !== Player.states.ATTACK) return;
-
-        // once clashed, never damage
-        if (attacker._clashed.has(other)) return;
-
-        if (otherHb.kind === HITBOX_TYPE.ATTACK) {
-            const victimIsAttacking =
-                other.state === Player.states.ATTACK && other.attackHitbox.enabled;
-            if (!victimIsAttacking) return;
-
-            attacker._clashed.add(other);
-            other._clashed.add(attacker);
-
-            attacker.attackHitbox.enabled = false;
-            other.attackHitbox.enabled = false;
-
-            SoundFX.play("swordCollide8")
-
-            // PUSH BOTH BACK
-            attacker.applyKnockbackFrom(other);
-            other.applyKnockbackFrom(attacker);
-
-            return;
-        }
-
-        if (otherHb.kind !== HITBOX_TYPE.BODY) return;
-        if (attacker._alreadyHit.has(other)) return;
-
-        const bothAttacking = attacker.attackHitbox.enabled && other.attackHitbox.enabled;
-
-        const swordsOverlap =
-            bothAttacking &&
-            attacker.attackHitbox.bounds.intersects?.(other.attackHitbox.bounds);
-
-        if (swordsOverlap) {
-            attacker._clashed.add(other);
-            other._clashed.add(attacker);
-
-            attacker.attackHitbox.enabled = false;
-            other.attackHitbox.enabled = false;
-
-            return;
-        }
-
-        // Damage
-        other.setPlayerHealth?.(10);
-        other.attackHitbox.enabled = false;
-        attacker._alreadyHit.add(other);
-        console.log(attacker.name, ": ", attacker.vitality.health)
-        console.log(other.name, ": ", other.vitality.health)
-
-
-    }
 
 
     applyKnockbackFrom(other, strength = this.knockbackStrength) {
@@ -248,7 +176,7 @@ export class Player extends Character {
     }
 
     setPlayerHealth(damage) {
-
+        console.log("Taking damage...")
 
         if (this.vitality.health === 0) {
 
@@ -402,6 +330,7 @@ export class Player extends Character {
         this._alreadyHit.clear();
         this.updateAttackHitboxBounds();
         this.attackHitbox.enabled = true;
+        this.attackHitbox.expired = false;
         this.game.spawnDynamicHitbox(this.attackHitbox);
 
 
@@ -485,16 +414,91 @@ export class Player extends Character {
     updateAttackHitboxBounds() {
         const box = this.hitbox.bounds;
         const w = box.dimension.width;
-        const h = box.dimension.height;
+        const attackWidth = this.attackHitbox.bounds.dimension.width;
 
         let startX;
         if (this.facing === DIRECTIONS.RIGHT) {
-            startX = box.start.x() + w * 0.20;
+            startX = box.start.x() + w;
         } else {
-            startX = box.start.x() - w * 0.20; // push it to the left of the body
+            startX = box.start.x() - attackWidth; // push it to the left of the body
         }
 
         this.attackHitbox.bounds.setStart(startX, this.attackHitbox.bounds.start.y());
     }
 
+}
+
+class AttackHitbox extends Hitbox {
+
+    /**
+     * The track of total time in seconds
+     * @type {number}
+     */
+    totalTime = 0;
+
+    /**
+     * @type {Player}
+     */
+    parent; // override, to enforce JSDoc type checking
+
+    /**
+     *
+     * @param {Player} parent
+     * @param {Rectangle2D} bounds
+     */
+    constructor(parent, bounds) {
+        super(parent, bounds);
+        this.kind = HITBOX_TYPE.ATTACK;
+        this.parent = parent;
+    }
+
+    update(timestep) {
+        // we need a little delay, so that
+        // clashing is a little more probably
+        // when players are closer together
+        this.totalTime += timestep;
+        if (this.totalTime > 0.1) {
+            this.enabled = true;
+            this.totalTime = 0;
+        }
+    }
+
+    /**
+     * The function used on response to intersection
+     *
+     * @param {IntersectionTestProperties} props
+     */
+    resolveIntersection(props) {
+        const otherHb = props.other;
+        const otherParent = otherHb.parent;
+
+        // consume hitbox
+        this.expired = true;
+        this.enabled = false;
+
+        if (otherParent instanceof TileEntity) {
+            console.log("Knocked back from tile");
+            this.parent.physics.velocity.x += 1;
+        } else if (otherParent instanceof Player) {
+            // well, what type of hitbox did we intersect with?
+            if (otherHb.kind === HITBOX_TYPE.ATTACK) {
+                // just bounce off
+                this.parent.physics.velocity.x = -1;
+                otherParent.physics.velocity.x = 1;
+                SoundFX.play("swordCollide8");
+            } else if (otherHb.kind === HITBOX_TYPE.BODY) {
+                // do we bounce off?
+                if (otherParent.state === Player.states.ATTACK
+                    && otherParent.facing !== this.parent.facing // lazy check
+                ) { // we want to only bounce off if we're facing towards each other
+                    this.parent.physics.velocity.x = -1;
+                    otherParent.physics.velocity.x = 1;
+                    SoundFX.play("swordCollide8");
+                } else {
+                    // just do damage
+                    this.parent.setPlayerHealth(10);
+                }
+            }
+        }
+    }
 }
