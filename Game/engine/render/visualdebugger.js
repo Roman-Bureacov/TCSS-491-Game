@@ -49,6 +49,17 @@ export class EngineDebugger {
                     this.gameplayPane.addDrawable(hitbox);
                 }
             }
+
+            this.gameplayPane.drawables
+                .filter(d => d instanceof Hitbox)
+                .map(h => {
+                    if (h.expired) { // remove expired hitboxes automatically
+                        this.gameplayPane.drawables.splice(
+                            this.gameplayPane.drawables.indexOf(h),
+                            1);
+                    }
+                })
+
             setTimeout(repeat, 50)
         }
 
