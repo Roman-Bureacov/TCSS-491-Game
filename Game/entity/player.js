@@ -150,8 +150,16 @@ export class Player extends Character {
             ));
     }
 
-
-
+    /**
+     * Reinitializes this player.
+     */
+    reinit() {
+        this.stateLock = false;
+        this.state = Player.states.IDLE;
+        this.vitality.health = Player.CONSTANTS.VITALITY_MAXIMUMS.health;
+        this.vitality.posture = 0;
+        this.vitality.souls = Player.CONSTANTS.VITALITY_MAXIMUMS.souls;
+    }
 
     applyKnockbackFrom(other, strength = this.knockbackStrength) {
         // Direction: push away from the other player
