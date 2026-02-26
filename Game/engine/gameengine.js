@@ -327,13 +327,11 @@ export class GameEngine {
         const stat = this.hitboxes.static;
 
         // dynamic vs dynamic (unique pairs only)
-        for (let i = 0; i < dyn.length; i++) {
-            const h1 = dyn[i];
-            if (h1.expired || h1.enabled === false) continue;
+        for (let h1 of dyn) {
+            if (h1.expired || !h1.enabled) continue;
 
-            for (let j = i + 1; j < dyn.length; j++) {
-                const h2 = dyn[j];
-                if (h2.expired || h2.enabled === false) continue;
+            for (let h2 of dyn) {
+                if (h2.expired || !h2.enabled) continue;
 
                 // same parent => ignore (prevents self-hitboxes hitting each other if you add multiple)
                 if (h1.parent === h2.parent) continue;
@@ -355,23 +353,16 @@ export class GameEngine {
                     otherEndX: props.subjectEndX,
                     otherEndY: props.subjectEndY,
                 });
-
             }
-        }
 
-        // dynamic vs static
-        for (let i = 0; i < dyn.length; i++) {
-            const h1 = dyn[i];
-            if (h1.expired || h1.enabled === false) continue;
-
-            for (let j = 0; j < stat.length; j++) {
-                const h2 = stat[j];
-                if (h2.expired || h2.enabled === false) continue;
+            for (let h2 of stat) {
+                if (h2.expired || !h2.enabled) continue;
 
                 const props = h1.intersects(h2);
                 if (props) h1.resolveIntersection(props);
             }
         }
+
     }
 
 
