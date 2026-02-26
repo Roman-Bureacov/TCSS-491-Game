@@ -1,15 +1,39 @@
 /*
-Rendering code, however not a full renderer.
+
+Rendering code, however not intended to be a full 3D renderer.
 
 This code is to represent a 3D camera in a not-so-3D world.
 
-The system has renderable objects, `Drawable`s, which provide the means
-on where to draw themselves as well as.
+The system is to make drawable objects, feed them into panes,
+organize the panes in a world, then make a renderer with a 
+specific camera and world to render with the said camera.
+
+The renderer has a special contract with the hitbox, in
+that it can render the hitbox—this, however, is mainly intended
+for debugging purposes.
+
  */
 
 import {Matrix, MatrixOp} from "../../../lib/Matrix/Matrix.js";
 import {Rectangle2D} from "../primitives.js";
 import {DrawingProperties} from "./drawing.js";
+import {Hitbox} from "../hitbox.js";
+import {DynamicEntity, StaticEntity} from "../../entity/entity.js";
+
+
+/**
+ * The interface representing that this object is drawable.
+ * 
+ * @interface
+ * @author Roman Bureacov
+ */
+class Drawable {
+    /**
+     * Gets the drawing properties associated with this object
+     * @return {DrawingProperties}
+     */
+    getDrawingProperties() {}
+}
 
 /**
  * An object in world space.
@@ -86,8 +110,9 @@ class SpaceObject {
  * A drawable object for the renderer to draw.
  *
  * @author Roman Bureacov
+ * @implements {Drawable}
  */
-class Drawable extends SpaceObject {
+class DrawableObject extends SpaceObject {
 
     /**
      * The spritesheet representing this drawable object.
@@ -113,9 +138,14 @@ class Drawable extends SpaceObject {
         Object.assign(this, { spritesheet });
         this.drawingProperties = new DrawingProperties(
             spritesheet,
-            new Rectangle2D(0, 0, dimX, dimY))
+            new Rectangle2D(0, 0, dimX, dimY),
+            this
+        );
     }
-
+    
+    getDrawingProperties() {
+        return this.drawingProperties;
+    }
 }
 
 /**
@@ -382,15 +412,16 @@ class Render {
             let paneToCamera = MatrixOp.multiply(worldToCamera, pane.transform);
             
             for (let drawable of pane.drawables) {
-                if (drawable.drawingProperties.hidden) continue;
+                const drawing = drawable.getDrawingProperties();
+                if (drawing.hidden) continue;
 
-                let entityToCamera = MatrixOp.multiply(paneToCamera, drawable.transform);
+                const entityToCamera = MatrixOp.multiply(paneToCamera, drawing.origin.transform);
 
                 // if on or behind camera... (z-check)
                 if (entityToCamera.get(2, 3) >= 0) continue;
 
-                let startpoint = MatrixOp.multiply(entityToCamera, drawable.drawingProperties.bounds.start);
-                let endpoint = MatrixOp.multiply(entityToCamera, drawable.drawingProperties.bounds.end);
+                const startpoint = MatrixOp.multiply(entityToCamera, drawing.bounds.start);
+                const endpoint = MatrixOp.multiply(entityToCamera, drawing.bounds.end);
 
                 Render.#toRasterCoordinates(startpoint, this.camera); // now working with matrices
                 Render.#toRasterCoordinates(endpoint, this.camera); // now working with matrices
@@ -417,35 +448,80 @@ class Render {
                 let width = endpoint.get(0, 0) - x;
                 let height = endpoint.get(1, 0) - y;
 
-                let prop = drawable.drawingProperties;
-                let position = prop.spritesheet.get(prop.spriteRow, prop.spriteCol);
-
-                if (drawable.drawingProperties.isReversed) {
-                    context.save();
-
-                    context.scale(-1, 1);
-
-                    context.drawImage(
-                        prop.spritesheet.image,
-                        position.x, position.y,
-                        prop.spritesheet.frameWidth, prop.spritesheet.frameHeight,
-                        -x - width, y,
-                        width, height
-                    );
-
-                    context.restore();
-                } else {
-                    context.drawImage(
-                        prop.spritesheet.image,
-                        position.x, position.y,
-                        prop.spritesheet.frameWidth, prop.spritesheet.frameHeight,
+                if (drawing.spritesheet) {
+                    this.drawSprite(
+                        context,
                         x, y,
-                        width, height
+                        width, height,
+                        drawing
                     );
+                } else {
+                    this.drawRectangle(
+                        context,
+                        x, y,
+                        width, height,
+                        drawing
+                    )
                 }
-
             }
         }
+    }
+
+    /**
+     * draws a sprite
+     * @param {CanvasRenderingContext2D} context
+     * @param {number} x the x to draw at
+     * @param {number} y the y to draw at
+     * @param {number} width the width of the frame
+     * @param {number} height the height of the frame
+     * @param {DrawingProperties} drawing the drawing properties
+     */
+    drawSprite(context,
+               x, y,
+               width, height,
+               drawing) {
+        let position = drawing.spritesheet.get(drawing.spriteRow, drawing.spriteCol);
+
+        if (drawing.isReversed) {
+            context.save();
+
+            context.scale(-1, 1);
+
+            context.drawImage(
+                drawing.spritesheet.image,
+                position.x, position.y,
+                drawing.spritesheet.frameWidth, drawing.spritesheet.frameHeight,
+                -x - width, y,
+                width, height
+            );
+
+            context.restore();
+        } else {
+            context.drawImage(
+                drawing.spritesheet.image,
+                position.x, position.y,
+                drawing.spritesheet.frameWidth, drawing.spritesheet.frameHeight,
+                x, y,
+                width, height
+            );
+        }
+    }
+
+    /**
+     * draws a sprite
+     * @param {CanvasRenderingContext2D} context
+     * @param {number} x the x to draw at
+     * @param {number} y the y to draw at
+     * @param {number} width the width of the frame
+     * @param {number} height the height of the frame
+     * @param {DrawingProperties} drawing the drawing properties
+     */
+    drawRectangle(context,
+                  x, y,
+                  width, height,
+                  drawing) {
+        context.strokeStyle = "Red";
+        context.strokeRect(x, y, width, height);
     }
 
     /**
@@ -506,4 +582,4 @@ class World {
 
 }
 
-export { Pane, Camera, Render, World, Drawable, SpaceObject }
+export { Pane, Camera, Render, World, DrawableObject, SpaceObject }

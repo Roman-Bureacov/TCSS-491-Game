@@ -4,6 +4,7 @@ This file has the information for hitboxes
 
 import {MatrixOp} from "../../lib/Matrix/Matrix.js";
 import {DIRECTIONS} from "./constants.js";
+import {DrawingProperties} from "./render/drawing.js";
 
 /**
  * @typedef IntersectionTestProperties
@@ -29,6 +30,7 @@ export const HITBOX_TYPE = Object.freeze({
  * Class that represents a hitbox on the x and y plane
  *
  * @author Roman Bureacov
+ * @implements {Drawable}
  */
 export class Hitbox {
     /**
@@ -70,6 +72,12 @@ export class Hitbox {
     bounds;
 
     /**
+     * The drawing properties for this rectangle
+     * @type {DrawingProperties}
+     */
+    drawingProperties;
+
+    /**
      * Creates a hitbox
      * @param {SpaceObject} parent the parent of this hitbox
      * @param {Rectangle2D} bounds the bounds for this hitbox
@@ -77,6 +85,11 @@ export class Hitbox {
     constructor(parent, bounds) {
         this.parent = parent;
         this.bounds = bounds;
+        this.drawingProperties = new DrawingProperties(
+            undefined,
+            this.bounds,
+            this.parent
+        );
     }
 
     /**
@@ -151,6 +164,9 @@ export class Hitbox {
     }
 
 
+    getDrawingProperties() {
+        return this.drawingProperties;
+    }
 }
 
 /**
