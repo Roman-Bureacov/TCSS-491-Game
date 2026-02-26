@@ -6,22 +6,26 @@ import {MatrixOp} from "../../lib/Matrix/Matrix.js";
 import {Point} from "./primitives.js";
 import {PropertyChangeSupport} from "../../lib/propertychangesupport.js";
 import {Player} from "../entity/player.js";
-import {Character} from "../entity/character.js";
-import {PlayerOne} from "../entity/Players/playerOne.js";
 
 /**
  * The game engine
  * 
  * @implements {PropertyChangeNotifier}
- * @implements {PropertyChangeListener}
  */
 export class GameEngine {
 
     /**
-     * The maximum time step for the game to run in (30 fps) in milliseconds
+     * The maximum time step for the game to run, in milliseconds
      * @type {Number}
      */
-    static MAX_SIM_STEP = 1/60 * 1000;
+    static SIM_STEP = 1/60 * 1000;
+
+    /**
+     * The maximum number of sim steps that may occur before
+     * going straight to rendering
+     * @type {number}
+     */
+    static SIM_MAX_STEP_COUNT = 15;
 
     /**
      * The renderer for this engine
@@ -34,12 +38,6 @@ export class GameEngine {
      * @type {{string : KeyboardEvent}} the map of key codes to their event details
      */
     keys = {};
-
-    /**
-     * The lock for key input (for when the engine needs to update the simulation)
-     * @type {boolean}
-     */
-    keyLock = false;
 
     /**
      * The focus, what two players the camera will focus on
@@ -115,17 +113,6 @@ export class GameEngine {
 
         this.render = renderer;
     };
-
-    /**
-     * @inheritDoc
-     */
-    notify(prop, then ,now) {
-        switch (prop) {
-            case Player.PROPERTIES.DIED:
-                this.notifyListeners(GameEngine.PROPERTIES.GAME_OVER);
-                break;
-        }
-    }
 
     /** @inheritDoc */
     addPropertyListener(prop, listener) {
@@ -215,10 +202,7 @@ export class GameEngine {
 
 
         const acknowledge = (event) => {
-
-            if (!this.keyLock) {
-                this.keys[event.code] = event;
-            }
+            this.keys[event.code] = event;
             // if (this.options.debugging) {
             //     console.log(event);
             // }
@@ -419,34 +403,31 @@ export class GameEngine {
         // what's this?
         // see: https://www.gafferongames.com/post/fix_your_timestep/
         this.accumulatedTime += dt;
-        let maxSteps = 10;
-        this.keyLock = true; // lock the keys!
+        let steps = 0;
 
         while (
-            this.accumulatedTime >= GameEngine.MAX_SIM_STEP
-            && maxSteps > 0
+            this.accumulatedTime >= GameEngine.SIM_STEP
+            && steps < GameEngine.SIM_MAX_STEP_COUNT
         ) {
-            this.clockTick = GameEngine.MAX_SIM_STEP / 1000;
+            this.clockTick = GameEngine.SIM_STEP / 1000;
             this.updateEntities();
             this.detectIntersections();
             this.updateHitboxes();
 
-            this.accumulatedTime -= GameEngine.MAX_SIM_STEP;
-            maxSteps--;
+            this.accumulatedTime -= GameEngine.SIM_STEP;
+            steps++;
+            this.keys = {};
         }
 
-        this.keyLock = false;
-        this.keys = {};
-
-        if (maxSteps === 0) {
+        if (steps > GameEngine.SIM_MAX_STEP_COUNT) {
             console.log(`
 Warning: took too many steps updating.
 simulation behind ${
-    Math.floor(this.accumulatedTime / GameEngine.MAX_SIM_STEP)
+    Math.floor(this.accumulatedTime / GameEngine.SIM_STEP)
 } step(s).
 Truncating...
             `);
-            this.accumulatedTime %= GameEngine.MAX_SIM_STEP;
+            this.accumulatedTime %= GameEngine.SIM_STEP;
         }
 
         this.draw()
