@@ -39,7 +39,10 @@ export class Hitbox {
 
     /**
      * Flag for if the hitbox is enabled or disabled.
-     * 
+     *
+     * Disabled hitboxes will continue to live in the game
+     * but won't do anything.
+     *
      * @type {boolean}
      */
     enabled = true;
@@ -53,6 +56,8 @@ export class Hitbox {
 
     /**
      * If this hitbox has expired.
+     *
+     * Expired hitboxes will be removed from the game.
      *
      * @type {boolean} if the hitbox has expired
      */
