@@ -40,7 +40,14 @@ export class MenuSystem {
                 const characterNames = {
                     [CHARACTER_NAMES.GUY] : 'Warrior',
                     [CHARACTER_NAMES.GUY2]: 'Knight',
-                    [CHARACTER_NAMES.WARRIOR_WOMAN]: 'Valkyrie'
+                    [CHARACTER_NAMES.WARRIOR_WOMAN]: 'Valkyrie',
+                    [CHARACTER_NAMES.SAMURAI_A]: 'Samurai1',
+                    [CHARACTER_NAMES.SAMURAI_B]: 'Samurai2',
+                    [CHARACTER_NAMES.MONK]: 'Monk',
+                    [CHARACTER_NAMES.MINOTAUR]: 'Minotaur',
+                    [CHARACTER_NAMES.MAGE]: 'Mage',
+                    [CHARACTER_NAMES.GANGSTER]: 'Gangster',
+                    [CHARACTER_NAMES.NINJA]: 'Ninja',
                 };
                 displayElement.textContent = characterNames[character];
 
