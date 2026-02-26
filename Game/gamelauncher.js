@@ -20,7 +20,7 @@ import {SoundFX} from "./engine/soundFX.js";
 import {AssetManager} from "./assets/assetmanager.js";
 import {getCharacterData} from "./entity/characterData.js";
 import {arenaData} from "./arena/arenaData.js";
-import {GameState} from "./engine/render/gamestates.js";
+import {GameState} from "./engine/gamestates.js";
 
 /**
  * Tells the game to start with the specified parameters.

@@ -17,8 +17,8 @@ The game engine is stateless, this game state is the thing that has state.
 
 */
 
-import {PropertyChangeSupport} from "../../../lib/propertychangesupport.js";
-import {Player} from "../../entity/player.js";
+import {PropertyChangeSupport} from "../../lib/propertychangesupport.js";
+import {Player} from "../entity/player.js";
 
 /**
  * A game state object, holding onto the state of the game in play.
