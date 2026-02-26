@@ -129,93 +129,99 @@ export class Player extends Character {
         this.gravity = -20;
 
         this.initKeymap();
-        this.initHitbox();
-        this.setupCombatHitboxes();
+        this.initSelfHitbox();
+        this.initAttackHitbox();
 
     }
 
     /**
      * Sets up the players attack and body hitboxes, adds it to the game engine. Sets the dynamic hitboxes.
      */
-    setupCombatHitboxes() {
+    initAttackHitbox() {
+        /** @deprecated */
         this.type = "player";
+
         this._alreadyHit = new Set();
         this._clashed = new Set();
 
-        this.hitbox.kind = HITBOX_TYPE.BODY; // <-- duplicated fragment
-        this.hitbox.enabled = true;
-
-        this.attackHitbox = new Hitbox(this, new Rectangle2D(0, 0, .05, 1));
-
+        this.attackHitbox = new Hitbox(this, new Rectangle2D(
+            0, -this.hitbox.bounds.dimension.height * 0.1,
+            .05, this.hitbox.bounds.dimension.height * 0.9
+            ));
         this.attackHitbox.kind = HITBOX_TYPE.ATTACK;
-        this.attackHitbox.enabled = false;
-
-        this.game.spawnDynamicHitbox(this.attackHitbox);
-
         this.attackHitbox.resolveIntersection = this.onAttackHitboxIntersection.bind(this);
     }
 
     /**
+     * The function used on response to intersection
      *
-     * @param {PlayerOne, PlayerTwo} players
+     * @param {IntersectionTestProperties} players
      */
     onAttackHitboxIntersection(players) {
-        const attacker = players.subject.parent;
         const otherHb = players.other;
-        const victim = otherHb.parent;
+        const other = otherHb.parent;
 
-        if (victim.type !== "player") return;
-        if (victim === attacker) return;
+        if (other instanceof TileEntity) {
+            console.log("Knocked back from tile");
+            this.physics.velocity.x += 1;
+        } else if (other instanceof Player) {
+
+        }
+
+        if (other.type !== "player") return;
+        if (other === attacker) return;
         if (attacker.state !== Player.states.ATTACK) return;
 
         // once clashed, never damage
-        if (attacker._clashed.has(victim)) return;
+        if (attacker._clashed.has(other)) return;
 
         if (otherHb.kind === HITBOX_TYPE.ATTACK) {
             const victimIsAttacking =
-                victim.state === Player.states.ATTACK && victim.attackHitbox.enabled;
+                other.state === Player.states.ATTACK && other.attackHitbox.enabled;
             if (!victimIsAttacking) return;
 
-            attacker._clashed.add(victim);
-            victim._clashed.add(attacker);
+            attacker._clashed.add(other);
+            other._clashed.add(attacker);
 
             attacker.attackHitbox.enabled = false;
-            victim.attackHitbox.enabled = false;
+            other.attackHitbox.enabled = false;
 
             SoundFX.play("swordCollide8")
 
             // PUSH BOTH BACK
-            attacker.applyKnockbackFrom(victim);
-            victim.applyKnockbackFrom(attacker);
+            attacker.applyKnockbackFrom(other);
+            other.applyKnockbackFrom(attacker);
 
             return;
         }
 
         if (otherHb.kind !== HITBOX_TYPE.BODY) return;
-        if (attacker._alreadyHit.has(victim)) return;
+        if (attacker._alreadyHit.has(other)) return;
 
-        const bothAttacking = attacker.attackHitbox.enabled && victim.attackHitbox.enabled;
+        const bothAttacking = attacker.attackHitbox.enabled && other.attackHitbox.enabled;
 
         const swordsOverlap =
             bothAttacking &&
-            attacker.attackHitbox.bounds.intersects?.(victim.attackHitbox.bounds);
+            attacker.attackHitbox.bounds.intersects?.(other.attackHitbox.bounds);
 
         if (swordsOverlap) {
-            attacker._clashed.add(victim);
-            victim._clashed.add(attacker);
+            attacker._clashed.add(other);
+            other._clashed.add(attacker);
 
             attacker.attackHitbox.enabled = false;
-            victim.attackHitbox.enabled = false;
+            other.attackHitbox.enabled = false;
 
             return;
         }
 
         // Damage
-        victim.setPlayerHealth?.(10);
-        victim.attackHitbox.enabled = false;
-        attacker._alreadyHit.add(victim);
+        other.setPlayerHealth?.(10);
+        other.attackHitbox.enabled = false;
+        attacker._alreadyHit.add(other);
         console.log(attacker.name, ": ", attacker.vitality.health)
-        console.log(victim.name, ": ", victim.vitality.health)
+        console.log(other.name, ": ", other.vitality.health)
+
+
     }
 
 
@@ -310,7 +316,7 @@ export class Player extends Character {
         };
     };
 
-    initHitbox() {
+    initSelfHitbox() {
 
         let box = this.drawingProperties.bounds;
         this.hitbox = new Hitbox(
@@ -387,6 +393,7 @@ export class Player extends Character {
     swing() {
         if (this.stateLock) return;
 
+
         this.lastState = this.state;
         this.state = Player.states.ATTACK;
         this.stateLock = true;
@@ -395,6 +402,8 @@ export class Player extends Character {
         this._alreadyHit.clear();
         this.updateAttackHitboxBounds();
         this.attackHitbox.enabled = true;
+        this.game.spawnDynamicHitbox(this.attackHitbox);
+
 
         SoundFX.play(getCharacterData(this.name).swordSound);
     }
@@ -474,24 +483,18 @@ export class Player extends Character {
     }
 
     updateAttackHitboxBounds() {
-        const box = this.drawingProperties.bounds;
+        const box = this.hitbox.bounds;
         const w = box.dimension.width;
         const h = box.dimension.height;
 
-        const dimX = w ;
-        const dimY = h ;
-
-        const startY = box.start.y() - h * 0.20;
-
         let startX;
         if (this.facing === DIRECTIONS.RIGHT) {
-            startX = box.start.x() - w * .20;
+            startX = box.start.x() + w * 0.20;
         } else {
-            startX = box.start.x() - dimX * 0.20; // push it to the left of the body
+            startX = box.start.x() - w * 0.20; // push it to the left of the body
         }
 
-        this.attackHitbox.bounds.setStart(startX, startY);
-        this.attackHitbox.bounds.setDimension(dimX, dimY);
+        this.attackHitbox.bounds.setStart(startX, this.attackHitbox.bounds.start.y());
     }
 
 }
