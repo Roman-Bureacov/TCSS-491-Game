@@ -13,6 +13,14 @@ import {getCharacterData} from "./characterData.js";
 import {DIRECTIONS} from "../engine/constants.js";
 
 /**
+ * The collection of vitality statistics
+ * @typedef VitalityStats
+ * @property {number} health the amount of health remaining
+ * @property {number} posture the amount of posture gained
+ * @property {number} souls the amount of souls remaining
+ */
+
+/**
  * Concrete implementation of the character.
  *
  * @author Roman Bureacov
@@ -29,6 +37,23 @@ export class Player extends Character {
         /** the player has died, sends the player itself as now */
         DIED : "Player.DIED",
     })
+
+    /**
+     * Collection of constants pertaining to the player
+     * @readonly
+     * @type {{
+     *     VITALITY_MAXIMUMS : VitalityStats,
+     *     POSTURE_DRAIN_PER_SECOND : number
+     * }}
+     */
+    static CONSTANTS = Object.freeze({
+        VITALITY_MAXIMUMS : {
+            health : 100,
+            posture : 100,
+            souls : 3
+        },
+        POSTURE_DRAIN_PER_SECOND : 10
+    });
 
     /**
      * Enum representing the possible states of player characters
@@ -55,6 +80,17 @@ export class Player extends Character {
      */
     onGround = false;
 
+
+    /**
+     * The vitality stats of this player.
+     * @type {VitalityStats}
+     */
+    vitality = {
+        health : 0,
+        posture : 0,
+        souls : 0,
+    }
+
     /**
      * Constructs a new playable character with no animators and an empty input map.
      *
@@ -70,7 +106,8 @@ export class Player extends Character {
                 startX = 0, startY = 0) {
         super(game, spritesheet, dimX, dimY, startX, startY);
 
-        this.playerHealth = 100;
+        this.vitality.health = Player.CONSTANTS.VITALITY_MAXIMUMS.health;
+        this.vitality.souls = Player.CONSTANTS.VITALITY_MAXIMUMS.souls;
 
         this.state = Player.states.IDLE;
         this.physics.velocityMax.x = 10;
@@ -177,8 +214,8 @@ export class Player extends Character {
         victim.setPlayerHealth?.(10);
         victim.attackHitbox.enabled = false;
         attacker._alreadyHit.add(victim);
-        console.log(attacker.name, ": ", attacker.playerHealth)
-        console.log(victim.name, ": ", victim.playerHealth)
+        console.log(attacker.name, ": ", attacker.vitality.health)
+        console.log(victim.name, ": ", victim.vitality.health)
     }
 
 
@@ -207,9 +244,9 @@ export class Player extends Character {
     setPlayerHealth(damage) {
 
 
-        if (this.playerHealth === 0) {
+        if (this.vitality.health === 0) {
 
-            this.playerHealth -= 1;
+            this.vitality.health -= 1;
 
             let rnd_int = Math.floor(Math.random() * 5) + 1;
             switch (getCharacterData(this.name).gender) {
@@ -239,8 +276,8 @@ export class Player extends Character {
             //     this.game.running = false;
             // }, 1000);
 
-        } else if (this.playerHealth > 0) {
-            this.playerHealth -= damage;
+        } else if (this.vitality.health > 0) {
+            this.vitality.health -= damage;
 
             let rnd_int = Math.floor(Math.random() * 7) + 1;
             switch (getCharacterData(this.name).gender) {
@@ -350,8 +387,6 @@ export class Player extends Character {
     swing() {
         if (this.stateLock) return;
 
-        console.log(this.name, ": New Swing action")
-
         this.lastState = this.state;
         this.state = Player.states.ATTACK;
         this.stateLock = true;
@@ -360,8 +395,6 @@ export class Player extends Character {
         this._alreadyHit.clear();
         this.updateAttackHitboxBounds();
         this.attackHitbox.enabled = true;
-
-        console.log(this.physics.position.y)
 
         SoundFX.play(getCharacterData(this.name).swordSound);
     }
@@ -395,12 +428,17 @@ export class Player extends Character {
     update() {
         this.physics.acceleration.y = this.gravity;
 
-        // for (let key in this.game.keys) this.keymapper.sendKeyEvent(this.game.keys[key]);
+        // send the keys for this player to process
+        for (let key in this.game.keys) this.keymapper.sendKeyEvent(this.game.keys[key]);
 
-        for (let k in this.game.keys) {
-            // console.log("Player got event:", this.game.keys[k].type, this.game.keys[k].code);
-            this.keymapper.sendKeyEvent(this.game.keys[k]);
-        }
+        // natural drain of the posture
+        this.vitality.posture = Math.max(
+            0,
+            Math.min(
+                Player.CONSTANTS.VITALITY_MAXIMUMS.posture,
+                this.vitality.posture -= Player.CONSTANTS.POSTURE_DRAIN_PER_SECOND * this.game.clockTick
+            )
+        );
 
         switch (this.state) {
             case Player.states.JUMP:
