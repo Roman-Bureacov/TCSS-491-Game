@@ -77,8 +77,8 @@ export class PlayerFactory {
         // then call the configurator on it
         // (formerly CharacterFactory)
         player.name = name;
-        CharacterConfigurator.attachAnimators(player, name)
-
+        CharacterConfigurator.attachAnimators(player, name);
+        CharacterConfigurator.attachSoundFX(player, name);
         return player;
 
     }

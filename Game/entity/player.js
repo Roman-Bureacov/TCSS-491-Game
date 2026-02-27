@@ -9,7 +9,6 @@ import {Hitbox, HITBOX_TYPE, HitboxOp} from "../engine/hitbox.js";
 import {TileEntity} from "./tileEntity.js";
 import {Rectangle2D} from "../engine/primitives.js";
 import {SoundFX} from "../engine/soundFX.js";
-import {getCharacterData} from "./characterData.js";
 import {DIRECTIONS} from "../engine/constants.js";
 
 /**
@@ -18,6 +17,14 @@ import {DIRECTIONS} from "../engine/constants.js";
  * @property {number} health the amount of health remaining
  * @property {number} posture the amount of posture gained
  * @property {number} souls the amount of souls remaining
+ */
+
+/**
+ * The collection of sound effects that the player can fire
+ * @typedef SoundEvents
+ * @property {() => {}} playHitSound the sound effect when the player is hit
+ * @property {() => {}} playDeadSound the sound effect when the player dies
+ * @property {() => {}} playSwingSound the sound effect when the player swings their weapon
  */
 
 /**
@@ -67,6 +74,16 @@ export class Player extends Character {
         JUMP: "jump",
         DEAD: "dead",
     });
+
+    /**
+     * The sound effects for this payer
+     * @type {SoundEvents}
+     */
+    soundEvents = {
+        playHitSound : () => {},
+        playDeadSound : () => {},
+        playSwingSound : () => {},
+    }
 
     /**
      * The keymapper for this player
@@ -188,39 +205,19 @@ export class Player extends Character {
 
         const oldHealth = this.vitality.health;
         this.vitality.health -= damage;
-        let rnd_int = Math.floor(Math.random() * 5) + 1;
         let sound;
         this.notifyListeners(Player.PROPERTIES.HIT, oldHealth, this.vitality.health);
 
         if (this.vitality.health > 0) {
-            switch (getCharacterData(this.name).gender) {
-                case "female":
-                    sound = `femaleHurt${rnd_int}`
-                    break;
-                case "male":
-                    sound = `maleHurt${rnd_int}`
-                    break;
-            }
-
+            this.soundEvents.playHitSound();
         } else {
             // player has health <= 0, they're "dead"
             // TODO: revise this to not be dead on health <= 0
             this.vitality.health = 0;
-
-            switch (getCharacterData(this.name).gender) {
-                case "female":
-                    sound = `femaleDeath${rnd_int}`
-                    break;
-                case "male":
-                    sound = `maleDeath${rnd_int}`
-                    break;
-            }
+            this.soundEvents.playDeadSound();
 
             this.notifyListeners(Player.PROPERTIES.DIED);
         }
-
-        SoundFX.play(sound)
-
 
         /*
         if (this.vitality.health === 0) {
@@ -335,7 +332,7 @@ export class Player extends Character {
         this.game.spawnDynamicHitbox(this.attackHitbox);
 
 
-        SoundFX.play(getCharacterData(this.name).swordSound);
+        this.soundEvents.playSwingSound();
     }
 
 

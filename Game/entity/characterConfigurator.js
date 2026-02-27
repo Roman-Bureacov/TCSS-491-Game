@@ -5,6 +5,7 @@ import {Player} from "./player.js";
 import {Character} from "./character.js";
 import {getCharacterData} from "./characterData.js";
 import {DIRECTIONS} from "../engine/constants.js";
+import {SoundFX} from "../engine/soundFX.js";
 
 /**
  * Configuration class that makes characters.
@@ -136,5 +137,36 @@ export class CharacterConfigurator {
 
         player.currentAnimation = player.animations[player.animationName()];
 
+    }
+
+    /**
+     * Attaches sound effects to the player
+     * @param {Player} player the player to attach sound to
+     * @param {string} name the name of the character
+     */
+    static attachSoundFX(player, name) {
+        const dat = getCharacterData(name);
+
+        const hitSound = (
+            dat.gender === "male"
+        ) ? `maleHurt` : `femaleHurt`;
+
+        const deadSound = (
+            dat.gender === "male"
+        ) ? `maleDeath` : `femaleDeath`;
+
+        player.soundEvents.playHitSound = () => {
+            let rnd_int = Math.floor(Math.random() * 5) + 1;
+            SoundFX.play(`${hitSound}${rnd_int}`)
+        }
+
+        player.soundEvents.playDeadSound = () => {
+            let rnd_int = Math.floor(Math.random() * 5) + 1;
+            SoundFX.play(`${deadSound}${rnd_int}`)
+        }
+
+        player.soundEvents.playSwingSound = () => {
+            SoundFX.play(dat.swordSound);
+        }
     }
 }
