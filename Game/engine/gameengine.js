@@ -327,10 +327,16 @@ export class GameEngine {
         const stat = this.hitboxes.static;
 
         // dynamic vs dynamic (unique pairs only)
-        for (let h1 of dyn) {
+        for (let i = 0; i < dyn.length; i++) {
+            const h1 = dyn[i];
             if (h1.expired || !h1.enabled) continue;
 
-            for (let h2 of dyn) {
+            // need to loop over the list such that every intersection
+            //   is resolved once. Note that both hitboxes get a change to react
+            //   so it is necessary to iterate as such to prevent the same pair
+            //   getting evaluated more than once
+            for (let j = i + 1; j < dyn.length; j++) {
+                const h2 = dyn[j];
                 if (h2.expired || !h2.enabled) continue;
 
                 // same parent => ignore (prevents self-hitboxes hitting each other if you add multiple)
@@ -340,6 +346,7 @@ export class GameEngine {
                 if (!props) continue;
 
                 // let both respond
+
                 h1.resolveIntersection(props);
                 h2.resolveIntersection({
                     subject: h2,

@@ -471,6 +471,7 @@ class AttackHitbox extends Hitbox {
             this.enabled = false;
             this.shouldExpire = false;
             this.totalTime = 0;
+            return;
         }
 
         // we need a little delay, so that
@@ -511,7 +512,7 @@ class AttackHitbox extends Hitbox {
             } else if (otherHb.kind === HITBOX_TYPE.BODY) {
                 // do we bounce off?
                 if (otherParent.state === Player.states.ATTACK
-                    && otherParent.facing !== this.parent.facing // lazy check
+                    && areFacingEachOther(this.parent, otherParent)
                 ) { // we want to only bounce off if we're facing towards each other
                     this.parent.physics.velocity.x = -1;
                     otherParent.physics.velocity.x = 1;
@@ -522,5 +523,23 @@ class AttackHitbox extends Hitbox {
                 }
             }
         }
+    }
+}
+
+/**
+ * Tests if two players are facing each other
+ * @param {Player} playerA
+ * @param {Player} playerB
+ * @return {boolean} if the two player are facing each other, false otherwise
+ */
+const areFacingEachOther = (playerA, playerB) => {
+    if (playerA.facing === playerB.facing) return false;
+
+    if (playerA.objectX() >= playerB.objectX()) {
+        return playerA.facing === DIRECTIONS.LEFT
+            && playerB.facing === DIRECTIONS.RIGHT
+    } else {
+        return playerA.facing === DIRECTIONS.RIGHT
+            && playerB.facing === DIRECTIONS.LEFT
     }
 }
