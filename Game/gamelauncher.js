@@ -30,7 +30,7 @@ import {EngineDebugger} from "./engine/render/visualdebugger.js";
  *
  * @author Roman Bureacov
  * @param {GameProperties} props the properties to start the game with
- * @return {Promise} the promise instantiating the `GameState` object
+ * @return {Promise<GameState>} the promise instantiating the `GameState` object
  */
 export const launchGame = (props) => {
     return downloadAssets(props) // first, before anything, we need to ensure the assets are available

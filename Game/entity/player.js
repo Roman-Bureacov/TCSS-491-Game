@@ -11,7 +11,6 @@ import {Rectangle2D} from "../engine/primitives.js";
 import {SoundFX} from "../engine/soundFX.js";
 import {getCharacterData} from "./characterData.js";
 import {DIRECTIONS} from "../engine/constants.js";
-import {HUD} from "../../userInterface/hudHelper.js";
 
 /**
  * The collection of vitality statistics
@@ -101,13 +100,11 @@ export class Player extends Character {
      * @param {number} dimY the positive dimension of this character
      * @param {number} [startX=0] the starting x position
      * @param {number} [startY=0] the starting y position
-     * @param {number} playerNumber the player number
      */
     constructor(game, spritesheet,
                 dimX = 1, dimY = 1,
-                startX = 0, startY = 0, playerNumber) {
+                startX = 0, startY = 0) {
         super(game, spritesheet, dimX, dimY, startX, startY);
-        this.playerNumber = playerNumber;
 
         this.vitality.health = Player.CONSTANTS.VITALITY_MAXIMUMS.health;
         this.vitality.souls = Player.CONSTANTS.VITALITY_MAXIMUMS.souls;
@@ -189,56 +186,50 @@ export class Player extends Character {
     setPlayerHealth(damage) {
         console.log("Taking damage...")
 
-        if (this.vitality.health === 0) {
-
-            this.vitality.health -= 1;
-            HUD.updateCharacterName()
-
-            let rnd_int = Math.floor(Math.random() * 5) + 1;
+        const oldHealth = this.vitality.health;
+        this.vitality.health -= damage;
+        let rnd_int = Math.floor(Math.random() * 5) + 1;
+        let sound;
+        if (this.vitality.health > 0) {
             switch (getCharacterData(this.name).gender) {
-
-                case "female": {
-                    const sound = `femaleDeath${rnd_int}`
-                    SoundFX.play(sound)
+                case "female":
+                    sound = `femaleHurt${rnd_int}`
                     break;
-
-                }
-
-                case "male": {
-                    const sound = `maleDeath${rnd_int}`
-                    SoundFX.play(sound)
+                case "male":
+                    sound = `maleHurt${rnd_int}`
                     break;
-                }
             }
 
+            this.notifyListeners(Player.PROPERTIES.HIT, oldHealth, this.vitality.health);
+        } else {
+            // player has health <= 0, they're "dead"
+            // TODO: revise this to not be dead on health <= 0
+            this.vitality.health = 0;
 
-            SoundFX.stop();
-
-            SoundFX.play("victory");
-
-
-        } else if (this.vitality.health > 0) {
-            this.vitality.health -= damage;
-
-            let rnd_int = Math.floor(Math.random() * 7) + 1;
             switch (getCharacterData(this.name).gender) {
-
-                case "female": {
-                    const sound = `femaleHurt${rnd_int}`
-                    SoundFX.play(sound)
+                case "female":
+                    sound = `femaleDeath${rnd_int}`
                     break;
-
-                }
-
-                case "male": {
-                    const sound = `maleHurt${rnd_int}`
-                    SoundFX.play(sound)
+                case "male":
+                    sound = `maleDeath${rnd_int}`
                     break;
-                }
             }
+
+            this.notifyListeners(Player.PROPERTIES.DIED);
         }
 
-        return this.vitality.health;
+        SoundFX.play(sound)
+
+
+        /*
+        if (this.vitality.health === 0) {
+            HUD.updateCharacterName()
+            SoundFX.stop();
+            SoundFX.play("victory");
+
+        } else if (this.vitality.health > 0) {
+        }
+        */
     }
 
     initKeymap() {
@@ -529,13 +520,7 @@ class AttackHitbox extends Hitbox {
                     SoundFX.play("swordCollide8");
                 } else {
                     // just do damage
-                    HUD.updateHealth(otherParent.playerNumber, otherParent.setPlayerHealth(10))
-                    console.log(this.parent.playerNumber)
-                    if (otherParent.vitality.health === 0) {
-                       otherParent.die();
-                       HUD.stopTimer();
-
-                    }
+                    otherParent.setPlayerHealth(10);
                 }
             }
         }

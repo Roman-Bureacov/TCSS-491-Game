@@ -9,7 +9,7 @@ import {Player} from "../player.js";
 export class PlayerOne extends Player {
 
     constructor(game, spritesheet, startPosX, startPosY, dimX, dimY) {
-        super(game, spritesheet, dimX, dimY, startPosX, startPosY,1)
+        super(game, spritesheet, dimX, dimY, startPosX, startPosY)
         this.setupKeymap();
     }
 

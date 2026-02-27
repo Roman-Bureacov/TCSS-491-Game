@@ -5,6 +5,7 @@ import {ArenaFactory} from "../Game/arena/arenaFactory.js";
 import {GameState} from "../Game/engine/gamestates.js";
 import {HUD} from "./hudHelper.js";
 import {PropertyChangeListener, PropertyChangeNotifier, PropertyChangeSupport} from "../lib/propertychangesupport.js";
+import {Player} from "../Game/entity/player.js";
 
 export class MenuSystem {
     constructor() {
@@ -153,7 +154,6 @@ export class MenuSystem {
                             break;
                         case GameState.PROPERTIES.PAUSE_GAME:
                             console.log("Game was paused");
-
                             break;
                         case GameState.PROPERTIES.RESUME_GAME:
                             console.log("Game was resumed");
@@ -168,9 +168,26 @@ export class MenuSystem {
 
             window.GAMESTATE = gameState;
 
+            // listen to game state
             gameState.addPropertyListener(GameState.PROPERTIES.GAME_OVER, logger)
             gameState.addPropertyListener(GameState.PROPERTIES.PAUSE_GAME, logger)
             gameState.addPropertyListener(GameState.PROPERTIES.RESUME_GAME, logger)
+
+            // listen to players
+            gameState.playerOne.addPropertyListener(
+                Player.PROPERTIES.HIT,
+                /** @implements {PropertyChangeListener} */ {
+                notify(prop, then, now) {
+                    HUD.updateHealth(1, now);
+                }
+            });
+            gameState.playerTwo.addPropertyListener(
+                Player.PROPERTIES.HIT,
+                /** @implements {PropertyChangeListener} */ {
+                notify(prop, then, now) {
+                    HUD.updateHealth(2, now);
+                }
+            })
         });
 
 
