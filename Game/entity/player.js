@@ -436,6 +436,11 @@ export class Player extends Character {
 
 }
 
+/**
+ * A more concrete implementation of the hitbox, specifically for the player to make use of
+ * @author Kassie Whitney
+ * @author Roman Bureacov
+ */
 class AttackHitbox extends Hitbox {
 
     /**
@@ -450,6 +455,14 @@ class AttackHitbox extends Hitbox {
     parent; // override, to enforce JSDoc type checking
 
     /**
+     * A flag that says if the update loop should expire this hitbox.
+     *
+     * Note that the game loop is to intersect -> update on hitboxes
+     * @type {boolean}
+     */
+    shouldExpire = false;
+
+    /**
      *
      * @param {Player} parent
      * @param {Rectangle2D} bounds
@@ -461,13 +474,25 @@ class AttackHitbox extends Hitbox {
     }
 
     update(timestep) {
-        // we need a little delay, so that
-        // clashing is a little more probably
-        // when players are closer together
         this.totalTime += timestep;
-        if (this.totalTime > 0.1) {
-            this.enabled = true;
+
+        if (this.shouldExpire) {
+            this.expired = true;
+            this.enabled = false;
+            this.shouldExpire = false;
             this.totalTime = 0;
+        }
+
+        // we need a little delay, so that
+        // clashing is a little more probable
+        // when players are closer together
+        if (this.totalTime > 0.9) {
+            // expire hitbox
+            this.expired = true;
+            this.enabled = false;
+            this.totalTime = 0;
+        } else if (this.totalTime > 0.1) {
+            this.enabled = true;
         }
     }
 
@@ -480,9 +505,8 @@ class AttackHitbox extends Hitbox {
         const otherHb = props.other;
         const otherParent = otherHb.parent;
 
-        // consume hitbox
-        this.expired = true;
-        this.enabled = false;
+        // consume hitbox on next update
+        this.shouldExpire = true;
 
         if (otherParent instanceof TileEntity) {
             console.log("Knocked back from tile");
