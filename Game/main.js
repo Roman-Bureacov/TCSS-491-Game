@@ -32,10 +32,12 @@ AssetManager.queueDownload("character/skeleton/skeleton.png")
 AssetManager.queueDownload("character/monk/monk.png")
 AssetManager.queueDownload("character/minotaur/minotaur.png")
 AssetManager.queueDownload("character/mage/mage.png")
-AssetManager.queueDownload("character/ninja/monk.png")
+AssetManager.queueDownload("character/knight/knight.png")
 AssetManager.queueDownload("tileset/Industrial_Tileset/1_Industrial_Tileset_1.png")
 AssetManager.queueDownload("tileset/Industrial_Tileset/1_Industrial_Tileset_1B.png")
 AssetManager.queueDownload("background/background03.jpeg");
+AssetManager.queueDownload("background/background02.jpeg");
+AssetManager.queueDownload("background/background01.jpeg");
 
 AssetManager.queueDownload("arena/basic.txt")
 AssetManager.queueDownload("arena/arena2.txt")

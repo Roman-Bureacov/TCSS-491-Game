@@ -19,6 +19,7 @@ export const assignKeymap = (name, player) => {
                 [KeyMapper.getName("KeyD", false)]: "stop right",
                 [KeyMapper.getName("KeyA", false)]: "stop left",
                 [KeyMapper.getName("KeyW", true)]: "jump",
+                [KeyMapper.getName("KeyQ", true)]: "jump",
             };
             break;
         }
@@ -30,6 +31,7 @@ export const assignKeymap = (name, player) => {
                 [KeyMapper.getName("KeyL", false)]: "stop right",
                 [KeyMapper.getName("KeyJ", false)]: "stop left",
                 [KeyMapper.getName("KeyI", true)]: "jump",
+                [KeyMapper.getName("KeyO", true)]: "block",
             };
             break;
         }
