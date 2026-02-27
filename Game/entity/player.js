@@ -190,6 +190,8 @@ export class Player extends Character {
         this.vitality.health -= damage;
         let rnd_int = Math.floor(Math.random() * 5) + 1;
         let sound;
+        this.notifyListeners(Player.PROPERTIES.HIT, oldHealth, this.vitality.health);
+
         if (this.vitality.health > 0) {
             switch (getCharacterData(this.name).gender) {
                 case "female":
@@ -200,7 +202,6 @@ export class Player extends Character {
                     break;
             }
 
-            this.notifyListeners(Player.PROPERTIES.HIT, oldHealth, this.vitality.health);
         } else {
             // player has health <= 0, they're "dead"
             // TODO: revise this to not be dead on health <= 0
