@@ -370,13 +370,16 @@ export class GameEngine {
      * updates the dynamic hitboxes, removing them if they expired
      */
     updateHitboxes() {
-        for (let i = 0; i < this.hitboxes.dynamic.length; i++) {
-            if (this.hitboxes.dynamic[i].expired) {
-                this.hitboxes.dynamic.splice(i, 1);
-            } else {
-                this.hitboxes.dynamic[i].update(this.clockTick);
-            }
-        }
+        // update
+        this.hitboxes.dynamic.forEach(h => h.update(this.clockTick));
+
+        // cleanup
+        this.hitboxes.dynamic
+            .filter(h => h.expired)
+            .forEach(h => this.hitboxes.dynamic.splice(
+                this.hitboxes.dynamic.indexOf(h),
+                1
+            ));
     }
 
     /**
@@ -410,7 +413,7 @@ export class GameEngine {
             this.keys = {};
         }
 
-        if (steps > GameEngine.SIM_MAX_STEP_COUNT) {
+        if (steps === GameEngine.SIM_MAX_STEP_COUNT) {
             console.log(`
 Warning: took too many steps updating.
 simulation behind ${
