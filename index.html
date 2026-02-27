@@ -36,12 +36,13 @@
                         <img class="char-preview-img" src="./Game/assets/character/warriorWoman/warriorWoman_img.png" alt="Valkyrie">
                         <span>Valkyrie</span>
                     </button>
-                    <button class="character-btn" data-player="1" data-character="Samurai1">
+                    <button class="character-btn" data-player="1" data-character="samurai1">
                         <div class="char-preview"></div>
-                        <img class="char-preview-img" src="./Game/assets/character/samurai/samurai_img.png" alt="Samurai1">
+                        <img class="char-preview-img" src="./Game/assets/character/samurai/samurai_img.png"
+                             alt="samurai1">
                         <span>Samurai1</span>
                     </button>
-                    <button class="character-btn" data-player="1" data-character="Samurai2">
+                    <button class="character-btn" data-player="1" data-character="samurai2">
                         <div class="char-preview"></div>
                         <img class="char-preview-img" src="./Game/assets/character/samurai/samurai2_img.png" alt="Samurai2">
                         <span>Samurai2</span>
@@ -54,7 +55,7 @@
                     <button class="character-btn" data-player="1" data-character="skeleton">
                         <div class="char-preview"></div>
                         <img class="char-preview-img" src="./Game/assets/character/skeleton/Skeleton_img.png" alt="Skeleton">
-                        <span>Skeletone</span>
+                        <span>Skeleton</span>
                     </button>
                     <button class="character-btn" data-player="1" data-character="minotaur">
                         <div class="char-preview"></div>
@@ -91,17 +92,17 @@
                         <img class="char-preview-img" src="./Game/assets/character/knight/knight_img.png" alt="Knight">
                         <span>Knight</span>
                     </button>
-                    <button class="character-btn" data-player=2" data-character="warriorWoman">
+                    <button class="character-btn" data-player="2" data-character="warriorWoman">
                         <div class="char-preview"></div>
                         <img class="char-preview-img" src="./Game/assets/character/warriorWoman/warriorWoman_img.png" alt="Valkyrie">
                         <span>Valkyrie</span>
                     </button>
-                    <button class="character-btn" data-player="2" data-character="Samurai1">
+                    <button class="character-btn" data-player="2" data-character="samurai1">
                         <div class="char-preview"></div>
                         <img class="char-preview-img" src="./Game/assets/character/samurai/samurai_img.png" alt="Samurai1">
                         <span>Samurai1</span>
                     </button>
-                    <button class="character-btn" data-player="2" data-character="Samurai2">
+                    <button class="character-btn" data-player="2" data-character="samurai2">
                         <div class="char-preview"></div>
                         <img class="char-preview-img" src="./Game/assets/character/samurai/samurai2_img.png" alt="Samurai2">
                         <span>Samurai2</span>
@@ -114,7 +115,7 @@
                     <button class="character-btn" data-player="2" data-character="skeleton">
                         <div class="char-preview"></div>
                         <img class="char-preview-img" src="./Game/assets/character/skeleton/Skeleton_img.png" alt="Skeleton">
-                        <span>Skeletone</span>
+                        <span>Skeleton</span>
                     </button>
                     <button class="character-btn" data-player="2" data-character="minotaur">
                         <div class="char-preview"></div>
@@ -205,10 +206,10 @@
         <div class="hud-container">
             <div class="player-hud player-1-hud">
                 <div class="player-info">
-                    <div class="character-portrait" id="p1Portrait"></div>
+<!--                    <div class="character-portrait" id="p1Portrait"></div>-->
                     <div class="player-details">
                         <div class="player-name">Player 1</div>
-                        <div class="character-name" id="p1CharName">Warrior</div>
+                        <div class="character-name player-1-name" id="p1CharName">null</div>
                     </div>
                 </div>
                 <div class="health-container">
@@ -234,9 +235,9 @@
                 <div class="player-info">
                     <div class="player-details">
                         <div class="player-name">Player 2</div>
-                        <div class="character-name" id="p2CharName">Knight</div>
+                        <div class="character-name player-2-name" id="p2CharName">null</div>
                     </div>
-                    <div class="character-portrait" id="p2Portrait"></div>
+<!--                    <div class="character-portrait" id="p2Portrait"></div>-->
                 </div>
             </div>
         </div>
@@ -245,10 +246,6 @@
                 style="background: white; border: 1px solid black"
                 tabindex="0" autofocus></canvas>
 
-        <!-- Bottom instruction hint -->
-        <div class="game-hint">
-            Press 1 or 2 to switch characters
-        </div>
     </div>
 </div>
 

@@ -2,8 +2,9 @@
 import {launchGame} from "../Game/gamelauncher.js";
 import {CHARACTER_NAMES} from "../Game/entity/characterData.js";
 import {ArenaFactory} from "../Game/arena/arenaFactory.js";
-import {GameEngine} from "../Game/engine/gameengine.js";
 import {GameState} from "../Game/engine/gamestates.js";
+import {HUD} from "./hudHelper.js";
+import {PropertyChangeListener, PropertyChangeNotifier, PropertyChangeSupport} from "../lib/propertychangesupport.js";
 
 export class MenuSystem {
     constructor() {
@@ -14,6 +15,8 @@ export class MenuSystem {
         };
         this.selectedArena = ArenaFactory.ARENAS.BASIC;
         this.initializeMenu();
+
+
     }
 
     initializeMenu() {
@@ -38,8 +41,8 @@ export class MenuSystem {
                 // Update display
                 const displayElement = document.getElementById(`p${player}Selected`);
                 const characterNames = {
-                    [CHARACTER_NAMES.GUY] : 'Warrior',
-                    [CHARACTER_NAMES.GUY2]: 'Knight',
+                    [CHARACTER_NAMES.GUY]: 'Warrior',
+                    [CHARACTER_NAMES.GUY2]: 'Warrior2',
                     [CHARACTER_NAMES.WARRIOR_WOMAN]: 'Valkyrie',
                     [CHARACTER_NAMES.SAMURAI_A]: 'Samurai1',
                     [CHARACTER_NAMES.SAMURAI_B]: 'Samurai2',
@@ -49,6 +52,7 @@ export class MenuSystem {
                     [CHARACTER_NAMES.GANGSTER]: 'Gangster',
                     [CHARACTER_NAMES.NINJA]: 'Ninja',
                 };
+
                 displayElement.textContent = characterNames[character];
 
                 // Check if we can enable start button
@@ -101,9 +105,29 @@ export class MenuSystem {
     }
 
     startGame() {
+        const characterNames = {
+            [CHARACTER_NAMES.GUY]: 'Warrior',
+            [CHARACTER_NAMES.GUY2]: 'Warrior2',
+            [CHARACTER_NAMES.WARRIOR_WOMAN]: 'Valkyrie',
+            [CHARACTER_NAMES.SAMURAI_A]: 'Samurai1',
+            [CHARACTER_NAMES.SAMURAI_B]: 'Samurai2',
+            [CHARACTER_NAMES.MONK]: 'Monk',
+            [CHARACTER_NAMES.MINOTAUR]: 'Minotaur',
+            [CHARACTER_NAMES.MAGE]: 'Mage',
+            [CHARACTER_NAMES.GANGSTER]: 'Gangster',
+            [CHARACTER_NAMES.KNIGHT]: 'Knight',
+            [CHARACTER_NAMES.SKELETON]: 'Skeleton',
+
+        };
         // Hide menu, show game
         document.getElementById('mainMenu').classList.add('hidden');
         document.getElementById('gameScreen').classList.remove('hidden');
+
+        const player1 = document.querySelector(".player-1-name");
+        const player2 = document.querySelector(".player-2-name");
+        player1.textContent = characterNames[this.selectedCharacters.player1];
+        player2.textContent = characterNames[this.selectedCharacters.player2];
+
 
         // Initialize the game with selected options
         window.gameConfig = {
@@ -129,6 +153,7 @@ export class MenuSystem {
                             break;
                         case GameState.PROPERTIES.PAUSE_GAME:
                             console.log("Game was paused");
+
                             break;
                         case GameState.PROPERTIES.RESUME_GAME:
                             console.log("Game was resumed");
@@ -136,13 +161,17 @@ export class MenuSystem {
                     }
                 }
             }
+
+            HUD.startTimer(99, function () {
+                console.log("Game Over")
+            })
+
             window.GAMESTATE = gameState;
 
             gameState.addPropertyListener(GameState.PROPERTIES.GAME_OVER, logger)
             gameState.addPropertyListener(GameState.PROPERTIES.PAUSE_GAME, logger)
             gameState.addPropertyListener(GameState.PROPERTIES.RESUME_GAME, logger)
         });
-
 
 
         // Dispatch event to signal game should start
@@ -160,6 +189,7 @@ export class HUDSystem {
         this.player2Health = 100;
         this.timer = 99;
         this.round = 1;
+        this.timerIntervalId = null;
     }
 
     updateHealth(player, health) {
@@ -210,7 +240,7 @@ export class HUDSystem {
 
     updateCharacterName(player, characterName) {
         const characterNames = { // TODO: this fragment is duplicated, maybe it could be simplified?
-            [CHARACTER_NAMES.GUY] : 'Warrior',
+            [CHARACTER_NAMES.GUY]: 'Warrior',
             [CHARACTER_NAMES.GUY2]: 'Knight',
             [CHARACTER_NAMES.WARRIOR_WOMAN]: 'Valkyrie'
         };
@@ -228,21 +258,37 @@ export class HUDSystem {
     }
 
     startTimer(duration = 99, onComplete) {
+        // stop an existing timer first (prevents multiple intervals)
+        this.stopTimer();
+
         this.timer = duration;
         this.updateTimer(this.timer);
 
-        const timerInterval = setInterval(() => {
+        this.timerIntervalId = window.setInterval(() => {
             this.timer--;
             this.updateTimer(this.timer);
 
             if (this.timer <= 0) {
-                clearInterval(timerInterval);
+                this.stopTimer();
                 if (onComplete) onComplete();
             }
         }, 1000);
 
-        return timerInterval;
+        return this.timerIntervalId;
     }
+
+    stopTimer() {
+        if (this.timerIntervalId !== null) {
+            window.clearInterval(this.timerIntervalId);
+            this.timerIntervalId = null;
+        }
+    }
+
+    // Optional: pause without clearing remainingSeconds
+    pauseTimer() {
+        this.stopTimer();
+    }
+
 }
 
 // Initialize menu when DOM is loaded
@@ -252,4 +298,4 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 // Make systems available globally
-export { MenuSystem as default };
+export {MenuSystem as default};

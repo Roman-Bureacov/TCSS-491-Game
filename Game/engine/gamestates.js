@@ -38,13 +38,13 @@ export class GameState {
      */
     static PROPERTIES = Object.freeze({
         /** the game is over */
-        GAME_OVER : "GameState.GAME_OVER",
+        GAME_OVER: "GameState.GAME_OVER",
         /** a new game has started */
-        NEW_GAME : "GameState.NEW_GAME",
+        NEW_GAME: "GameState.NEW_GAME",
         /** the game has been paused */
-        PAUSE_GAME : "GameState.PAUSE_GAME",
+        PAUSE_GAME: "GameState.PAUSE_GAME",
         /** the game has been resumed */
-        RESUME_GAME : "GameState.RESUME_GAME",
+        RESUME_GAME: "GameState.RESUME_GAME",
     })
 
     /**
@@ -151,7 +151,12 @@ export class GameState {
     notify(prop, then, now) {
         switch (prop) {
             case Player.PROPERTIES.DIED:
-                this.endGame();
+
+                setTimeout(() => {
+                    this.game.running = false;
+                    this.endGame();
+
+                }, 4000);
                 break;
         }
     }

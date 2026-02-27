@@ -67,6 +67,13 @@ export class HUD {
         }
         return null;
     }
+
+    static stopTimer() {
+        if (window.hudSystem) {
+            return window.hudSystem.stopTimer()
+        }
+        return null;
+    }
 }
 
 // Example usage:
