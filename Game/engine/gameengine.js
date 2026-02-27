@@ -410,7 +410,7 @@ export class GameEngine {
             this.keys = {};
         }
 
-        if (steps > GameEngine.SIM_MAX_STEP_COUNT) {
+        if (steps >= GameEngine.SIM_MAX_STEP_COUNT) {
             console.log(`
 Warning: took too many steps updating.
 simulation behind ${
