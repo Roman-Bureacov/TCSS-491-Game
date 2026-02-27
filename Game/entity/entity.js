@@ -2,7 +2,7 @@
 Represents an entity, which is drawable on the renderer
  */
 
-import {Drawable} from "../engine/render/Render.js";
+import {DrawableObject} from "../engine/render/Render.js";
 import {PhysicsEntity} from "./PhysicsEntity.js";
 
 /**
@@ -12,7 +12,7 @@ import {PhysicsEntity} from "./PhysicsEntity.js";
  *
  * @author Roman Bureacov
  */
-export class DynamicEntity extends Drawable {
+export class DynamicEntity extends DrawableObject {
 
     /**
      * The defining hitbox of this entity, if it exists.
@@ -73,7 +73,7 @@ export class DynamicEntity extends Drawable {
  *
  * @author Roman Bureacov
  */
-export class StaticEntity extends Drawable {
+export class StaticEntity extends DrawableObject {
 
     /**
      * The defining hitbox of this entity, if it exists.

@@ -17,8 +17,8 @@ The game engine is stateless, this game state is the thing that has state.
 
 */
 
-import {PropertyChangeSupport} from "../../../lib/propertychangesupport.js";
-import {Player} from "../../entity/player.js";
+import {PropertyChangeSupport} from "../../lib/propertychangesupport.js";
+import {Player} from "../entity/player.js";
 
 /**
  * A game state object, holding onto the state of the game in play.
@@ -123,12 +123,13 @@ export class GameState {
             this.arena.playerAStart.x ?? -1,
             this.arena.playerAStart.y ?? 0
         );
+        this.playerOne.reinit();
+
         this.playerTwo.setPosition(
             this.arena.playerBStart.x ?? 1,
             this.arena.playerBStart.y ?? 0
         );
-
-        // TODO: reinit player stats...
+        this.playerTwo.reinit();
 
         new Promise(() => this.game.start())
             .catch((reason) => console.log("Something went wrong: ", reason));

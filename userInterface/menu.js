@@ -3,7 +3,7 @@ import {launchGame} from "../Game/gamelauncher.js";
 import {CHARACTER_NAMES} from "../Game/entity/characterData.js";
 import {ArenaFactory} from "../Game/arena/arenaFactory.js";
 import {GameEngine} from "../Game/engine/gameengine.js";
-import {GameState} from "../Game/engine/render/gamestates.js";
+import {GameState} from "../Game/engine/gamestates.js";
 
 export class MenuSystem {
     constructor() {

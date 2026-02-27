@@ -20,7 +20,8 @@ import {SoundFX} from "./engine/soundFX.js";
 import {AssetManager} from "./assets/assetmanager.js";
 import {getCharacterData} from "./entity/characterData.js";
 import {arenaData} from "./arena/arenaData.js";
-import {GameState} from "./engine/render/gamestates.js";
+import {GameState} from "./engine/gamestates.js";
+import {EngineDebugger} from "./engine/render/visualdebugger.js";
 
 /**
  * Tells the game to start with the specified parameters.
@@ -78,6 +79,7 @@ export const launchGame = (props) => {
                 renderer: renderer,
                 playerOne: playerOne,
                 playerTwo: playerTwo,
+                visualDebugger: new EngineDebugger(game, entityPane)
             }
 
             if (arena.music) SoundFX.play(arena.music);

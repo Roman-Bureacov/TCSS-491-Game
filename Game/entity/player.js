@@ -13,6 +13,14 @@ import {getCharacterData} from "./characterData.js";
 import {DIRECTIONS} from "../engine/constants.js";
 
 /**
+ * The collection of vitality statistics
+ * @typedef VitalityStats
+ * @property {number} health the amount of health remaining
+ * @property {number} posture the amount of posture gained
+ * @property {number} souls the amount of souls remaining
+ */
+
+/**
  * Concrete implementation of the character.
  *
  * @author Roman Bureacov
@@ -29,6 +37,23 @@ export class Player extends Character {
         /** the player has died, sends the player itself as now */
         DIED : "Player.DIED",
     })
+
+    /**
+     * Collection of constants pertaining to the player
+     * @readonly
+     * @type {{
+     *     VITALITY_MAXIMUMS : VitalityStats,
+     *     POSTURE_DRAIN_PER_SECOND : number
+     * }}
+     */
+    static CONSTANTS = Object.freeze({
+        VITALITY_MAXIMUMS : {
+            health : 100,
+            posture : 100,
+            souls : 3
+        },
+        POSTURE_DRAIN_PER_SECOND : 10
+    });
 
     /**
      * Enum representing the possible states of player characters
@@ -55,6 +80,17 @@ export class Player extends Character {
      */
     onGround = false;
 
+
+    /**
+     * The vitality stats of this player.
+     * @type {VitalityStats}
+     */
+    vitality = {
+        health : 0,
+        posture : 0,
+        souls : 0,
+    }
+
     /**
      * Constructs a new playable character with no animators and an empty input map.
      *
@@ -70,7 +106,8 @@ export class Player extends Character {
                 startX = 0, startY = 0) {
         super(game, spritesheet, dimX, dimY, startX, startY);
 
-        this.playerHealth = 100;
+        this.vitality.health = Player.CONSTANTS.VITALITY_MAXIMUMS.health;
+        this.vitality.souls = Player.CONSTANTS.VITALITY_MAXIMUMS.souls;
 
         this.state = Player.states.IDLE;
         this.physics.velocityMax.x = 10;
@@ -92,95 +129,37 @@ export class Player extends Character {
         this.gravity = -20;
 
         this.initKeymap();
-        this.initHitbox();
-        this.setupCombatHitboxes();
+        this.initSelfHitbox();
+        this.initAttackHitbox();
 
     }
 
     /**
      * Sets up the players attack and body hitboxes, adds it to the game engine. Sets the dynamic hitboxes.
      */
-    setupCombatHitboxes() {
+    initAttackHitbox() {
+        /** @deprecated */
         this.type = "player";
+
         this._alreadyHit = new Set();
         this._clashed = new Set();
 
-        this.hitbox.kind = HITBOX_TYPE.BODY; // <-- duplicated fragment
-        this.hitbox.enabled = true;
-
-        this.attackHitbox = new Hitbox(this, new Rectangle2D(0, 0, .05, 1));
-
-        this.attackHitbox.kind = HITBOX_TYPE.ATTACK;
-        this.attackHitbox.enabled = false;
-
-        this.game.spawnDynamicHitbox(this.attackHitbox);
-
-        this.attackHitbox.resolveIntersection = this.onAttackHitboxIntersection.bind(this);
+        this.attackHitbox = new AttackHitbox(this, new Rectangle2D(
+            0, -this.hitbox.bounds.dimension.height * 0.1,
+            .05, this.hitbox.bounds.dimension.height * 0.9
+            ));
     }
 
     /**
-     *
-     * @param {PlayerOne, PlayerTwo} players
+     * Reinitializes this player.
      */
-    onAttackHitboxIntersection(players) {
-        const attacker = players.subject.parent;
-        const otherHb = players.other;
-        const victim = otherHb.parent;
-
-        if (victim.type !== "player") return;
-        if (victim === attacker) return;
-        if (attacker.state !== Player.states.ATTACK) return;
-
-        // once clashed, never damage
-        if (attacker._clashed.has(victim)) return;
-
-        if (otherHb.kind === HITBOX_TYPE.ATTACK) {
-            const victimIsAttacking =
-                victim.state === Player.states.ATTACK && victim.attackHitbox.enabled;
-            if (!victimIsAttacking) return;
-
-            attacker._clashed.add(victim);
-            victim._clashed.add(attacker);
-
-            attacker.attackHitbox.enabled = false;
-            victim.attackHitbox.enabled = false;
-
-            SoundFX.play("swordCollide8")
-
-            // PUSH BOTH BACK
-            attacker.applyKnockbackFrom(victim);
-            victim.applyKnockbackFrom(attacker);
-
-            return;
-        }
-
-        if (otherHb.kind !== HITBOX_TYPE.BODY) return;
-        if (attacker._alreadyHit.has(victim)) return;
-
-        const bothAttacking = attacker.attackHitbox.enabled && victim.attackHitbox.enabled;
-
-        const swordsOverlap =
-            bothAttacking &&
-            attacker.attackHitbox.bounds.intersects?.(victim.attackHitbox.bounds);
-
-        if (swordsOverlap) {
-            attacker._clashed.add(victim);
-            victim._clashed.add(attacker);
-
-            attacker.attackHitbox.enabled = false;
-            victim.attackHitbox.enabled = false;
-
-            return;
-        }
-
-        // Damage
-        victim.setPlayerHealth?.(10);
-        victim.attackHitbox.enabled = false;
-        attacker._alreadyHit.add(victim);
-        console.log(attacker.name, ": ", attacker.playerHealth)
-        console.log(victim.name, ": ", victim.playerHealth)
+    reinit() {
+        this.stateLock = false;
+        this.state = Player.states.IDLE;
+        this.vitality.health = Player.CONSTANTS.VITALITY_MAXIMUMS.health;
+        this.vitality.posture = 0;
+        this.vitality.souls = Player.CONSTANTS.VITALITY_MAXIMUMS.souls;
     }
-
 
     applyKnockbackFrom(other, strength = this.knockbackStrength) {
         // Direction: push away from the other player
@@ -205,11 +184,11 @@ export class Player extends Character {
     }
 
     setPlayerHealth(damage) {
+        console.log("Taking damage...")
 
+        if (this.vitality.health === 0) {
 
-        if (this.playerHealth === 0) {
-
-            this.playerHealth -= 1;
+            this.vitality.health -= 1;
 
             let rnd_int = Math.floor(Math.random() * 5) + 1;
             switch (getCharacterData(this.name).gender) {
@@ -239,8 +218,8 @@ export class Player extends Character {
             //     this.game.running = false;
             // }, 1000);
 
-        } else if (this.playerHealth > 0) {
-            this.playerHealth -= damage;
+        } else if (this.vitality.health > 0) {
+            this.vitality.health -= damage;
 
             let rnd_int = Math.floor(Math.random() * 7) + 1;
             switch (getCharacterData(this.name).gender) {
@@ -273,7 +252,7 @@ export class Player extends Character {
         };
     };
 
-    initHitbox() {
+    initSelfHitbox() {
 
         let box = this.drawingProperties.bounds;
         this.hitbox = new Hitbox(
@@ -350,7 +329,6 @@ export class Player extends Character {
     swing() {
         if (this.stateLock) return;
 
-        console.log(this.name, ": New Swing action")
 
         this.lastState = this.state;
         this.state = Player.states.ATTACK;
@@ -360,8 +338,9 @@ export class Player extends Character {
         this._alreadyHit.clear();
         this.updateAttackHitboxBounds();
         this.attackHitbox.enabled = true;
+        this.attackHitbox.expired = false;
+        this.game.spawnDynamicHitbox(this.attackHitbox);
 
-        console.log(this.physics.position.y)
 
         SoundFX.play(getCharacterData(this.name).swordSound);
     }
@@ -395,12 +374,17 @@ export class Player extends Character {
     update() {
         this.physics.acceleration.y = this.gravity;
 
-        // for (let key in this.game.keys) this.keymapper.sendKeyEvent(this.game.keys[key]);
+        // send the keys for this player to process
+        for (let key in this.game.keys) this.keymapper.sendKeyEvent(this.game.keys[key]);
 
-        for (let k in this.game.keys) {
-            // console.log("Player got event:", this.game.keys[k].type, this.game.keys[k].code);
-            this.keymapper.sendKeyEvent(this.game.keys[k]);
-        }
+        // natural drain of the posture
+        this.vitality.posture = Math.max(
+            0,
+            Math.min(
+                Player.CONSTANTS.VITALITY_MAXIMUMS.posture,
+                this.vitality.posture -= Player.CONSTANTS.POSTURE_DRAIN_PER_SECOND * this.game.clockTick
+            )
+        );
 
         switch (this.state) {
             case Player.states.JUMP:
@@ -436,24 +420,93 @@ export class Player extends Character {
     }
 
     updateAttackHitboxBounds() {
-        const box = this.drawingProperties.bounds;
+        const box = this.hitbox.bounds;
         const w = box.dimension.width;
-        const h = box.dimension.height;
-
-        const dimX = w ;
-        const dimY = h ;
-
-        const startY = box.start.y() - h * 0.20;
+        const attackWidth = this.attackHitbox.bounds.dimension.width;
 
         let startX;
         if (this.facing === DIRECTIONS.RIGHT) {
-            startX = box.start.x() - w * .20;
+            startX = box.start.x() + w;
         } else {
-            startX = box.start.x() - dimX * 0.20; // push it to the left of the body
+            startX = box.start.x() - attackWidth; // push it to the left of the body
         }
 
-        this.attackHitbox.bounds.setStart(startX, startY);
-        this.attackHitbox.bounds.setDimension(dimX, dimY);
+        this.attackHitbox.bounds.setStart(startX, this.attackHitbox.bounds.start.y());
     }
 
+}
+
+class AttackHitbox extends Hitbox {
+
+    /**
+     * The track of total time in seconds
+     * @type {number}
+     */
+    totalTime = 0;
+
+    /**
+     * @type {Player}
+     */
+    parent; // override, to enforce JSDoc type checking
+
+    /**
+     *
+     * @param {Player} parent
+     * @param {Rectangle2D} bounds
+     */
+    constructor(parent, bounds) {
+        super(parent, bounds);
+        this.kind = HITBOX_TYPE.ATTACK;
+        this.parent = parent;
+    }
+
+    update(timestep) {
+        // we need a little delay, so that
+        // clashing is a little more probably
+        // when players are closer together
+        this.totalTime += timestep;
+        if (this.totalTime > 0.1) {
+            this.enabled = true;
+            this.totalTime = 0;
+        }
+    }
+
+    /**
+     * The function used on response to intersection
+     *
+     * @param {IntersectionTestProperties} props
+     */
+    resolveIntersection(props) {
+        const otherHb = props.other;
+        const otherParent = otherHb.parent;
+
+        // consume hitbox
+        this.expired = true;
+        this.enabled = false;
+
+        if (otherParent instanceof TileEntity) {
+            console.log("Knocked back from tile");
+            this.parent.physics.velocity.x += 1;
+        } else if (otherParent instanceof Player) {
+            // well, what type of hitbox did we intersect with?
+            if (otherHb.kind === HITBOX_TYPE.ATTACK) {
+                // just bounce off
+                this.parent.physics.velocity.x = -1;
+                otherParent.physics.velocity.x = 1;
+                SoundFX.play("swordCollide8");
+            } else if (otherHb.kind === HITBOX_TYPE.BODY) {
+                // do we bounce off?
+                if (otherParent.state === Player.states.ATTACK
+                    && otherParent.facing !== this.parent.facing // lazy check
+                ) { // we want to only bounce off if we're facing towards each other
+                    this.parent.physics.velocity.x = -1;
+                    otherParent.physics.velocity.x = 1;
+                    SoundFX.play("swordCollide8");
+                } else {
+                    // just do damage
+                    this.parent.setPlayerHealth(10);
+                }
+            }
+        }
+    }
 }

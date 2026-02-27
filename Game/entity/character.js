@@ -85,7 +85,8 @@ export class Character extends DynamicEntity {
 
 
     /**
-     * updates this character
+     * updates this character, specifically updating the
+     * animator and physics.
      */
     update() {
         // let anim = this.animations[this.animationName()];

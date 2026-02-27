@@ -6,8 +6,14 @@
 export class DrawingProperties {
 
     /**
+     * The origin to which this drawing is made with respect to
+     * @type {SpaceObject}
+     */
+    origin;
+
+    /**
      * The spritesheet
-     * @type {Spritesheet}
+     * @type {Spritesheet | undefined}
      */
     spritesheet;
 
@@ -43,11 +49,13 @@ export class DrawingProperties {
 
     /**
      * Constructs drawing properties to be used by the renderer
-     * @param {Spritesheet} spritesheet
+     * @param {Spritesheet} [spritesheet]
      * @param {Rectangle2D} bounds
+     * @param {SpaceObject} origin
      */
-    constructor(spritesheet, bounds) {
+    constructor(spritesheet = undefined, bounds, origin) {
         this.spritesheet = spritesheet;
         this.bounds = bounds;
+        this.origin = origin;
     }
 }
