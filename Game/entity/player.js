@@ -123,17 +123,27 @@ export class Player extends Character {
      * The amount of time remaining in the stagger state
      * @type {number} the time in seconds
      */
-    postureTimeout = 0;
+    staggerTimeout = 0;
+
+    /**
+     * The finisher hitbox for this player
+     * @type {Hitbox}
+     */
+    finisherHitbox;
 
     /**
      * Collection of setters for this object.
-     * @type {{
-     *      health: function(*): void,
-     *      posture: function(*): void,
-     *      souls: function(*): void
-     * }}
      */
     setters = {
+        /**
+         * Sets the health for this player
+         *
+         * If the new health is below the minimum or
+         * above the maximum, then it is either the minimum
+         * or maximum that is set.
+         *
+         * @param {number} newHealth the new health to set
+         */
         health : (newHealth) => {
             newHealth = Math.max( // bounds check on health
                 0,
@@ -152,6 +162,16 @@ export class Player extends Character {
             }
 
         },
+
+        /**
+         * Sets the posture for this player.
+         *
+         * If the new posture is below the minimum or
+         * above the maximum, then it is either the minimum
+         * or the maximum that is set.
+         *
+         * @param {number} newPosture
+         */
         posture : (newPosture) => {
             newPosture = Math.max( // bounds check
                 0,
@@ -174,6 +194,16 @@ export class Player extends Character {
                 this.stagger();
             }
         },
+
+        /**
+         * Sets the souls for this player
+         *
+         * If the new souls is below the minimum or
+         * above the maximum, then it is either the minimum
+         * or the maximum that is set
+         *
+         * @param {number} newSouls
+         */
         souls : (newSouls) => {
             newSouls = Math.max( // bounds check on health
                 0,
@@ -237,19 +267,15 @@ export class Player extends Character {
         this.initKeymap();
         this.initSelfHitbox();
         this.initAttackHitbox();
-
+        this.initFinisherHitbox();
     }
+
+    // SECTION: initializers
 
     /**
      * Sets up the players attack and body hitboxes, adds it to the game engine. Sets the dynamic hitboxes.
      */
     initAttackHitbox() {
-        /** @deprecated */
-        this.type = "player";
-
-        this._alreadyHit = new Set();
-        this._clashed = new Set();
-
         this.attackHitbox = new AttackHitbox(this, new Rectangle2D(
             0, -this.hitbox.bounds.dimension.height * 0.1,
             .05, this.hitbox.bounds.dimension.height * 0.9
@@ -267,75 +293,6 @@ export class Player extends Character {
         this.vitality.souls = Player.CONSTANTS.VITALITY_MAXIMUMS.souls;
     }
 
-    applyKnockbackFrom(other, strength = this.knockbackStrength) {
-        // Direction: push away from the other player
-        const dir = (this.objectX() < other.objectX()) ? -1 : 1;
-
-        // Cancel player-driven acceleration so they slide back cleanly
-        this.constantAcceleration[DIRECTIONS.LEFT] = 0;
-        this.constantAcceleration[DIRECTIONS.RIGHT] = 0;
-
-        // Set a short timer during which we don't zero velocity.x in update()
-        this.knockbackTimer = this.knockbackDuration;
-
-        // Apply the impulse
-        this.physics.velocity.x = dir * strength;
-
-        // Optional: little "pop" so it feels like impact
-        // Only if you're on ground or you want it always
-        if (this.onGround) {
-            this.physics.velocity.y = Math.max(this.physics.velocity.y, this.knockbackLift);
-            this.onGround = false;
-        }
-    }
-
-    
-
-    /**
-     * Initiates a hit on this player, launching any necessary
-     * events as a result.
-     * 
-     * @param {number} damage the amount of damage this player should take
-     */
-    hit(damage) {
-        console.log("Taking damage...")
-
-        const newHealth = this.vitality.health - damage;
-        this.setters.health(newHealth);
-        const newPosture = this.vitality.posture + damage * Player.CONSTANTS.POSTURE_PER_DAMAGE;
-        this.setters.posture(newPosture);
-
-        if (this.vitality.health > 0) {
-            this.soundEvents.playHitSound();
-        } else {
-            // player has health <= 0, they're "dead"
-            this.kill();
-        }
-    }
-
-    /**
-     * Initiates the event that this player has died.
-     */
-    kill() {
-        // TODO: revise this to not be dead on health <= 0
-        this.stateLock = true;
-        this.state = Player.states.DEAD;
-        this.vitality.health = 0;
-        this.soundEvents.playDeadSound();
-
-        this.notifyListeners(Player.PROPERTIES.DIED, undefined, 0);
-    }
-
-    /**
-     * Initiates the event that this player is staggered
-     */
-    stagger() {
-        console.log("I've been staggered!")
-        this.state = Player.states.STAGGERED;
-        this.stateLock = true;
-        this.postureTimeout = Player.CONSTANTS.POSTURE_TIMEOUT;
-    }
-
     initKeymap() {
         this.keymapper = new KeyMapper();
         this.keymapper.outputMap = {
@@ -345,6 +302,7 @@ export class Player extends Character {
             "stop right": () => this.stopMoving(DIRECTIONS.RIGHT),
             "stop left": () => this.stopMoving(DIRECTIONS.LEFT),
             "jump": () => this.jump(),
+            "finisher": () => this.finisher()
         };
     };
 
@@ -391,6 +349,82 @@ export class Player extends Character {
         }
     }
 
+    /**
+     * Initializes the finisher hitbox
+     */
+    initFinisherHitbox() {
+        this.finisherHitbox = new FinisherHitbox(
+            this,
+            new Rectangle2D(
+                0, 0,
+                this.attackHitbox.bounds.dimension.width,
+                this.attackHitbox.bounds.dimension.height
+                )
+        )
+    }
+
+    // SECTION: actions that may be performed on the player
+
+    /**
+     * Initiates a hit on this player, launching any necessary
+     * events as a result.
+     *
+     * @param {number} damage the amount of damage this player should take
+     */
+    hit(damage) {
+        console.log("Taking damage...")
+
+        const newHealth = this.vitality.health - damage;
+        this.setters.health(newHealth);
+
+        if (this.state !== Player.states.STAGGERED) {
+            const newPosture = this.vitality.posture + damage * Player.CONSTANTS.POSTURE_PER_DAMAGE;
+            this.setters.posture(newPosture);
+        }
+
+        this.soundEvents.playHitSound();
+    }
+
+    /**
+     * Initiates the event that this player has died.
+     */
+    kill() {
+        this.stateLock = true;
+        this.state = Player.states.DEAD;
+        this.soundEvents.playDeadSound();
+
+        this.notifyListeners(Player.PROPERTIES.DIED);
+    }
+
+    /**
+     * Initiates the event that this player is staggered
+     */
+    stagger() {
+        console.log("I've been staggered!")
+        this.state = Player.states.STAGGERED;
+        this.stateLock = true;
+        this.staggerTimeout = Player.CONSTANTS.POSTURE_TIMEOUT;
+        // deactivate relevant hitboxes
+        this.attackHitbox.expired = true;
+        this.finisherHitbox.expired = true;
+    }
+
+    /**
+     * Initiates the event that this player has had a finisher
+     * performed on them
+     */
+    finish() {
+        console.log("I've been finished upon!")
+        this.state = Player.states.IDLE;
+        this.stateLock = false;
+        this.setters.souls(this.vitality.souls - 1);
+        if (this.vitality.souls > 0) {
+            this.setters.posture(0);
+            this.setters.health(Player.CONSTANTS.VITALITY_MAXIMUMS.health);
+        }
+    }
+
+    // SECTION: functions that map directly to player output map
 
     /**
      * Sets the acceleration for this character
@@ -425,18 +459,13 @@ export class Player extends Character {
     swing() {
         if (this.stateLock) return;
 
-
         this.lastState = this.state;
         this.state = Player.states.ATTACK;
         this.stateLock = true;
 
-        this._clashed.clear();
-        this._alreadyHit.clear();
         this.updateAttackHitboxBounds();
-        this.attackHitbox.enabled = true;
-        this.attackHitbox.expired = false;
         this.game.spawnDynamicHitbox(this.attackHitbox);
-
+        this.finisherHitbox.expired = true;
 
         this.soundEvents.playSwingSound();
     }
@@ -456,6 +485,32 @@ export class Player extends Character {
 
     }
 
+    /**
+     * causes a player to initiate a finisher
+     */
+    finisher() {
+        if (this.stateLock) return;
+
+        // spawn at where the player is looking
+        const hw = this.finisherHitbox.bounds.dimension.width
+        if (this.facing === DIRECTIONS.LEFT) {
+            this.finisherHitbox.bounds.setStart(
+                -hw,
+                this.finisherHitbox.bounds.start.y()
+            )
+        } else {
+            const w = this.hitbox.bounds.dimension.width;
+            this.finisherHitbox.bounds.setStart(
+                w,
+                this.finisherHitbox.bounds.start.y()
+            )
+        }
+
+        this.game.spawnDynamicHitbox(this.finisherHitbox);
+    }
+
+    // SECTION: overrides
+
     update() {
         this.physics.acceleration.y = this.gravity;
 
@@ -463,14 +518,16 @@ export class Player extends Character {
         for (let key in this.game.keys) this.keymapper.sendKeyEvent(this.game.keys[key]);
 
         // natural drain of the posture
-        this.setters.posture(
-            this.vitality.posture - Player.CONSTANTS.POSTURE_DRAIN_PER_SECOND * this.game.clockTick
-        )
+        if (this.state !== Player.states.STAGGERED) {
+            this.setters.posture(
+                this.vitality.posture - Player.CONSTANTS.POSTURE_DRAIN_PER_SECOND * this.game.clockTick
+            )
+        }
 
         switch (this.state) {
             case Player.states.STAGGERED:
-                this.postureTimeout -= this.game.clockTick;
-                if (this.postureTimeout <= 0) {
+                this.staggerTimeout -= this.game.clockTick;
+                if (this.staggerTimeout <= 0) {
                     this.state = Player.states.IDLE;
                     this.stateLock = false;
                     console.log("No longer staggered!")
@@ -508,6 +565,8 @@ export class Player extends Character {
         super.update();
     }
 
+    // SECTION: helpers
+
     updateAttackHitboxBounds() {
         const box = this.hitbox.bounds;
         const w = box.dimension.width;
@@ -523,6 +582,28 @@ export class Player extends Character {
         this.attackHitbox.bounds.setStart(startX, this.attackHitbox.bounds.start.y());
     }
 
+
+    applyKnockbackFrom(other, strength = this.knockbackStrength) {
+        // Direction: push away from the other player
+        const dir = (this.objectX() < other.objectX()) ? -1 : 1;
+
+        // Cancel player-driven acceleration so they slide back cleanly
+        this.constantAcceleration[DIRECTIONS.LEFT] = 0;
+        this.constantAcceleration[DIRECTIONS.RIGHT] = 0;
+
+        // Set a short timer during which we don't zero velocity.x in update()
+        this.knockbackTimer = this.knockbackDuration;
+
+        // Apply the impulse
+        this.physics.velocity.x = dir * strength;
+
+        // Optional: little "pop" so it feels like impact
+        // Only if you're on ground or you want it always
+        if (this.onGround) {
+            this.physics.velocity.y = Math.max(this.physics.velocity.y, this.knockbackLift);
+            this.onGround = false;
+        }
+    }
 }
 
 /**
@@ -560,6 +641,12 @@ class AttackHitbox extends Hitbox {
         super(parent, bounds);
         this.kind = HITBOX_TYPE.ATTACK;
         this.parent = parent;
+    }
+
+    reset() {
+        this.enabled = false;
+        this.expired = false;
+        this.totalTime = 0;
     }
 
     update(timestep) {
@@ -620,6 +707,42 @@ class AttackHitbox extends Hitbox {
                     // just do damage
                     otherParent.hit(10);
                 }
+            }
+        }
+    }
+}
+
+class FinisherHitbox extends Hitbox {
+
+    /**
+     * The total time accumulated in seconds
+     * @type {number}
+     */
+    totalTime = 0;
+
+    reset() {
+        super.reset();
+        this.totalTime = 0;
+    }
+
+    update(timestep) {
+        this.totalTime += timestep;
+
+        if (this.totalTime > 0.9) {
+            // despawn
+            this.enabled = false;
+            this.expired = true;
+            this.totalTime = 0;
+        }
+    }
+
+    resolveIntersection(props) {
+        if (props.other.parent === this.parent) return;
+        const other = props.other.parent;
+
+        if (other instanceof Player) {
+            if (other.state === Player.states.STAGGERED) {
+                other.finish();
             }
         }
     }

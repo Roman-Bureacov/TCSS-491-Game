@@ -237,10 +237,16 @@ export class GameEngine {
     };
 
     /**
-     * Spawns a dynamic hitbox in which this game engine becomes aware of
+     * Spawns a dynamic hitbox in which this game engine becomes aware of.
+     *
+     * Every hitbox spawned will have its reset behavior called upon
+     * to reset any and all state associated.
+     *
+     * @see {Hitbox}
      * @param {Hitbox} hitbox the hitbox to make the game aware of
      */
     spawnDynamicHitbox(hitbox) {
+        hitbox.reset();
         this.hitboxes.dynamic.push(hitbox)
     }
 
