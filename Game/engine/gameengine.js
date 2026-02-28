@@ -242,6 +242,16 @@ export class GameEngine {
      * Every hitbox spawned will have its reset behavior called upon
      * to reset any and all state associated.
      *
+     * The update loop in the engine first tests intersections
+     * then updates hitboxes:
+     * ```md
+     * 1. test intersections
+     *   a. if a hitbox is not enabled, intersection is not tested
+     *   b. if a hitbox is enabled, intersection is tested
+     *     * if an intersection is found, let both intersecting hitboxes react
+     * 2. update any and all hitboxes that have not expired
+     * 3. remove any and all expired hitboxes
+     * ```
      * @see {Hitbox}
      * @param {Hitbox} hitbox the hitbox to make the game aware of
      */
@@ -383,13 +393,18 @@ export class GameEngine {
      * updates the dynamic hitboxes, removing them if they expired
      */
     updateHitboxes() {
-        for (let i = 0; i < this.hitboxes.dynamic.length; i++) {
-            if (this.hitboxes.dynamic[i].expired) {
-                this.hitboxes.dynamic.splice(i, 1);
-            } else {
-                this.hitboxes.dynamic[i].update(this.clockTick);
-            }
-        }
+        const expired = []
+        this.hitboxes.dynamic
+            .forEach(h => {
+                if (h.expired) expired.push(h)
+                else h.update(this.clockTick);
+            });
+        expired.forEach(h => {
+            this.hitboxes.dynamic.splice(
+                this.hitboxes.dynamic.indexOf(h),
+                1
+            )
+        })
     }
 
     /**
