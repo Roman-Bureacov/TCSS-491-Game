@@ -245,8 +245,16 @@ export class Player extends Character {
         this.vitality.health = Player.CONSTANTS.VITALITY_MAXIMUMS.health;
         this.vitality.souls = Player.CONSTANTS.VITALITY_MAXIMUMS.souls;
 
-        this.state = Player.states.IDLE;
+        // phys init
         this.physics.velocityMax.x = 10;
+        this.constantAcceleration = {
+            [DIRECTIONS.LEFT]: 0,
+            [DIRECTIONS.RIGHT]: 0,
+        };
+        this.physics.velocityMax.x = 5;
+        this.physics.velocityMax.y = 10;
+        this.physics.drag.x = 15;
+        this.physics.drag.y = 15;
 
         // Knockback / hit control
         this.knockbackTimer = 0;      // seconds remaining
@@ -254,12 +262,7 @@ export class Player extends Character {
         this.knockbackStrength = 1.5;   // tune for push distance
         this.knockbackLift = 0.5;      // optional small vertical bump
 
-        this.constantAcceleration = {
-            [DIRECTIONS.LEFT]: 0,
-            [DIRECTIONS.RIGHT]: 0,
-        };
-        this.physics.velocityMax.x = 5;
-        this.physics.velocityMax.y = 10;
+        this.state = Player.states.IDLE;
         this.lastState = this.state;
 
         this.gravity = -20;
@@ -377,6 +380,8 @@ export class Player extends Character {
         const newHealth = this.vitality.health - damage;
         this.setters.health(newHealth);
 
+
+
         if (this.state !== Player.states.STAGGERED) {
             const newPosture = this.vitality.posture + damage * Player.CONSTANTS.POSTURE_PER_DAMAGE;
             this.setters.posture(newPosture);
@@ -424,6 +429,20 @@ export class Player extends Character {
         }
     }
 
+    /**
+     * Inititates the event that this player has been knocked back
+     *
+     * @param {number} velocityX the knockback velocity in X
+     * @param {number} velocityY the knockback velocity in Y
+     */
+    knockback(velocityX, velocityY) {
+        this.constantAcceleration[DIRECTIONS.LEFT] = 0;
+        this.constantAcceleration[DIRECTIONS.RIGHT] = 0;
+
+        this.physics.velocity.x = velocityX;
+        this.physics.velocity.y = velocityY;
+    }
+
     // SECTION: functions that map directly to player output map
 
     /**
@@ -439,7 +458,6 @@ export class Player extends Character {
             }
 
             this.constantAcceleration[this.facing] = acceleration;
-
 
         }
 
@@ -479,7 +497,6 @@ export class Player extends Character {
             if (this.onGround) {
                 this.onGround = false;
                 this.physics.velocity.y = this.gravity * -1 + 3;
-                this.state = Player.states.JUMP;
             }
         }
 
@@ -513,6 +530,7 @@ export class Player extends Character {
 
     update() {
         this.physics.acceleration.y = this.gravity;
+        this.physics.acceleration.x = this.physics.getDecelerationVector().x
 
         // send the keys for this player to process
         for (let key in this.game.keys) this.keymapper.sendKeyEvent(this.game.keys[key]);
@@ -533,34 +551,30 @@ export class Player extends Character {
                     console.log("No longer staggered!")
                 }
                 break;
-            case Player.states.JUMP:
-                this.physics.acceleration.x =
-                    this.constantAcceleration[DIRECTIONS.LEFT] +
-                    this.constantAcceleration[DIRECTIONS.RIGHT];
-                break;
             case Player.states.ATTACK :
 
                 break;
             case Player.states.MOVE :
-                this.physics.acceleration.x = 0;
-
-                this.physics.acceleration.x =
+                const newAccel =
                     this.constantAcceleration[DIRECTIONS.LEFT]
                     + this.constantAcceleration[DIRECTIONS.RIGHT];
 
-                if (this.physics.acceleration.x === 0) {
+                if (newAccel === 0) {
                     this.setState(Player.states.IDLE);
-                } else this.setState(Player.states.MOVE);
+                } else {
+                    this.physics.acceleration.x = newAccel;
+                    this.setState(Player.states.MOVE);
+                }
                 break;
             case Player.states.IDLE :
-                this.physics.velocity.x = 0;
                 break;
-
             case Player.states.DEAD:
                 this.physics.velocity.x = 0;
                 this.physics.velocity.y = 0;
                 break;
         }
+
+        this.onGround = false;
 
         super.update();
     }
