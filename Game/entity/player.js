@@ -380,8 +380,6 @@ export class Player extends Character {
         const newHealth = this.vitality.health - damage;
         this.setters.health(newHealth);
 
-
-
         if (this.state !== Player.states.STAGGERED) {
             const newPosture = this.vitality.posture + damage * Player.CONSTANTS.POSTURE_PER_DAMAGE;
             this.setters.posture(newPosture);
@@ -430,17 +428,31 @@ export class Player extends Character {
     }
 
     /**
-     * Inititates the event that this player has been knocked back
+     * pushes the player in a direction
      *
-     * @param {number} velocityX the knockback velocity in X
-     * @param {number} velocityY the knockback velocity in Y
+     * @param {number} velocityX the push velocity in X
+     * @param {number} velocityY the push velocity in Y
      */
-    knockback(velocityX, velocityY) {
+    push(velocityX, velocityY) {
         this.constantAcceleration[DIRECTIONS.LEFT] = 0;
         this.constantAcceleration[DIRECTIONS.RIGHT] = 0;
 
         this.physics.velocity.x = velocityX;
         this.physics.velocity.y = velocityY;
+    }
+
+    /**
+     * Knocks the player back, in the opposite direction they are facing.
+     * @param {number} velocityX the unsigned amount of knockback in the x
+     * @param {number} velocityY the signed amount of knockback in the y
+     */
+    knockback(velocityX, velocityY) {
+
+        if (this.facing === DIRECTIONS.RIGHT) {
+            velocityX = -velocityX;
+        }
+
+        this.push(velocityX, velocityY)
     }
 
     // SECTION: functions that map directly to player output map
