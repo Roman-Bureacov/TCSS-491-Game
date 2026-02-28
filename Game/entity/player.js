@@ -54,13 +54,6 @@ export class Player extends Character {
     /**
      * Collection of constants pertaining to the player
      * @readonly
-     * @type {{
-     *     VITALITY_MAXIMUMS : VitalityStats,
-     *     POSTURE_DRAIN_PER_SECOND : number,
-     *     POSTURE_DRAIN_PER_SECOND : number,
-     *     POSTURE_PER_DAMAGE : number,
-     *     POSTURE_TIMEOUT : number
-     * }}
      */
     static CONSTANTS = Object.freeze({
         VITALITY_MAXIMUMS: {
@@ -71,6 +64,13 @@ export class Player extends Character {
         POSTURE_DRAIN_PER_SECOND: 10,
         POSTURE_PER_DAMAGE: 3,
         POSTURE_TIMEOUT: 5,
+        KNOCKBACK: {
+            CLASH: {x: 5, y: 5},
+            SUCCESSFUL_BLOCK: {x: 10, y: 3},
+            FAIR_BLOCK: {x: 5, y: 3},
+            POOR_BLOCK: {x: 3, y: 3},
+            HIT: {x: 3, y: 3},
+        }
     });
 
     /**
@@ -246,21 +246,16 @@ export class Player extends Character {
         this.vitality.souls = Player.CONSTANTS.VITALITY_MAXIMUMS.souls;
 
         // phys init
-        this.physics.velocityMax.x = 10;
-        this.constantAcceleration = {
+        this.constantVelocity = {
             [DIRECTIONS.LEFT]: 0,
             [DIRECTIONS.RIGHT]: 0,
         };
-        this.physics.velocityMax.x = 5;
+        this.physics.velocityMax.x = 50;
         this.physics.velocityMax.y = 10;
+        this.physics.accelerationMax.x = 10;
+        this.physics.accelerationMax.y = 10;
         this.physics.drag.x = 15;
-        this.physics.drag.y = 15;
-
-        // Knockback / hit control
-        this.knockbackTimer = 0;      // seconds remaining
-        this.knockbackDuration = 0.12; // tune (0.08–0.20)
-        this.knockbackStrength = 1.5;   // tune for push distance
-        this.knockbackLift = 0.5;      // optional small vertical bump
+        this.physics.drag.y = 0;
 
         this.state = Player.states.IDLE;
         this.lastState = this.state;
@@ -299,8 +294,8 @@ export class Player extends Character {
     initKeymap() {
         this.keymapper = new KeyMapper();
         this.keymapper.outputMap = {
-            "move right": () => this.move(800),
-            "move left": () => this.move(-800),
+            "move right": () => this.move(5),
+            "move left": () => this.move(-5),
             "attack": () => this.swing(),
             "stop right": () => this.stopMoving(DIRECTIONS.RIGHT),
             "stop left": () => this.stopMoving(DIRECTIONS.LEFT),
@@ -339,8 +334,8 @@ export class Player extends Character {
                         this.stateLock = false;
 
                         const ax =
-                            this.constantAcceleration[DIRECTIONS.LEFT] +
-                            this.constantAcceleration[DIRECTIONS.RIGHT];
+                            this.constantVelocity[DIRECTIONS.LEFT] +
+                            this.constantVelocity[DIRECTIONS.RIGHT];
 
                         this.state = (ax !== 0) ? Player.states.MOVE : Player.states.IDLE;
                     }
@@ -434,8 +429,8 @@ export class Player extends Character {
      * @param {number} velocityY the push velocity in Y
      */
     push(velocityX, velocityY) {
-        this.constantAcceleration[DIRECTIONS.LEFT] = 0;
-        this.constantAcceleration[DIRECTIONS.RIGHT] = 0;
+        this.constantVelocity[DIRECTIONS.LEFT] = 0;
+        this.constantVelocity[DIRECTIONS.RIGHT] = 0;
 
         this.physics.velocity.x = velocityX;
         this.physics.velocity.y = velocityY;
@@ -459,17 +454,17 @@ export class Player extends Character {
 
     /**
      * Sets the acceleration for this character
-     * @param acceleration
+     * @param {number} velocityX
      */
-    move(acceleration) {
+    move(velocityX) {
         if (!this.setState(Player.states.MOVE)) {
-            const newFacing = acceleration < 0 ? DIRECTIONS.LEFT : DIRECTIONS.RIGHT;
+            const newFacing = velocityX < 0 ? DIRECTIONS.LEFT : DIRECTIONS.RIGHT;
             if (newFacing !== this.facing) {
                 this.physics.velocity.x = 0;
                 this.facing = newFacing;
             }
 
-            this.constantAcceleration[this.facing] = acceleration;
+            this.constantVelocity[this.facing] = velocityX;
 
         }
 
@@ -480,7 +475,7 @@ export class Player extends Character {
      * @param facing
      */
     stopMoving(facing) {
-        this.constantAcceleration[facing] = 0;
+        this.constantVelocity[facing] = 0;
     }
 
     /**
@@ -508,10 +503,9 @@ export class Player extends Character {
         if (!this.stateLock) {
             if (this.onGround) {
                 this.onGround = false;
-                this.physics.velocity.y = this.gravity * -1 + 3;
+                this.physics.velocity.y = -this.gravity/3;
             }
         }
-
     }
 
     /**
@@ -541,8 +535,9 @@ export class Player extends Character {
     // SECTION: overrides
 
     update() {
-        this.physics.acceleration.y = this.gravity;
-        this.physics.acceleration.x = this.physics.getDecelerationVector().x;
+        const drag = this.physics.getDragVector()
+        this.physics.acceleration.y = this.gravity + drag.y;
+        this.physics.acceleration.x = drag.x;
 
         // send the keys for this player to process
         for (let key in this.game.keys) this.keymapper.sendKeyEvent(this.game.keys[key]);
@@ -570,15 +565,14 @@ export class Player extends Character {
 
                 break;
             case Player.states.MOVE :
-                const newAccel =
-                    this.constantAcceleration[DIRECTIONS.LEFT]
-                    + this.constantAcceleration[DIRECTIONS.RIGHT];
+                const newVelocity =
+                    this.constantVelocity[DIRECTIONS.LEFT]
+                    + this.constantVelocity[DIRECTIONS.RIGHT];
 
-
-                if (newAccel === 0) {
+                if (newVelocity === 0) {
                     this.setState(Player.states.IDLE);
                 } else {
-                    this.physics.acceleration.x = newAccel;
+                    this.physics.velocity.x = newVelocity;
                     this.setState(Player.states.MOVE);
                 }
                 break;
@@ -694,25 +688,40 @@ class AttackHitbox extends Hitbox {
 
         if (otherParent instanceof TileEntity) {
             console.log("Knocked back from tile");
-            this.parent.physics.velocity.x += 1;
+            this.parent.knockback(1, 0)
         } else if (otherParent instanceof Player) {
             // well, what type of hitbox did we intersect with?
             if (otherHb.kind === HITBOX_TYPE.ATTACK) {
                 // just bounce off
-                this.parent.physics.velocity.x = -1;
-                otherParent.physics.velocity.x = 1;
+                this.parent.knockback(3, 4)
+                otherParent.knockback(3, 4);
                 SoundFX.play("swordCollide8");
             } else if (otherHb.kind === HITBOX_TYPE.BODY) {
                 // do we bounce off?
                 if (otherParent.state === Player.states.ATTACK
                     && areFacingEachOther(this.parent, otherParent)
                 ) { // we want to only bounce off if we're facing towards each other
-                    this.parent.physics.velocity.x = -1;
-                    otherParent.physics.velocity.x = 1;
+                    this.parent.knockback(
+                        Player.CONSTANTS.KNOCKBACK.CLASH.x,
+                        Player.CONSTANTS.KNOCKBACK.CLASH.y
+                    );
+                    otherParent.knockback(
+                        Player.CONSTANTS.KNOCKBACK.CLASH.x,
+                        Player.CONSTANTS.KNOCKBACK.CLASH.y
+                    );
                     SoundFX.play("swordCollide8");
                 } else {
                     // just do damage
                     otherParent.hit(10);
+
+                    const sign = (
+                        areFacingEachOther(this.parent, otherParent)
+                    ) ? 1: -1;
+
+                    otherParent.knockback(
+                        sign * Player.CONSTANTS.KNOCKBACK.HIT.x,
+                        Player.CONSTANTS.KNOCKBACK.HIT.y
+                    )
                 }
             }
         }

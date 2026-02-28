@@ -38,6 +38,12 @@ export class PhysicsEntity {
     position = {x: 0, y: 0};
 
     /**
+     * The absolute maximum acceleration vector for this entity in meters per second per second
+     * @type {{x: number, y: number}}
+     */
+    accelerationMax = { x: 1, y: 1 }
+    
+    /**
      * The absolute maximum velocity vector for this entity in meters per second
      * @type {{x: number, y: number}}
      */
@@ -58,6 +64,20 @@ export class PhysicsEntity {
      * @param timeStep
      */
     updatePhysics(timeStep) {
+        this.acceleration.x = 
+            Math.sign(this.acceleration.x)
+            * Math.min(
+                Math.abs(this.acceleration.x),
+                this.accelerationMax.x
+            );
+        this.acceleration.y =
+            Math.sign(this.acceleration.y)
+            * Math.min(
+                Math.abs(this.acceleration.y),
+                this.accelerationMax.y
+            );
+
+
         const newVelocityX = this.acceleration.x * timeStep;
         const newVelocityY = this.acceleration.y * timeStep;
 
@@ -83,7 +103,7 @@ export class PhysicsEntity {
      * Calculates the deceleration vector based on this entity's drag
      * @return {{x: number, y: number}} the deceleration vector, in meters per second per second
      */
-    getDecelerationVector() {
+    getDragVector() {
         const oppSignX = -Math.sign(this.velocity.x);
         const oppSignY = -Math.sign(this.velocity.y);
 
