@@ -542,7 +542,7 @@ export class Player extends Character {
 
     update() {
         this.physics.acceleration.y = this.gravity;
-        this.physics.acceleration.x = this.physics.getDecelerationVector().x
+        this.physics.acceleration.x = this.physics.getDecelerationVector().x;
 
         // send the keys for this player to process
         for (let key in this.game.keys) this.keymapper.sendKeyEvent(this.game.keys[key]);
@@ -553,6 +553,9 @@ export class Player extends Character {
                 this.vitality.posture - Player.CONSTANTS.POSTURE_DRAIN_PER_SECOND * this.game.clockTick
             )
         }
+
+        // to prevent endless deceleration that only gets smaller but does not equal zero
+        if (Math.abs(this.physics.velocity.x) < 0.1) this.physics.velocity.x = 0;
 
         switch (this.state) {
             case Player.states.STAGGERED:
@@ -570,6 +573,7 @@ export class Player extends Character {
                 const newAccel =
                     this.constantAcceleration[DIRECTIONS.LEFT]
                     + this.constantAcceleration[DIRECTIONS.RIGHT];
+
 
                 if (newAccel === 0) {
                     this.setState(Player.states.IDLE);
@@ -606,29 +610,6 @@ export class Player extends Character {
         }
 
         this.attackHitbox.bounds.setStart(startX, this.attackHitbox.bounds.start.y());
-    }
-
-
-    applyKnockbackFrom(other, strength = this.knockbackStrength) {
-        // Direction: push away from the other player
-        const dir = (this.objectX() < other.objectX()) ? -1 : 1;
-
-        // Cancel player-driven acceleration so they slide back cleanly
-        this.constantAcceleration[DIRECTIONS.LEFT] = 0;
-        this.constantAcceleration[DIRECTIONS.RIGHT] = 0;
-
-        // Set a short timer during which we don't zero velocity.x in update()
-        this.knockbackTimer = this.knockbackDuration;
-
-        // Apply the impulse
-        this.physics.velocity.x = dir * strength;
-
-        // Optional: little "pop" so it feels like impact
-        // Only if you're on ground or you want it always
-        if (this.onGround) {
-            this.physics.velocity.y = Math.max(this.physics.velocity.y, this.knockbackLift);
-            this.onGround = false;
-        }
     }
 }
 

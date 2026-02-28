@@ -44,7 +44,7 @@ export class PhysicsEntity {
     velocityMax = {x: 1, y: 1};
 
     /**
-     * The amount of drag for this entity, measured in
+     * The amount of drag for this entity
      * @type {{x: number, y: number}}
      */
     drag = {x: 0, y: 0}
@@ -88,14 +88,8 @@ export class PhysicsEntity {
         const oppSignY = -Math.sign(this.velocity.y);
 
         return {
-            x: Math.floor(
-                    (1 / 2 * oppSignX * this.drag.x * this.velocity.x ** 2)
-                    / PhysicsEntity.PRECISION
-                ) * PhysicsEntity.PRECISION,
-            y: Math.floor(
-                (1/2 * oppSignY * this.drag.y * this.velocity.y ** 2)
-                / PhysicsEntity.PRECISION
-            ) * PhysicsEntity.PRECISION
+            x: oppSignX * (1/2 * this.drag.x * this.velocity.x ** 2),
+            y: oppSignY * (1/2 * this.drag.y * this.velocity.y ** 2)
         }
     }
 }
