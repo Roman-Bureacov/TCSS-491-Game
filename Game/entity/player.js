@@ -39,9 +39,13 @@ export class Player extends Character {
      * @enum {string}
      */
     static PROPERTIES = Object.freeze({
-        /** the player was hit, sends old health as then and new health as now */
-        HIT: "Player.HIT",
-        /** the player has died, sends the player itself as now */
+        /** the player health has changed, sends old health as then and new health as now */
+        HEALTH: "Player.HEALTH",
+        /** the player posture has changed, the old posture as then and new posture as now */
+        POSTURE: "Player.POSTURE",
+        /** the player souls has changed, the old souls as then and the new souls as now */
+        SOULS: "Player.SOULS",
+        /** the player has died, sends the new health as now */
         DIED: "Player.DIED",
     })
 
@@ -106,6 +110,28 @@ export class Player extends Character {
         health: 0,
         posture: 0,
         souls: 0,
+    }
+
+
+    setters = {
+        health : (newHealth) => {
+            this.notifyListeners(Player.PROPERTIES.HEALTH,
+                this.vitality.health,
+                this.vitality.health = newHealth
+            );
+        },
+        posture : (newPosture) => {
+            this.notifyListeners(Player.PROPERTIES.POSTURE,
+                this.vitality.posture,
+                this.vitality.posture = newPosture
+            );
+        },
+        souls : (newSouls) => {
+            this.notifyListeners(Player.PROPERTIES.SOULS,
+                this.vitality.souls,
+                this.vitality.souls = newSouls
+            );
+        }
     }
 
     /**
@@ -200,34 +226,39 @@ export class Player extends Character {
         }
     }
 
-    setPlayerHealth(damage) {
+    
+
+    /**
+     * Initiates a hit on this player, launching any necessary
+     * events as a result.
+     * 
+     * @param {number} damage the amount of damage this player should take
+     */
+    hit(damage) {
         console.log("Taking damage...")
 
-        const oldHealth = this.vitality.health;
-        this.vitality.health -= damage;
-        let sound;
-        this.notifyListeners(Player.PROPERTIES.HIT, oldHealth, this.vitality.health);
+        const newHealth = this.vitality.health - damage;
+        this.setters.health(newHealth);
 
         if (this.vitality.health > 0) {
             this.soundEvents.playHitSound();
         } else {
             // player has health <= 0, they're "dead"
-            // TODO: revise this to not be dead on health <= 0
-            this.vitality.health = 0;
-            this.soundEvents.playDeadSound();
-
-            this.notifyListeners(Player.PROPERTIES.DIED);
+            this.kill();
         }
+    }
 
-        /*
-        if (this.vitality.health === 0) {
-            HUD.updateCharacterName()
-            SoundFX.stop();
-            SoundFX.play("victory");
+    /**
+     * Initiates the event that this player has died.
+     */
+    kill() {
+        // TODO: revise this to not be dead on health <= 0
+        this.stateLock = true;
+        this.state = Player.states.DEAD;
+        this.vitality.health = 0;
+        this.soundEvents.playDeadSound();
 
-        } else if (this.vitality.health > 0) {
-        }
-        */
+        this.notifyListeners(Player.PROPERTIES.DIED, undefined, 0);
     }
 
     initKeymap() {
@@ -347,17 +378,6 @@ export class Player extends Character {
                 this.state = Player.states.JUMP;
             }
         }
-
-    }
-
-    /**
-     * Triggers dying animation.
-     */
-    die() {
-
-        this.state = Player.states.DEAD;
-        this.stateLock = true;
-        this.notifyListeners(Player.PROPERTIES.DIED)
 
     }
 
@@ -519,7 +539,7 @@ class AttackHitbox extends Hitbox {
                     SoundFX.play("swordCollide8");
                 } else {
                     // just do damage
-                    otherParent.setPlayerHealth(10);
+                    otherParent.hit(10);
                 }
             }
         }

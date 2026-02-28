@@ -19,7 +19,14 @@ export class MenuSystem {
      */
     playerOneListener =  {
         notify(prop, then, now) {
-            HUD.updateHealth(1, now);
+            switch (prop) {
+                case Player.PROPERTIES.HEALTH:
+                    HUD.updateHealth(1, now);
+                    break;
+                case Player.PROPERTIES.DIED:
+                    HUD.updateHealth(1, now);
+                    break;
+            }
         }
     }
 
@@ -28,7 +35,14 @@ export class MenuSystem {
      */
     playerTwoListener =  {
         notify(prop, then, now) {
-            HUD.updateHealth(2, now);
+            switch (prop) {
+                case Player.PROPERTIES.HEALTH:
+                    HUD.updateHealth(2, now);
+                    break;
+                case Player.PROPERTIES.DIED:
+                    HUD.updateHealth(2, now);
+                    break;
+            }
         }
     }
 
@@ -179,11 +193,11 @@ export class MenuSystem {
 
             // listen to players
             gameState.playerOne.addPropertyListener(
-                Player.PROPERTIES.HIT,
+                Player.PROPERTIES.HEALTH,
                 this.playerOneListener
             );
             gameState.playerTwo.addPropertyListener(
-                Player.PROPERTIES.HIT,
+                Player.PROPERTIES.HEALTH,
                 this.playerTwoListener
             )
 
