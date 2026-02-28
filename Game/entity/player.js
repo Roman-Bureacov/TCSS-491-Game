@@ -45,8 +45,10 @@ export class Player extends Character {
         POSTURE: "Player.POSTURE",
         /** the player souls has changed, the old souls as then and the new souls as now */
         SOULS: "Player.SOULS",
-        /** the player has died, sends the new health as now */
+        /** the player has died, does not send anything */
         DIED: "Player.DIED",
+        /** the player has maximized their posture, does not send anything */
+        MAX_POSTURE: "Player.MAX_POSTURE",
     })
 
     /**
@@ -54,7 +56,10 @@ export class Player extends Character {
      * @readonly
      * @type {{
      *     VITALITY_MAXIMUMS : VitalityStats,
-     *     POSTURE_DRAIN_PER_SECOND : number
+     *     POSTURE_DRAIN_PER_SECOND : number,
+     *     POSTURE_DRAIN_PER_SECOND : number,
+     *     POSTURE_PER_DAMAGE : number,
+     *     POSTURE_TIMEOUT : number
      * }}
      */
     static CONSTANTS = Object.freeze({
@@ -63,7 +68,9 @@ export class Player extends Character {
             posture: 100,
             souls: 3
         },
-        POSTURE_DRAIN_PER_SECOND: 10
+        POSTURE_DRAIN_PER_SECOND: 10,
+        POSTURE_PER_DAMAGE: 3,
+        POSTURE_TIMEOUT: 5,
     });
 
     /**
@@ -77,6 +84,7 @@ export class Player extends Character {
         IDLE: "idle ",
         JUMP: "jump",
         DEAD: "dead",
+        STAGGERED: "staggered"
     });
 
     /**
@@ -101,7 +109,6 @@ export class Player extends Character {
      */
     onGround = false;
 
-
     /**
      * The vitality stats of this player.
      * @type {VitalityStats}
@@ -112,25 +119,81 @@ export class Player extends Character {
         souls: 0,
     }
 
+    /**
+     * The amount of time remaining in the stagger state
+     * @type {number} the time in seconds
+     */
+    postureTimeout = 0;
 
+    /**
+     * Collection of setters for this object.
+     * @type {{
+     *      health: function(*): void,
+     *      posture: function(*): void,
+     *      souls: function(*): void
+     * }}
+     */
     setters = {
         health : (newHealth) => {
-            this.notifyListeners(Player.PROPERTIES.HEALTH,
-                this.vitality.health,
-                this.vitality.health = newHealth
+            newHealth = Math.max( // bounds check on health
+                0,
+                Math.min(
+                    newHealth,
+                    Player.CONSTANTS.VITALITY_MAXIMUMS.health
+                )
             );
+
+            // only change and notify if there is a difference
+            if (this.vitality.health - newHealth) {
+                this.notifyListeners(Player.PROPERTIES.HEALTH,
+                    this.vitality.health,
+                    this.vitality.health = newHealth
+                );
+            }
+
         },
         posture : (newPosture) => {
-            this.notifyListeners(Player.PROPERTIES.POSTURE,
-                this.vitality.posture,
-                this.vitality.posture = newPosture
+            newPosture = Math.max( // bounds check
+                0,
+                Math.min(
+                    newPosture,
+                    Player.CONSTANTS.VITALITY_MAXIMUMS.posture
+                )
             );
+
+            // only change and notify if there is a difference
+            if (this.vitality.posture - newPosture) {
+                this.notifyListeners(Player.PROPERTIES.POSTURE,
+                    this.vitality.posture,
+                    this.vitality.posture = newPosture
+                );
+            }
+
+            // initiate staggered state when we max out posture
+            if (newPosture === Player.CONSTANTS.VITALITY_MAXIMUMS.posture) {
+                this.stagger();
+            }
         },
         souls : (newSouls) => {
-            this.notifyListeners(Player.PROPERTIES.SOULS,
-                this.vitality.souls,
-                this.vitality.souls = newSouls
+            newSouls = Math.max( // bounds check on health
+                0,
+                Math.min(
+                    newSouls,
+                    Player.CONSTANTS.VITALITY_MAXIMUMS.souls
+                )
             );
+
+            // only change and notify if there is a difference
+            if (this.vitality.souls - newSouls) {
+                this.notifyListeners(Player.PROPERTIES.SOULS,
+                    this.vitality.souls,
+                    this.vitality.souls = newSouls
+                );
+            }
+
+            if (newSouls <= 0) {
+                this.kill();
+            }
         }
     }
 
@@ -239,6 +302,8 @@ export class Player extends Character {
 
         const newHealth = this.vitality.health - damage;
         this.setters.health(newHealth);
+        const newPosture = this.vitality.posture + damage * Player.CONSTANTS.POSTURE_PER_DAMAGE;
+        this.setters.posture(newPosture);
 
         if (this.vitality.health > 0) {
             this.soundEvents.playHitSound();
@@ -259,6 +324,16 @@ export class Player extends Character {
         this.soundEvents.playDeadSound();
 
         this.notifyListeners(Player.PROPERTIES.DIED, undefined, 0);
+    }
+
+    /**
+     * Initiates the event that this player is staggered
+     */
+    stagger() {
+        console.log("I've been staggered!")
+        this.state = Player.states.STAGGERED;
+        this.stateLock = true;
+        this.postureTimeout = Player.CONSTANTS.POSTURE_TIMEOUT;
     }
 
     initKeymap() {
@@ -388,15 +463,19 @@ export class Player extends Character {
         for (let key in this.game.keys) this.keymapper.sendKeyEvent(this.game.keys[key]);
 
         // natural drain of the posture
-        this.vitality.posture = Math.max(
-            0,
-            Math.min(
-                Player.CONSTANTS.VITALITY_MAXIMUMS.posture,
-                this.vitality.posture -= Player.CONSTANTS.POSTURE_DRAIN_PER_SECOND * this.game.clockTick
-            )
-        );
+        this.setters.posture(
+            this.vitality.posture - Player.CONSTANTS.POSTURE_DRAIN_PER_SECOND * this.game.clockTick
+        )
 
         switch (this.state) {
+            case Player.states.STAGGERED:
+                this.postureTimeout -= this.game.clockTick;
+                if (this.postureTimeout <= 0) {
+                    this.state = Player.states.IDLE;
+                    this.stateLock = false;
+                    console.log("No longer staggered!")
+                }
+                break;
             case Player.states.JUMP:
                 this.physics.acceleration.x =
                     this.constantAcceleration[DIRECTIONS.LEFT] +
