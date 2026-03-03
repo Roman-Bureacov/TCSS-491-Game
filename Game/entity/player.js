@@ -186,57 +186,58 @@ export class Player extends Character {
         }
     }
 
-    setPlayerHealth(damage) {
+    setPlayerPosture(damage) {
         console.log("Taking damage...")
 
-        if (this.vitality.health === 0) {
-
-            this.vitality.health -= 1;
-            HUD.updateCharacterName()
-
-            let rnd_int = Math.floor(Math.random() * 5) + 1;
-            switch (getCharacterData(this.name).gender) {
-
-                case "female": {
-                    const sound = `femaleDeath${rnd_int}`
-                    SoundFX.play(sound)
-                    break;
-
-                }
-
-                case "male": {
-                    const sound = `maleDeath${rnd_int}`
-                    SoundFX.play(sound)
-                    break;
-                }
-            }
-
-
-            SoundFX.stop();
-
-            SoundFX.play("victory");
-
-
-        } else if (this.vitality.health > 0) {
-            this.vitality.health -= damage;
-
-            let rnd_int = Math.floor(Math.random() * 7) + 1;
-            switch (getCharacterData(this.name).gender) {
-
-                case "female": {
-                    const sound = `femaleHurt${rnd_int}`
-                    SoundFX.play(sound)
-                    break;
-
-                }
-
-                case "male": {
-                    const sound = `maleHurt${rnd_int}`
-                    SoundFX.play(sound)
-                    break;
-                }
-            }
-        }
+        // if (this.vitality.health === 0) {
+        //
+        //     this.vitality.health -= 1;
+        //
+        //     let rnd_int = Math.floor(Math.random() * 5) + 1;
+        //     switch (getCharacterData(this.name).gender) {
+        //
+        //         case "female": {
+        //             const sound = `femaleDeath${rnd_int}`
+        //             SoundFX.play(sound)
+        //             break;
+        //
+        //         }
+        //
+        //         case "male": {
+        //             const sound = `maleDeath${rnd_int}`
+        //             SoundFX.play(sound)
+        //             break;
+        //         }
+        //     }
+        //
+        //
+        //     SoundFX.stop();
+        //
+        //     SoundFX.play("victory");
+        //
+        //
+        // } else if (this.vitality.health > 0) {
+        //     this.vitality.health -= damage;
+        //
+        //     let rnd_int = Math.floor(Math.random() * 7) + 1;
+        //     switch (getCharacterData(this.name).gender) {
+        //
+        //         case "female": {
+        //             const sound = `femaleHurt${rnd_int}`
+        //             SoundFX.play(sound)
+        //             break;
+        //
+        //         }
+        //
+        //         case "male": {
+        //             const sound = `maleHurt${rnd_int}`
+        //             SoundFX.play(sound)
+        //             break;
+        //         }
+        //     }
+        // }
+        // TODO: Need to update this so that posture is being used instead of health. Health should only decrease
+        //  when posture is at 100.
 
         return this.vitality.health;
     }
@@ -504,8 +505,8 @@ class AttackHitbox extends Hitbox {
                     otherParent.physics.velocity.x = 1;
                     SoundFX.play("swordCollide8");
                 } else {
-                    // just do damage
-                    HUD.updateHealth(otherParent.playerNumber, otherParent.setPlayerHealth(10))
+                    // just increase posture
+                    HUD.updatePosture(otherParent.playerNumber, 5)
                     console.log(this.parent.playerNumber)
                     if (otherParent.vitality.health === 0) {
                        otherParent.die();

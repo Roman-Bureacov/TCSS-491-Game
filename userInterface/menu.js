@@ -173,11 +173,6 @@ export class MenuSystem {
             gameState.addPropertyListener(GameState.PROPERTIES.RESUME_GAME, logger)
         });
 
-
-        // Dispatch event to signal game should start
-        // window.dispatchEvent(new CustomEvent('gameStart', {
-        //     detail: window.gameConfig
-        // }));
     }
 }
 
@@ -185,15 +180,30 @@ export class MenuSystem {
 export class HUDSystem {
     constructor() {
         this.maxHealth = 100;
+        this.maxPosture = 100;
         this.player1Health = 100;
         this.player2Health = 100;
+        this.player1Posture = 0;
+        this.player2Posture = 0;
         this.timer = 99;
         this.round = 1;
         this.timerIntervalId = null;
     }
 
+    updatePosture(player, delta) {
+        const add = Math.max(0, delta); // only increase
+
+        if (player === 1) {
+            this.player1Posture = Math.min(this.maxPosture, this.player1Posture + add);
+            this.updatePostureBar('p1', this.player1Posture);
+        } else if (player === 2) {
+            this.player2Posture = Math.min(this.maxPosture, this.player2Posture + add);
+            this.updatePostureBar('p2', this.player2Posture);
+        }
+    }
+
     updateHealth(player, health) {
-        const healthPercentage = Math.max(0, Math.min(100, health));
+        const healthPercentage = Math.max(0, Math.min(this.maxHealth, health));
 
         if (player === 1) {
             this.player1Health = healthPercentage;
@@ -204,13 +214,27 @@ export class HUDSystem {
         }
     }
 
+
+    updatePostureBar(playerPrefix, posture) {
+        const bar = document.getElementById(`${playerPrefix}Posture`);
+        const txt = document.getElementById(`${playerPrefix}PostureText`);
+        if (!bar) return;
+
+        bar.style.width = `${posture}%`;
+
+        if (txt) txt.textContent = `Posture: ${Math.round(posture)}%`;
+
+        bar.classList.remove('high', 'critical');
+        if (posture >= 85) bar.classList.add('critical');
+        else if (posture >= 50) bar.classList.add('high');
+    }
+
     updateHealthBar(playerPrefix, health) {
         const healthBar = document.getElementById(`${playerPrefix}Health`);
-        const healthText = document.getElementById(`${playerPrefix}HealthText`);
 
-        if (healthBar && healthText) {
+
+        if (healthBar) {
             healthBar.style.width = `${health}%`;
-            healthText.textContent = `${Math.round(health)}%`;
 
             // Update color based on health
             healthBar.classList.remove('low', 'critical');

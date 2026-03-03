@@ -16,6 +16,17 @@ export class HUD {
     }
 
     /**
+     * Update player posture
+     * @param {number} player - Player number (1 or 2)
+     * @param {number} posture - Posture value (0 - 100)
+     */
+    static updatePosture(player, posture) {
+        if (window.hudSystem) {
+            window.hudSystem.updatePosture(player, posture);
+        }
+    }
+
+    /**
      * Update game timer
      * @param {number} seconds - Seconds remaining
      */
