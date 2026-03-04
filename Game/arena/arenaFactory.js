@@ -17,7 +17,7 @@ export class ArenaFactory {
      * @enum {string}
      */
     static ARENAS = Object.freeze({
-        BASIC : "basicArena",
+        ARENA1 : "arena1",
         ARENA2: "arena2"
     });
 
@@ -35,8 +35,8 @@ export class ArenaFactory {
         let text;
 
         switch (name) {
-            case this.ARENAS.BASIC :
-                text = AssetManager.getText("arena/basic.txt");
+            case this.ARENAS.ARENA1 :
+                text = AssetManager.getText("arena/arena1.txt");
                 break;
             case this.ARENAS.ARENA2:
                 text = AssetManager.getText("arena/arena2.txt")

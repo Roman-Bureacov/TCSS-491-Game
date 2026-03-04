@@ -13,13 +13,13 @@ import {TILESET_NAMES} from "./tileData.js";
  * @type {{[key: ARENAS] : ArenaData}}
  */
 export const arenaData = {
-    [ArenaFactory.ARENAS.BASIC] : {
-        backgroundAssetPath : "background/background03.jpeg",
-        arenaAssetPath : "arena/basic.txt",
+    [ArenaFactory.ARENAS.ARENA1] : {
+        backgroundAssetPath : "background/background01.jpeg",
+        arenaAssetPath : "arena/arena1.txt",
         tileSetPath : TILESET_NAMES.INDUSTRIAL,
     },
     [ArenaFactory.ARENAS.ARENA2] : {
-        backgroundAssetPath : undefined,
+        backgroundAssetPath : "background/background03.jpeg",
         arenaAssetPath : "arena/arena2.txt",
         tileSetPath : TILESET_NAMES.INDUSTRIALB,
     }

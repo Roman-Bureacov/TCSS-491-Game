@@ -39,7 +39,7 @@ AssetManager.queueDownload("background/background03.jpeg");
 AssetManager.queueDownload("background/background02.jpeg");
 AssetManager.queueDownload("background/background01.jpeg");
 
-AssetManager.queueDownload("arena/basic.txt")
+AssetManager.queueDownload("arena/arena1.txt")
 AssetManager.queueDownload("arena/arena2.txt")
 
 
@@ -94,11 +94,11 @@ AssetManager.downloadAll(async () => {
     TRY THIS:
         change the arena between BASIC and ARENA2
 
-        have a look at the files basic.txt and arena2.txt
+        have a look at the files arena1.txt and arena2.txt
 
         the `detail` specifier is optional (hence all the undefined checks below)
      */
-    const arena = ArenaFactory.makeArena(ArenaFactory.ARENAS.BASIC);
+    const arena = ArenaFactory.makeArena(ArenaFactory.ARENAS.ARENA1);
 
     // TODO: how might we make the music persistent (that is, play only when focused?)
     if (arena.music) SoundFX.play(arena.music);

@@ -17,7 +17,7 @@ export class MenuSystem {
     /**
      * @type {PropertyChangeListener}
      */
-    playerOneListener =  {
+    playerOneListener = {
         notify(prop, then, now) {
             switch (prop) {
                 case Player.PROPERTIES.HEALTH:
@@ -25,6 +25,12 @@ export class MenuSystem {
                     break;
                 case Player.PROPERTIES.DIED:
                     HUD.updateHealth(1, now);
+                    break;
+                case Player.PROPERTIES.POSTURE:
+                    HUD.updatePosture(1, now)
+                    break;
+                case Player.PROPERTIES.SOULS:
+                    HUD.updateStock(1, now);
                     break;
             }
         }
@@ -33,7 +39,7 @@ export class MenuSystem {
     /**
      * @type {PropertyChangeListener}
      */
-    playerTwoListener =  {
+    playerTwoListener = {
         notify(prop, then, now) {
             switch (prop) {
                 case Player.PROPERTIES.HEALTH:
@@ -41,6 +47,12 @@ export class MenuSystem {
                     break;
                 case Player.PROPERTIES.DIED:
                     HUD.updateHealth(2, now);
+                    break;
+                case Player.PROPERTIES.POSTURE:
+                    HUD.updatePosture(2, now)
+                    break;
+                case Player.PROPERTIES.SOULS:
+                    HUD.updateStock(2, now);
                     break;
             }
         }
@@ -52,7 +64,7 @@ export class MenuSystem {
             player1: null,
             player2: null
         };
-        this.selectedArena = ArenaFactory.ARENAS.BASIC;
+        this.selectedArena = ArenaFactory.ARENAS.ARENA1;
         this.initializeMenu();
 
 
@@ -175,7 +187,7 @@ export class MenuSystem {
             arena: this.selectedArena
         };
 
-        const game = launchGame({
+        launchGame({
             playerOneCharacter: this.selectedCharacters.player1,
             playerTwoCharacter: this.selectedCharacters.player2,
             arenaName: this.selectedArena,
@@ -200,14 +212,28 @@ export class MenuSystem {
                 Player.PROPERTIES.HEALTH,
                 this.playerTwoListener
             )
+            gameState.playerOne.addPropertyListener(
+                Player.PROPERTIES.SOULS,
+                this.playerOneListener
+            )
+
+            gameState.playerTwo.addPropertyListener(
+                Player.PROPERTIES.SOULS,
+                this.playerTwoListener
+            )
+
+            gameState.playerOne.addPropertyListener(
+                Player.PROPERTIES.POSTURE,
+                this.playerOneListener);
+
+            gameState.playerTwo.addPropertyListener(
+                Player.PROPERTIES.POSTURE,
+                this.playerTwoListener);
+
 
             window.GAMESTATE = gameState;
         });
 
-        // Dispatch event to signal game should start
-        // window.dispatchEvent(new CustomEvent('gameStart', {
-        //     detail: window.gameConfig
-        // }));
     }
 
     notify(prop, then, now) {
@@ -215,6 +241,7 @@ export class MenuSystem {
             case GameState.PROPERTIES.GAME_OVER:
                 // TODO: splash game over screen here
                 console.log("Game Over, player died");
+                HUD.stopTimer();
                 break;
             case GameState.PROPERTIES.PAUSE_GAME:
                 console.log("Game was paused");
@@ -231,24 +258,27 @@ export class HUDSystem {
     constructor() {
         this.maxHealth = 100;
         this.maxPosture = 100;
+        this.maxStocks = 3;
         this.player1Health = 100;
         this.player2Health = 100;
         this.player1Posture = 0;
         this.player2Posture = 0;
+        this.player2Stock = 3;
+        this.player1Stock = 3;
         this.timer = 99;
         this.round = 1;
         this.timerIntervalId = null;
     }
 
-    updatePosture(player, delta) {
-        const add = Math.max(0, delta); // only increase
+    updatePosture(player, postureNow) {
+        const posture = Math.max(0, Math.min(this.maxPosture, postureNow));
 
         if (player === 1) {
-            this.player1Posture = Math.min(this.maxPosture, this.player1Posture + add);
-            this.updatePostureBar('p1', this.player1Posture);
+            this.player1Posture = posture;
+            this.updatePostureBar('p1', posture);
         } else if (player === 2) {
-            this.player2Posture = Math.min(this.maxPosture, this.player2Posture + add);
-            this.updatePostureBar('p2', this.player2Posture);
+            this.player2Posture = posture;
+            this.updatePostureBar('p2', posture);
         }
     }
 
@@ -261,6 +291,35 @@ export class HUDSystem {
         } else if (player === 2) {
             this.player2Health = healthPercentage;
             this.updateHealthBar('p2', healthPercentage);
+        }
+    }
+
+    updateStock(player, life) {
+        const stocks = Math.max(0, Math.min(this.maxStocks, life));
+
+        if (player === 1) {
+            this.player1Stock = stocks;
+            this.updateStockNumber('p1', stocks);
+        } else if (player === 2) {
+            this.player2Stock = stocks;
+            this.updateStockNumber('p2', stocks);
+        }
+    }
+
+    updateStockNumber(playerPrefix, life) {
+        document.getElementById(`${playerPrefix}Life${life}`).style.display = "none";
+    }
+
+    // Used to rest the stock visibility.
+    showStock(playerPrefix, life) {
+        const el = document.getElementById(`${playerPrefix}Life${life}`);
+        if (el) el.style.display = "";
+    }
+
+    resetStocks(playerPrefix) {
+        for (let i = 1; i <= 3; i++) {
+            const el = document.getElementById(`${playerPrefix}Life${i}`);
+            if (el) el.style.display = "";
         }
     }
 

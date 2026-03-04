@@ -49,6 +49,18 @@ export class Character extends DynamicEntity {
     state = "";
 
     /**
+     * The state of the character stagger as per the staggerStates this character may exhibit.
+     * @type {string}
+     */
+    stagger_state = "";
+
+    /**
+     * The freeze flag for the stagger. False when not frozen, true when frozen in place.
+     * @type {boolean}
+     */
+    stagger_flag = false;
+
+    /**
      * The
      * @type {string}
      */

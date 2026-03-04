@@ -18,11 +18,22 @@ export class HUD {
     /**
      * Update player posture
      * @param {number} player - Player number (1 or 2)
-     * @param {number} posture - Posture value (0 - 100)
+     * @param {number} delta - Posture value (0 - 100)
      */
-    static updatePosture(player, posture) {
+    static updatePosture(player, delta) {
         if (window.hudSystem) {
-            window.hudSystem.updatePosture(player, posture);
+            window.hudSystem.updatePosture(player, delta);
+        }
+    }
+
+    /**
+     * Update the number stocks left.
+     * @param {number} player - Player number (1 or 2)
+     * @param {number} life - stock value (1,3)
+     */
+    static updateStock(player, life) {
+        if(window.hudSystem) {
+            window.hudSystem.updateStock(player, life);
         }
     }
 
