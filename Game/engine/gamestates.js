@@ -151,12 +151,7 @@ export class GameState {
     notify(prop, then, now) {
         switch (prop) {
             case Player.PROPERTIES.DIED:
-
-                setTimeout(() => {
-                    this.game.running = false;
-                    this.endGame();
-
-                }, 4000);
+                this.endGame();
                 break;
         }
     }

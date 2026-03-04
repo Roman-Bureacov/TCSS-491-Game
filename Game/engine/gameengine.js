@@ -237,10 +237,26 @@ export class GameEngine {
     };
 
     /**
-     * Spawns a dynamic hitbox in which this game engine becomes aware of
+     * Spawns a dynamic hitbox in which this game engine becomes aware of.
+     *
+     * Every hitbox spawned will have its reset behavior called upon
+     * to reset any and all state associated.
+     *
+     * The update loop in the engine first tests intersections
+     * then updates hitboxes:
+     * ```md
+     * 1. test intersections
+     *   a. if a hitbox is not enabled, intersection is not tested
+     *   b. if a hitbox is enabled, intersection is tested
+     *     * if an intersection is found, let both intersecting hitboxes react
+     * 2. update any and all hitboxes that have not expired
+     * 3. remove any and all expired hitboxes
+     * ```
+     * @see {Hitbox}
      * @param {Hitbox} hitbox the hitbox to make the game aware of
      */
     spawnDynamicHitbox(hitbox) {
+        hitbox.reset();
         this.hitboxes.dynamic.push(hitbox)
     }
 
@@ -327,10 +343,16 @@ export class GameEngine {
         const stat = this.hitboxes.static;
 
         // dynamic vs dynamic (unique pairs only)
-        for (let h1 of dyn) {
+        for (let i = 0; i < dyn.length; i++) {
+            const h1 = dyn[i];
             if (h1.expired || !h1.enabled) continue;
 
-            for (let h2 of dyn) {
+            // need to loop over the list such that every intersection
+            //   is resolved once. Note that both hitboxes get a change to react
+            //   so it is necessary to iterate as such to prevent the same pair
+            //   getting evaluated more than once
+            for (let j = i + 1; j < dyn.length; j++) {
+                const h2 = dyn[j];
                 if (h2.expired || !h2.enabled) continue;
 
                 // same parent => ignore (prevents self-hitboxes hitting each other if you add multiple)
@@ -340,6 +362,7 @@ export class GameEngine {
                 if (!props) continue;
 
                 // let both respond
+
                 h1.resolveIntersection(props);
                 h2.resolveIntersection({
                     subject: h2,
@@ -370,13 +393,18 @@ export class GameEngine {
      * updates the dynamic hitboxes, removing them if they expired
      */
     updateHitboxes() {
-        for (let i = 0; i < this.hitboxes.dynamic.length; i++) {
-            if (this.hitboxes.dynamic[i].expired) {
-                this.hitboxes.dynamic.splice(i, 1);
-            } else {
-                this.hitboxes.dynamic[i].update(this.clockTick);
-            }
-        }
+        const expired = []
+        this.hitboxes.dynamic
+            .forEach(h => {
+                if (h.expired) expired.push(h)
+                else h.update(this.clockTick);
+            });
+        expired.forEach(h => {
+            this.hitboxes.dynamic.splice(
+                this.hitboxes.dynamic.indexOf(h),
+                1
+            )
+        })
     }
 
     /**
@@ -410,7 +438,7 @@ export class GameEngine {
             this.keys = {};
         }
 
-        if (steps > GameEngine.SIM_MAX_STEP_COUNT) {
+        if (steps >= GameEngine.SIM_MAX_STEP_COUNT) {
             console.log(`
 Warning: took too many steps updating.
 simulation behind ${

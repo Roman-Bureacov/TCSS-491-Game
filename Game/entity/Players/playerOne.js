@@ -9,7 +9,7 @@ import {Player} from "../player.js";
 export class PlayerOne extends Player {
 
     constructor(game, spritesheet, startPosX, startPosY, dimX, dimY) {
-        super(game, spritesheet, dimX, dimY, startPosX, startPosY,1)
+        super(game, spritesheet, dimX, dimY, startPosX, startPosY)
         this.setupKeymap();
     }
 
@@ -22,7 +22,8 @@ export class PlayerOne extends Player {
             [KeyMapper.getName("KeyD", false)]: "stop right",
             [KeyMapper.getName("KeyA", false)]: "stop left",
             [KeyMapper.getName("KeyW", true)]: "jump",
-            [KeyMapper.getName("KeyW", false)]: "jump"
+            [KeyMapper.getName("KeyW", false)]: "jump",
+            [KeyMapper.getName("KeyQ", true)]: "finisher",
         };
     }
 

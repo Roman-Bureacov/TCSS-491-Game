@@ -12,28 +12,48 @@ Roman Bureacov
 export class PhysicsEntity {
 
     /**
-     * The acceleration vector of this entity
+     * The precision for physics, to prevent
+     * numbers continuously growing smaller and instead
+     * rounding down to zero.
+     * @type {number}
+     */
+    static PRECISION = 10e-2;
+
+    /**
+     * The acceleration vector of this entity in meters per second per second
      * @type {{x: number, y: number}}
      */
     acceleration = {x:0, y: 0};
 
     /**
-     * The velocity vector of this entity
+     * The velocity vector of this entity in meters per second
      * @type {{x: number, y: number}}
      */
     velocity = {x: 0, y: 0};
 
     /**
-     * The position of this entity
+     * The position of this entity in meters
      * @type {{x: number, y: number}}
      */
     position = {x: 0, y: 0};
 
     /**
-     * The absolute maximum velocity vector for this entity
+     * The absolute maximum acceleration vector for this entity in meters per second per second
+     * @type {{x: number, y: number}}
+     */
+    accelerationMax = { x: 1, y: 1 }
+    
+    /**
+     * The absolute maximum velocity vector for this entity in meters per second
      * @type {{x: number, y: number}}
      */
     velocityMax = {x: 1, y: 1};
+
+    /**
+     * The amount of drag for this entity
+     * @type {{x: number, y: number}}
+     */
+    drag = {x: 0, y: 0}
 
     constructor() {
 
@@ -44,6 +64,20 @@ export class PhysicsEntity {
      * @param timeStep
      */
     updatePhysics(timeStep) {
+        this.acceleration.x = 
+            Math.sign(this.acceleration.x)
+            * Math.min(
+                Math.abs(this.acceleration.x),
+                this.accelerationMax.x
+            );
+        this.acceleration.y =
+            Math.sign(this.acceleration.y)
+            * Math.min(
+                Math.abs(this.acceleration.y),
+                this.accelerationMax.y
+            );
+
+
         const newVelocityX = this.acceleration.x * timeStep;
         const newVelocityY = this.acceleration.y * timeStep;
 
@@ -63,6 +97,20 @@ export class PhysicsEntity {
 
         this.position.x += this.velocity.x * timeStep;
         this.position.y += this.velocity.y * timeStep;
+    }
+
+    /**
+     * Calculates the deceleration vector based on this entity's drag
+     * @return {{x: number, y: number}} the deceleration vector, in meters per second per second
+     */
+    getDragVector() {
+        const oppSignX = -Math.sign(this.velocity.x);
+        const oppSignY = -Math.sign(this.velocity.y);
+
+        return {
+            x: oppSignX * (1/2 * this.drag.x * this.velocity.x ** 2),
+            y: oppSignY * (1/2 * this.drag.y * this.velocity.y ** 2)
+        }
     }
 }
 

@@ -5,8 +5,47 @@ import {ArenaFactory} from "../Game/arena/arenaFactory.js";
 import {GameState} from "../Game/engine/gamestates.js";
 import {HUD} from "./hudHelper.js";
 import {PropertyChangeListener, PropertyChangeNotifier, PropertyChangeSupport} from "../lib/propertychangesupport.js";
+import {Player} from "../Game/entity/player.js";
 
+/**
+ *
+ * @implements {PropertyChangeListener}
+ * @author Parker Nelson
+ */
 export class MenuSystem {
+
+    /**
+     * @type {PropertyChangeListener}
+     */
+    playerOneListener =  {
+        notify(prop, then, now) {
+            switch (prop) {
+                case Player.PROPERTIES.HEALTH:
+                    HUD.updateHealth(1, now);
+                    break;
+                case Player.PROPERTIES.DIED:
+                    HUD.updateHealth(1, now);
+                    break;
+            }
+        }
+    }
+
+    /**
+     * @type {PropertyChangeListener}
+     */
+    playerTwoListener =  {
+        notify(prop, then, now) {
+            switch (prop) {
+                case Player.PROPERTIES.HEALTH:
+                    HUD.updateHealth(2, now);
+                    break;
+                case Player.PROPERTIES.DIED:
+                    HUD.updateHealth(2, now);
+                    break;
+            }
+        }
+    }
+
     constructor() {
         this.gameCanvas = document.querySelector('#gameWorld');
         this.selectedCharacters = {
@@ -142,37 +181,48 @@ export class MenuSystem {
             arenaName: this.selectedArena,
             canvas: this.gameCanvas,
         }).then((gameState) => {
-            // TODO: the listener attached needs to be a concrete class
-            //   (perhaps the `MenuSystem` itself implements `PropertyChangeListener`
-            //   from `propertychangesupport.js`?)
-            const logger = {
-                notify(prop, then, now) {
-                    switch (prop) {
-                        case GameState.PROPERTIES.GAME_OVER:
-                            console.log("Game Over, player died");
-                            break;
-                        case GameState.PROPERTIES.PAUSE_GAME:
-                            console.log("Game was paused");
-
-                            break;
-                        case GameState.PROPERTIES.RESUME_GAME:
-                            console.log("Game was resumed");
-                            break;
-                    }
-                }
-            }
 
             HUD.startTimer(99, function () {
-                console.log("Game Over")
+                gameState.endGame();
             })
 
-            window.GAMESTATE = gameState;
+            // listen to game state
+            gameState.addPropertyListener(GameState.PROPERTIES.GAME_OVER, this)
+            gameState.addPropertyListener(GameState.PROPERTIES.PAUSE_GAME, this)
+            gameState.addPropertyListener(GameState.PROPERTIES.RESUME_GAME, this)
 
-            gameState.addPropertyListener(GameState.PROPERTIES.GAME_OVER, logger)
-            gameState.addPropertyListener(GameState.PROPERTIES.PAUSE_GAME, logger)
-            gameState.addPropertyListener(GameState.PROPERTIES.RESUME_GAME, logger)
+            // listen to players
+            gameState.playerOne.addPropertyListener(
+                Player.PROPERTIES.HEALTH,
+                this.playerOneListener
+            );
+            gameState.playerTwo.addPropertyListener(
+                Player.PROPERTIES.HEALTH,
+                this.playerTwoListener
+            )
+
+            window.GAMESTATE = gameState;
         });
 
+        // Dispatch event to signal game should start
+        // window.dispatchEvent(new CustomEvent('gameStart', {
+        //     detail: window.gameConfig
+        // }));
+    }
+
+    notify(prop, then, now) {
+        switch (prop) {
+            case GameState.PROPERTIES.GAME_OVER:
+                // TODO: splash game over screen here
+                console.log("Game Over, player died");
+                break;
+            case GameState.PROPERTIES.PAUSE_GAME:
+                console.log("Game was paused");
+                break;
+            case GameState.PROPERTIES.RESUME_GAME:
+                console.log("Game was resumed");
+                break;
+        }
     }
 }
 

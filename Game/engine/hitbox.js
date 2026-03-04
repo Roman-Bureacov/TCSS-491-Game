@@ -42,7 +42,7 @@ export class Hitbox {
     /**
      * Flag for if the hitbox is enabled or disabled.
      *
-     * Disabled hitboxes will continue to live in the game
+     * Disabled hitboxes will continue to update in the game
      * but won't intersect with anything.
      *
      * @type {boolean}
@@ -59,7 +59,8 @@ export class Hitbox {
     /**
      * If this hitbox has expired.
      *
-     * Expired hitboxes will be removed from the game.
+     * Expired hitboxes won't intersect with anything
+     * and are marked for removal from the game.
      *
      * @type {boolean} if the hitbox has expired
      */
@@ -163,6 +164,14 @@ export class Hitbox {
         // ...
     }
 
+    /**
+     * Resets any and all state associate with the hitbox, if specified
+     */
+    reset() {
+        this.expired = false;
+        this.enabled = true;
+        // ...
+    }
 
     getDrawingProperties() {
         return this.drawingProperties;
