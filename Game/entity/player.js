@@ -63,7 +63,7 @@ export class Player extends Character {
         },
         POSTURE_DRAIN_PER_SECOND: 10,
         POSTURE_PER_DAMAGE: 3,
-        POSTURE_TIMEOUT: 5,
+        STAGGER_TIMEOUT: 5,
         KNOCKBACK: {
             CLASH: {x: 5, y: 5},
             SUCCESSFUL_BLOCK: {x: 10, y: 3},
@@ -401,7 +401,7 @@ export class Player extends Character {
         console.log("I've been staggered!")
         this.state = Player.states.STAGGERED;
         this.stateLock = true;
-        this.staggerTimeout = Player.CONSTANTS.POSTURE_TIMEOUT;
+        this.staggerTimeout = Player.CONSTANTS.STAGGER_TIMEOUT;
         // deactivate relevant hitboxes
         this.attackHitbox.expired = true;
         this.finisherHitbox.expired = true;
@@ -560,7 +560,7 @@ export class Player extends Character {
                     this.vitality.posture
                     - (
                         Player.CONSTANTS.VITALITY_MAXIMUMS.posture
-                        / Player.CONSTANTS.POSTURE_TIMEOUT
+                        / Player.CONSTANTS.STAGGER_TIMEOUT
                         * this.game.clockTick
                     )
                 )
