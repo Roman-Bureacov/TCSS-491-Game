@@ -84,25 +84,17 @@ export class Player extends Character {
         IDLE: "idle ",
         JUMP: "jump",
         DEAD: "dead",
+        STAGGERED: "staggered"
     });
-
-    static staggerStates = Object.freeze({
-        STAGGERED: "staggered",
-        NOT_STAGGERED: "not_staggered",
-
-    })
 
     /**
      * The sound effects for this payer
      * @type {SoundEvents}
      */
     soundEvents = {
-        playHitSound: () => {
-        },
-        playDeadSound: () => {
-        },
-        playSwingSound: () => {
-        },
+        playHitSound : () => {},
+        playDeadSound : () => {},
+        playSwingSound : () => {},
     }
 
     /**
@@ -152,7 +144,7 @@ export class Player extends Character {
          *
          * @param {number} newHealth the new health to set
          */
-        health: (newHealth) => {
+        health : (newHealth) => {
             newHealth = Math.max( // bounds check on health
                 0,
                 Math.min(
@@ -180,7 +172,7 @@ export class Player extends Character {
          *
          * @param {number} newPosture
          */
-        posture: (newPosture) => {
+        posture : (newPosture) => {
             newPosture = Math.max( // bounds check
                 0,
                 Math.min(
@@ -212,30 +204,29 @@ export class Player extends Character {
          *
          * @param {number} newSouls
          */
-        souls: (newSouls) => {
-            newSouls = Math.max(0, Math.min(newSouls, Player.CONSTANTS.VITALITY_MAXIMUMS.souls));
+        souls : (newSouls) => {
+            newSouls = Math.max( // bounds check on health
+                0,
+                Math.min(
+                    newSouls,
+                    Player.CONSTANTS.VITALITY_MAXIMUMS.souls
+                )
+            );
 
-            const oldSouls = this.vitality.souls;
-            if (oldSouls === newSouls) return;
-
-            this.notifyListeners(Player.PROPERTIES.SOULS, oldSouls, this.vitality.souls = newSouls);
-
-            if (newSouls <= 0) {
-                this.kill()
-            } else if (newSouls > 0){
-                // refill health after losing a soul (if that's intended)
-                const newHealth = Player.CONSTANTS.VITALITY_MAXIMUMS.health
-                this.setters.health(newHealth)
-            } else {
-                const newHealth = 0;
-                this.setters.health(newHealth);
+            // only change and notify if there is a difference
+            if (this.vitality.souls - newSouls) {
+                this.notifyListeners(Player.PROPERTIES.SOULS,
+                    this.vitality.souls,
+                    this.vitality.souls = newSouls
+                );
             }
 
-            console.log(`Souls Left: ${newSouls}`)
-
+            if (newSouls <= 0) {
+                this.kill();
+            }
         }
     }
-    
+
     /**
      * Constructs a new playable character with no animators and an empty input map.
      *
@@ -247,8 +238,8 @@ export class Player extends Character {
      * @param {number} [startY=0] the starting y position
      */
     constructor(game, spritesheet,
-        dimX = 1, dimY = 1,
-        startX = 0, startY = 0) {
+                dimX = 1, dimY = 1,
+                startX = 0, startY = 0) {
         super(game, spritesheet, dimX, dimY, startX, startY);
 
         this.vitality.health = Player.CONSTANTS.VITALITY_MAXIMUMS.health;
@@ -311,8 +302,7 @@ export class Player extends Character {
             "jump": () => this.jump(),
             "finisher": () => this.finisher()
         };
-    }
-    ;
+    };
 
     initSelfHitbox() {
 
@@ -367,7 +357,7 @@ export class Player extends Character {
                 0, 0,
                 this.attackHitbox.bounds.dimension.width,
                 this.attackHitbox.bounds.dimension.height
-            )
+                )
         )
     }
 
@@ -382,24 +372,13 @@ export class Player extends Character {
     hit(damage) {
         console.log("Taking damage...")
 
-        if (this.stagger_state !== Player.staggerStates.STAGGERED) {
+        const newHealth = this.vitality.health - damage;
+        this.setters.health(newHealth);
+
+        if (this.state !== Player.states.STAGGERED) {
             const newPosture = this.vitality.posture + damage * Player.CONSTANTS.POSTURE_PER_DAMAGE;
             this.setters.posture(newPosture);
         }
-
-        if (this.stagger_state === Player.staggerStates.STAGGERED) {
-            const newHealth = this.vitality.health - damage;
-
-
-            if (newHealth > 0) {
-                this.setters.health(newHealth)
-            } else {
-                const newSouls = this.vitality.souls - 1;
-                this.setters.souls(newSouls);
-
-            }
-        }
-
 
         this.soundEvents.playHitSound();
     }
@@ -412,7 +391,6 @@ export class Player extends Character {
         this.state = Player.states.DEAD;
         this.soundEvents.playDeadSound();
 
-
         this.notifyListeners(Player.PROPERTIES.DIED);
     }
 
@@ -421,8 +399,7 @@ export class Player extends Character {
      */
     stagger() {
         console.log("I've been staggered!")
-        this.stagger_state = Player.staggerStates.STAGGERED;
-        this.stagger_flag = true;
+        this.state = Player.states.STAGGERED;
         this.stateLock = true;
         this.staggerTimeout = Player.CONSTANTS.POSTURE_TIMEOUT;
         // deactivate relevant hitboxes
@@ -526,7 +503,7 @@ export class Player extends Character {
         if (!this.stateLock) {
             if (this.onGround) {
                 this.onGround = false;
-                this.physics.velocity.y = -this.gravity / 3;
+                this.physics.velocity.y = -this.gravity/3;
             }
         }
     }
@@ -566,38 +543,33 @@ export class Player extends Character {
         for (let key in this.game.keys) this.keymapper.sendKeyEvent(this.game.keys[key]);
 
         // natural drain of the posture
-        if (this.stagger_state !== Player.staggerStates.STAGGERED) {
+        if (this.state !== Player.states.STAGGERED) {
             this.setters.posture(
                 this.vitality.posture - Player.CONSTANTS.POSTURE_DRAIN_PER_SECOND * this.game.clockTick
             )
-        } else if (this.stagger_state === Player.staggerStates.STAGGERED) {
-
-            if (this.stagger_flag) {
-                this.staggerTimeout -= this.game.clockTick;
-                if (this.staggerTimeout <= 0) {
-                    this.stagger_flag = false;
-                    this.stateLock = false;
-                    console.log("No longer staggered!")
-                }
-            }
-
-            if (this.vitality.posture > 0) {
-                this.setters.posture(
-                    this.vitality.posture - Player.CONSTANTS.POSTURE_DRAIN_PER_SECOND * this.game.clockTick
-                )
-
-            } else if (this.vitality.posture <= 0) {
-                this.stagger_state = Player.staggerStates.NOT_STAGGERED;
-            }
-
-
         }
 
         // to prevent endless deceleration that only gets smaller but does not equal zero
         if (Math.abs(this.physics.velocity.x) < 0.1) this.physics.velocity.x = 0;
 
         switch (this.state) {
+            case Player.states.STAGGERED:
+                this.staggerTimeout -= this.game.clockTick;
 
+                this.setters.posture( // drain posture at the rate at of the timeout
+                    this.vitality.posture
+                    - (
+                        Player.CONSTANTS.VITALITY_MAXIMUMS.posture
+                        / Player.CONSTANTS.POSTURE_TIMEOUT
+                        * this.game.clockTick
+                    )
+                )
+                if (this.staggerTimeout <= 0) {
+                    this.state = Player.states.IDLE;
+                    this.stateLock = false;
+                    console.log("No longer staggered!")
+                }
+                break;
             case Player.states.ATTACK :
 
                 break;
@@ -632,14 +604,14 @@ export class Player extends Character {
         const box = this.hitbox.bounds;
         const w = box.dimension.width;
         const attackWidth = this.attackHitbox.bounds.dimension.width;
-    
+
         let startX;
         if (this.facing === DIRECTIONS.RIGHT) {
             startX = box.start.x() + w;
         } else {
             startX = box.start.x() - attackWidth; // push it to the left of the body
         }
-    
+
         this.attackHitbox.bounds.setStart(startX, this.attackHitbox.bounds.start.y());
     }
 }
@@ -794,7 +766,7 @@ class FinisherHitbox extends Hitbox {
         const other = props.other.parent;
 
         if (other instanceof Player) {
-            if (other.stagger_state === Player.staggerStates.STAGGERED.state) {
+            if (other.state === Player.states.STAGGERED) {
                 other.finish();
             }
         }
