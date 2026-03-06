@@ -64,6 +64,12 @@ export class Player extends Character {
         POSTURE_DRAIN_PER_SECOND: 10,
         POSTURE_PER_DAMAGE: 3,
         STAGGER_TIMEOUT: 5,
+        BLOCKING: {
+            TIMEOUT: 1,
+            TIME_SUCCESSFUL: 0.8,
+            TIME_FAIR: 0.4,
+            TIME_POOR: 0.2,
+        },
         KNOCKBACK: {
             CLASH: {x: 5, y: 5},
             SUCCESSFUL_BLOCK: {x: 10, y: 3},
@@ -121,10 +127,13 @@ export class Player extends Character {
     }
 
     /**
-     * The amount of time remaining in the stagger state
-     * @type {number} the time in seconds
+     * Collection of timeouts for specific states
+     * @type {Object.<Player.states, number>}
      */
-    staggerTimeout = 0;
+    timeouts = {
+        [Player.states.STAGGERED]: 0,
+        [Player.states.BLOCK]: 0,
+    }
 
     /**
      * The finisher hitbox for this player
@@ -295,13 +304,14 @@ export class Player extends Character {
     initKeymap() {
         this.keymapper = new KeyMapper();
         this.keymapper.outputMap = {
-            "move right": () => this.move(5),
-            "move left": () => this.move(-5),
-            "attack": () => this.swing(),
-            "stop right": () => this.stopMoving(DIRECTIONS.RIGHT),
-            "stop left": () => this.stopMoving(DIRECTIONS.LEFT),
-            "jump": () => this.jump(),
-            "finisher": () => this.finisher()
+            "move right": () => this.performMove(5),
+            "move left": () => this.performMove(-5),
+            "attack": () => this.performSwing(),
+            "stop right": () => this.performStopMoving(DIRECTIONS.RIGHT),
+            "stop left": () => this.performStopMoving(DIRECTIONS.LEFT),
+            "jump": () => this.performJump(),
+            "finisher": () => this.performFinisher(),
+            "block": () => this.performBlock(),
         };
     };
 
@@ -402,7 +412,7 @@ export class Player extends Character {
         console.log("I've been staggered!")
         this.state = Player.states.STAGGERED;
         this.stateLock = true;
-        this.staggerTimeout = Player.CONSTANTS.STAGGER_TIMEOUT;
+        this.timeouts[Player.states.STAGGERED] = Player.CONSTANTS.STAGGER_TIMEOUT;
         // deactivate relevant hitboxes
         this.attackHitbox.expired = true;
         this.finisherHitbox.expired = true;
@@ -420,6 +430,71 @@ export class Player extends Character {
         if (this.vitality.souls > 0) {
             this.setters.posture(0);
             this.setters.health(Player.CONSTANTS.VITALITY_MAXIMUMS.health);
+        }
+    }
+
+    /**
+     * makes the player attempt to block the damage
+     * @param {number} damage
+     * @param {Player} [source]
+     */
+    block(damage, source) {
+        const t = this.timeouts[Player.states.BLOCK];
+
+        if (t <= Player.CONSTANTS.BLOCKING.TIME_POOR) {
+            // failed block
+            console.log("failed block")
+            this.hit(damage);
+            this.knockback(
+                Player.CONSTANTS.KNOCKBACK.HIT.x,
+                Player.CONSTANTS.KNOCKBACK.HIT.y
+            );
+        } else if (t <= Player.CONSTANTS.BLOCKING.TIME_FAIR) {
+            // poor block
+            console.log("poor block")
+            this.hit(damage / 2); // TODO: maybe not make it a magic number?
+            this.knockback(
+                Player.CONSTANTS.KNOCKBACK.HIT.x,
+                Player.CONSTANTS.KNOCKBACK.HIT.y
+            );
+            if (source) {
+                source.knockback(
+                    Player.CONSTANTS.KNOCKBACK.POOR_BLOCK.x,
+                    Player.CONSTANTS.KNOCKBACK.POOR_BLOCK.y
+                );
+                source.setters.posture(
+                    source.vitality.posture + Player.CONSTANTS.VITALITY_MAXIMUMS.posture / 10
+                );
+            }
+        } else if (t <= Player.CONSTANTS.BLOCKING.TIME_SUCCESSFUL) {
+            // fair block
+            console.log("fair block")
+            this.hit(damage / 3); // TODO: maybe not make it a magic number?
+            this.knockback(
+                Player.CONSTANTS.KNOCKBACK.HIT.x,
+                Player.CONSTANTS.KNOCKBACK.HIT.y
+            );
+            if (source) {
+                source.knockback(
+                    Player.CONSTANTS.KNOCKBACK.FAIR_BLOCK.x,
+                    Player.CONSTANTS.KNOCKBACK.FAIR_BLOCK.y
+                );
+                source.setters.posture(
+                    source.vitality.posture + Player.CONSTANTS.VITALITY_MAXIMUMS.posture / 5
+                )
+            }
+        } else {
+            // successful block
+            console.log("successful block")
+            if (source) {
+                source.knockback(
+                    Player.CONSTANTS.KNOCKBACK.SUCCESSFUL_BLOCK.x,
+                    Player.CONSTANTS.KNOCKBACK.SUCCESSFUL_BLOCK.y
+                );
+                source.setters.posture(
+                    source.vitality.posture + Player.CONSTANTS.VITALITY_MAXIMUMS.posture / 3
+                )
+            }
         }
     }
 
@@ -457,7 +532,7 @@ export class Player extends Character {
      * Sets the acceleration for this character
      * @param {number} velocityX
      */
-    move(velocityX) {
+    performMove(velocityX) {
         if (!this.setState(Player.states.MOVE)) {
             const newFacing = velocityX < 0 ? DIRECTIONS.LEFT : DIRECTIONS.RIGHT;
             if (newFacing !== this.facing) {
@@ -475,14 +550,14 @@ export class Player extends Character {
      * Removes acceleration in the facing direction
      * @param facing
      */
-    stopMoving(facing) {
+    performStopMoving(facing) {
         this.constantVelocity[facing] = 0;
     }
 
     /**
      * Initiates an attack
      */
-    swing() {
+    performSwing() {
         if (this.stateLock) return;
 
         this.lastState = this.state;
@@ -500,7 +575,7 @@ export class Player extends Character {
     /**
      * causes this player to jump
      */
-    jump() {
+    performJump() {
         if (!this.stateLock) {
             if (this.onGround) {
                 this.onGround = false;
@@ -512,7 +587,7 @@ export class Player extends Character {
     /**
      * causes a player to initiate a finisher
      */
-    finisher() {
+    performFinisher() {
         if (this.stateLock) return;
 
         // spawn at where the player is looking
@@ -531,6 +606,17 @@ export class Player extends Character {
         }
 
         this.game.spawnDynamicHitbox(this.finisherHitbox);
+    }
+
+    /**
+     * initiates a blocking action
+     */
+    performBlock() {
+        if (this.stateLock) return;
+        this.lastState = this.state;
+        this.stateLock = true;
+        this.state = Player.states.BLOCK;
+        this.timeouts[Player.states.BLOCK] = Player.CONSTANTS.BLOCKING.TIMEOUT;
     }
 
     // SECTION: overrides
@@ -554,8 +640,11 @@ export class Player extends Character {
         if (Math.abs(this.physics.velocity.x) < 0.1) this.physics.velocity.x = 0;
 
         switch (this.state) {
+            case Player.states.BLOCK:
+                this.timeouts[Player.states.BLOCK] -= this.game.clockTick;
+                break;
             case Player.states.STAGGERED:
-                this.staggerTimeout -= this.game.clockTick;
+                this.timeouts[Player.states.STAGGERED] -= this.game.clockTick;
 
                 this.setters.posture( // drain posture at the rate at of the timeout
                     this.vitality.posture
@@ -565,7 +654,7 @@ export class Player extends Character {
                         * this.game.clockTick
                     )
                 )
-                if (this.staggerTimeout <= 0) {
+                if (this.timeouts[Player.states.STAGGERED] <= 0) {
                     this.state = Player.states.IDLE;
                     this.stateLock = false;
                     console.log("No longer staggered!")
@@ -703,8 +792,14 @@ class AttackHitbox extends Hitbox {
             // well, what type of hitbox did we intersect with?
             if (otherHb.kind === HITBOX_TYPE.ATTACK) {
                 // just bounce off
-                this.parent.knockback(3, 4)
-                otherParent.knockback(3, 4);
+                this.parent.knockback(
+                    Player.CONSTANTS.KNOCKBACK.CLASH.x,
+                    Player.CONSTANTS.KNOCKBACK.CLASH.y
+                    );
+                otherParent.knockback(
+                    Player.CONSTANTS.KNOCKBACK.CLASH.x,
+                    Player.CONSTANTS.KNOCKBACK.CLASH.y
+                    );
                 SoundFX.play("swordCollide8");
             } else if (otherHb.kind === HITBOX_TYPE.BODY) {
                 // do we bounce off?
@@ -720,6 +815,17 @@ class AttackHitbox extends Hitbox {
                         Player.CONSTANTS.KNOCKBACK.CLASH.y
                     );
                     SoundFX.play("swordCollide8");
+                } else if (otherParent.state === Player.states.BLOCK) {
+                    if (areFacingEachOther(this.parent, otherParent)) {
+                        // TODO: we may want to do something about these damage values being magic numbers...
+                        otherParent.block(10, this.parent);
+                    } else {
+                        otherParent.hit(10);
+                        otherParent.knockback(
+                            Player.CONSTANTS.KNOCKBACK.HIT.x,
+                            Player.CONSTANTS.KNOCKBACK.HIT.y
+                        );
+                    }
                 } else {
                     // just do damage
                     otherParent.hit(10);

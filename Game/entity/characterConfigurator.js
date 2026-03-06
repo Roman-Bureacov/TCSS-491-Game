@@ -57,6 +57,11 @@ export class CharacterConfigurator {
                 dataRight.isLooping = false;
                 dataLeft.callback = ANIMATOR_CONSTANTS.ATTACK_CALLBACK(player);
                 dataLeft.isLooping = false;
+            } else if (state === Player.states.BLOCK) {
+                dataRight.callback = ANIMATOR_CONSTANTS.BLOCK_CALLBACK(player);
+                dataRight.isLooping = false;
+                dataLeft.callback = ANIMATOR_CONSTANTS.BLOCK_CALLBACK(player);
+                dataLeft.isLooping = false;
             }
             
             animations.push(dataRight);

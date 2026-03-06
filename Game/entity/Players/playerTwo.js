@@ -23,6 +23,7 @@ export class PlayerTwo extends Player {
             [KeyMapper.getName("KeyI", true)]: "jump",
             [KeyMapper.getName("KeyI", false)]: "jump",
             [KeyMapper.getName("KeyP", true)]: "finisher",
+            [KeyMapper.getName("KeyM", true)]: "block",
         };
     }
 

@@ -24,6 +24,7 @@ export class PlayerOne extends Player {
             [KeyMapper.getName("KeyW", true)]: "jump",
             [KeyMapper.getName("KeyW", false)]: "jump",
             [KeyMapper.getName("KeyQ", true)]: "finisher",
+            [KeyMapper.getName("KeyV", true)]: "block",
         };
     }
 

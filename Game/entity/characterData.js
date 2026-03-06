@@ -33,6 +33,12 @@ export const ANIMATOR_CONSTANTS = Object.freeze({
         player.attackHitbox.enabled = false;
         player.stateLock = false;
         player.state = player.lastState;
+    },
+    STAGGER_DURATION: Player.CONSTANTS.STAGGER_TIMEOUT,
+    BLOCK_DURATION: Player.CONSTANTS.BLOCKING.TIMEOUT,
+    BLOCK_CALLBACK: (player) => () => {
+        player.stateLock = false;
+        player.state = player.lastState;
     }
 })
 
@@ -103,12 +109,12 @@ const CHARACTER_DATA = {
 
             [Player.states.BLOCK]: {
                 [DIRECTIONS.RIGHT]: [[2, 0], [2, 1], [2, 2]],
-                duration: ANIMATOR_CONSTANTS.ATTACK_DURATION
+                duration: ANIMATOR_CONSTANTS.BLOCK_DURATION
             },
 
             [Player.states.STAGGERED]: {
                 [DIRECTIONS.RIGHT]: [[0, 0]],
-                duration: 0.5
+                duration:  ANIMATOR_CONSTANTS.STAGGER_DURATION
             },
             [Player.states.DEAD]: {
                 [DIRECTIONS.RIGHT]: [[0, 0]],
@@ -147,11 +153,11 @@ const CHARACTER_DATA = {
             },
             [Player.states.BLOCK]: {
                 [DIRECTIONS.RIGHT]: [[2, 0], [2, 1], [2, 2]],
-                duration: ANIMATOR_CONSTANTS.ATTACK_DURATION
+                duration: ANIMATOR_CONSTANTS.BLOCK_DURATION
             },
             [Player.states.STAGGERED]: {
                 [DIRECTIONS.RIGHT]: [[0, 0]],
-                duration: 0.5
+                duration:  ANIMATOR_CONSTANTS.STAGGER_DURATION
             },
             [Player.states.DEAD]: {
                 [DIRECTIONS.RIGHT]: [[0, 0]],
@@ -197,12 +203,12 @@ const CHARACTER_DATA = {
 
             [Player.states.BLOCK]: {
                 [DIRECTIONS.RIGHT]: [[0,0]],
-                duration: 0.5
+                duration: ANIMATOR_CONSTANTS.BLOCK_DURATION
             },
 
             [Player.states.STAGGERED]: {
                 [DIRECTIONS.RIGHT]: [[0, 0], [0, 1], [0, 2], [0, 3]],
-                duration: 0.5
+                duration:  ANIMATOR_CONSTANTS.STAGGER_DURATION
             },
 
             [Player.states.DEAD]: {
@@ -243,11 +249,11 @@ const CHARACTER_DATA = {
             },
             [Player.states.BLOCK]: {
                 [DIRECTIONS.RIGHT]: [[11, 0], [11, 1], [11, 2],[11,3],[11,4]],
-                duration: 0.5
+                duration: ANIMATOR_CONSTANTS.BLOCK_DURATION
             },
             [Player.states.STAGGERED]: {
                 [DIRECTIONS.RIGHT]: [[9, 0], [9, 1]],
-                duration: 0.5
+                duration:  ANIMATOR_CONSTANTS.STAGGER_DURATION
             },
 
             [Player.states.DEAD]: {
@@ -291,11 +297,11 @@ const CHARACTER_DATA = {
             },
             [Player.states.BLOCK]: {
                 [DIRECTIONS.RIGHT]: [[7, 0], [7, 1], [7, 2]],
-                duration: 0.5
+                duration: ANIMATOR_CONSTANTS.BLOCK_DURATION
             },
             [Player.states.STAGGERED]: {
                 [DIRECTIONS.RIGHT]: [[9, 0], [9, 1], [9, 2]],
-                duration: 0.5,
+                duration:  ANIMATOR_CONSTANTS.STAGGER_DURATION
             },
             [Player.states.DEAD]: {
                 [DIRECTIONS.RIGHT]: [[9, 0], [9, 1], [9, 2], [9, 3], [9, 4], [9, 5]],
@@ -329,19 +335,19 @@ const CHARACTER_DATA = {
             },
             [Player.states.JUMP]: {
                 [DIRECTIONS.RIGHT]: [[3, 0], [3, 1], [3, 2], [3, 3], [3, 4], [3, 5], [3, 6], [3, 7], [3, 8], [3, 9], [3, 10], [3, 11]],
-                idleDur: 1,
+                duration: 1,
             },
             [Player.states.BLOCK]: {
                 [DIRECTIONS.RIGHT]: [[8, 0], [8, 1], [8, 2]],
-                duration: 0.5
+                duration: ANIMATOR_CONSTANTS.BLOCK_DURATION
             },
             [Player.states.STAGGERED]: {
                 [DIRECTIONS.RIGHT]: [[9, 0], [9, 1]],
-                idleDur: 0.5,
+                duration:  ANIMATOR_CONSTANTS.STAGGER_DURATION
             },
             [Player.states.DEAD]: {
                 [DIRECTIONS.RIGHT]: [[9, 0], [9, 1], [9, 2]],
-                idleDur: 1,
+                duration: 1,
             },
         },
     },
@@ -373,11 +379,11 @@ const CHARACTER_DATA = {
             },
             [Player.states.BLOCK]: {
                 [DIRECTIONS.RIGHT]: [[6,0], [6,1]],
-                duration: 0.5
+                duration: ANIMATOR_CONSTANTS.BLOCK_DURATION
             },
              [Player.states.STAGGERED]: {
                 [DIRECTIONS.RIGHT]: [[8,0],[8,1],[8,2]],
-                duration: 0.5,
+                duration:  ANIMATOR_CONSTANTS.STAGGER_DURATION
             },
             [Player.states.DEAD]: {
                 [DIRECTIONS.RIGHT]: [[9,0],[9,1],[9,2],[9,3],[9,4]],
@@ -413,11 +419,11 @@ const CHARACTER_DATA = {
             },
             [Player.states.BLOCK]: {
                 [DIRECTIONS.RIGHT]: [[8,0], [8,1],[8,2],[8,3]],
-                duration: 0.5
+                duration: ANIMATOR_CONSTANTS.BLOCK_DURATION
             },
              [Player.states.STAGGERED]: {
                 [DIRECTIONS.RIGHT]: [[4,0],[4,1],[4,2]],
-                duration: 0.5,
+                duration:  ANIMATOR_CONSTANTS.STAGGER_DURATION
             },
             [Player.states.DEAD]: {
                 [DIRECTIONS.RIGHT]: [[9,0],[9,1],[9,2],[9,3],[9,4]],
@@ -453,11 +459,11 @@ const CHARACTER_DATA = {
             },
             [Player.states.BLOCK]: {
                 [DIRECTIONS.RIGHT]: [[3,0], [3,1],[3,2]],
-                duration: 0.5
+                duration: ANIMATOR_CONSTANTS.BLOCK_DURATION
             },
              [Player.states.STAGGERED]: {
                 [DIRECTIONS.RIGHT]: [[4,0],[4,1]],
-                duration: 0.5,
+                duration:  ANIMATOR_CONSTANTS.STAGGER_DURATION
             },
             [Player.states.DEAD]: {
                 [DIRECTIONS.RIGHT]: [[4,0],[4,1],[4,2],[4,3],[4,4]],
@@ -493,11 +499,11 @@ const CHARACTER_DATA = {
             },
             [Player.states.BLOCK]: {
                 [DIRECTIONS.RIGHT]: [[5,0], [5,1]],
-                duration: 0.5
+                duration: ANIMATOR_CONSTANTS.BLOCK_DURATION
             },
              [Player.states.STAGGERED]: {
                 [DIRECTIONS.RIGHT]: [[9,0], [9,1]],
-                duration: 0.5,
+                duration:  ANIMATOR_CONSTANTS.STAGGER_DURATION
             },
             [Player.states.DEAD]: {
                 [DIRECTIONS.RIGHT]: [[9,0],[9,1],[9,2],[9,3],[9,4]],
@@ -533,11 +539,11 @@ const CHARACTER_DATA = {
             },
             [Player.states.BLOCK]: {
                 [DIRECTIONS.RIGHT]: [[8,0], [8,1],[8,2]],
-                duration: 0.5
+                duration: ANIMATOR_CONSTANTS.BLOCK_DURATION
             },
             [Player.states.STAGGERED]: {
                 [DIRECTIONS.RIGHT]: [[9,0],[9,1],[9,2]],
-                duration: 1,
+                duration:  ANIMATOR_CONSTANTS.STAGGER_DURATION
             },
             [Player.states.DEAD]: {
                 [DIRECTIONS.RIGHT]: [[9,0],[9,1],[9,2],[9,3],[9,4]],
@@ -573,11 +579,11 @@ const CHARACTER_DATA = {
             },
             [Player.states.BLOCK]: {
                 [DIRECTIONS.RIGHT]: [[8,0], [8,1],[8,2],[8,3]],
-                duration: 0.5
+                duration: ANIMATOR_CONSTANTS.BLOCK_DURATION
             },
             [Player.states.STAGGERED]: {
                 [DIRECTIONS.RIGHT]: [[9,0],[9,1],[9,2]],
-                duration: 0.5,
+                duration:  ANIMATOR_CONSTANTS.STAGGER_DURATION
             },
             [Player.states.DEAD]: {
                 [DIRECTIONS.RIGHT]: [[9,0],[9,1],[9,2],[9,3],[9,4]],
