@@ -41,6 +41,7 @@ export class CharacterConfigurator {
                 frames: anim[DIRECTIONS.RIGHT] ?? anim[DIRECTIONS.LEFT],
                 duration: anim.duration,
                 isReversed: (!anim[DIRECTIONS.RIGHT]), // if the right is undefined, reverse
+                isLooping: true,
             }
             const dataLeft = {
                 state: state,
@@ -48,6 +49,7 @@ export class CharacterConfigurator {
                 frames: anim[DIRECTIONS.LEFT] ?? anim[DIRECTIONS.RIGHT],
                 duration: anim.duration,
                 isReversed: (!anim[DIRECTIONS.LEFT]), // if the left is undefined, reverse
+                isLooping: true,
             }
             
             if (state === Player.states.ATTACK) {

@@ -302,7 +302,7 @@ const CHARACTER_DATA = {
         spritesheet: {
             img: "character/skeleton/skeleton.png",
             numRow: 10,
-            numCol: 7,
+            numCol: 10,
         },
         swordSound: "heavySwordSwoosh1",
         gender: "male",
@@ -362,10 +362,10 @@ const CHARACTER_DATA = {
         },
     },
 
-    [CHARACTER_NAMES.MINOTAUR]: { 
+    [CHARACTER_NAMES.MINOTAUR]: {
         spritesheet: {
             img: "character/minotaur/minotaur.png",
-            numRow: 5,
+            numRow: 6,
             numCol: 12,
         },
         swordSound: "heavySwordSwoosh1",
@@ -426,11 +426,11 @@ const CHARACTER_DATA = {
         },
     },
 
-    [CHARACTER_NAMES.MAGE]: { 
+    [CHARACTER_NAMES.MAGE]: {
         spritesheet: {
             img: "character/mage/mage.png",
             numRow: 10,
-            numCol: 13,
+            numCol: 15,
         },
         swordSound: "heavySwordSwoosh1",
         gender: "female",
