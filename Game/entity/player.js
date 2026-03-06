@@ -264,7 +264,7 @@ export class Player extends Character {
         this.physics.velocityMax.y = 10;
         this.physics.accelerationMax.x = 10;
         this.physics.accelerationMax.y = 10;
-        this.physics.drag.x = 15;
+        this.physics.drag.x = 50;
         this.physics.drag.y = 0;
 
         this.state = Player.states.IDLE;
