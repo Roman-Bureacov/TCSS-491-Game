@@ -84,7 +84,8 @@ export class Player extends Character {
         IDLE: "idle ",
         JUMP: "jump",
         DEAD: "dead",
-        STAGGERED: "staggered"
+        STAGGERED: "staggered",
+        BLOCK: "block"
     });
 
     /**
