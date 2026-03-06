@@ -41,13 +41,11 @@ export class PlayerFactory {
     static makePlayer(name, type, game,
                       initX, initY,
                       dimX, dimY) {
-
         const spritesheet =
             new Spritesheet(
-                AssetManager.getAsset(
-                    getCharacterData(name).img),
-                    getCharacterData(name).numRow,
-                    getCharacterData(name).numCol
+                AssetManager.getAsset(getCharacterData(name).spritesheet.img),
+                getCharacterData(name).spritesheet.numRow,
+                getCharacterData(name).spritesheet.numCol
             );
 
         let player;

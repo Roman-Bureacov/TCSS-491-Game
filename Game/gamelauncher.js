@@ -128,7 +128,7 @@ const downloadAssets = async (props) => {
     // first, get the character assets prepped
     /** @param {string} name name of the character */
     const downloadCharacter = async (name) => {
-        const asset = getCharacterData(name).img;
+        const asset = getCharacterData(name).spritesheet.img;
         return AssetManager.downloadOne(asset)
     }
 

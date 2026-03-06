@@ -3,7 +3,7 @@
 import {Animator} from "./animation.js";
 import {Player} from "./player.js";
 import {Character} from "./character.js";
-import {getCharacterData} from "./characterData.js";
+import {ANIMATOR_CONSTANTS, getCharacterData} from "./characterData.js";
 import {DIRECTIONS} from "../engine/constants.js";
 import {SoundFX} from "../engine/soundFX.js";
 
@@ -31,97 +31,36 @@ export class CharacterConfigurator {
     static attachAnimators(player, name) {
         let data = getCharacterData(name);
 
-        console.log(data)
+        const animations = [];
         
-        let S = Player.states
-
-        const animations = [
-            {
-                state: S.MOVE,
+        for (const [state, anim] of Object.entries(data.animation)) {
+            // note: !undefined resolves to true
+            const dataRight = {
+                state: state,
                 facing: DIRECTIONS.RIGHT,
-                frames: data.moveR,
-                duration: data.moveDur,
-                isLooping: true
-            },
-            {
-                state: S.MOVE,
-                facing: DIRECTIONS.LEFT,
-                frames: data.moveR,
-                isReversed: true,
-                duration: data.moveDur,
-                isLooping: true
-            },
-            {
-                state: S.IDLE,
-                facing: DIRECTIONS.RIGHT,
-                frames: data.idleR,
-                duration: data.idleDur,
-                isLooping: true
-            },
-            {
-                state: S.IDLE,
-                facing: DIRECTIONS.LEFT,
-                frames: data.idleR,
-                isReversed: true,
-                duration: data.idleDur,
-                isLooping: true
-            },
-            {
-                state: S.ATTACK,
-                facing: DIRECTIONS.RIGHT,
-                frames: data.attackR,
-                duration: data.attackDur,
-                callback: () => {
-                    player.attackHitbox.enabled = false;
-                    player.stateLock = false;
-                    player.state = player.lastState;
-                }
-
-            },
-            {
-                state: S.ATTACK,
-                facing: DIRECTIONS.LEFT,
-                frames: data.attackR,
-                isReversed: true,
-                duration: data.attackDur,
-                callback: () => {
-                    player.attackHitbox.enabled = false;
-                    player.stateLock = false;
-                    player.state = player.lastState;
-                }
-
-            },
-            {
-                state : S.JUMP,
-                facing: DIRECTIONS.LEFT,
-                frames: data.jumpR,
-                isReversed: true,
-                duration: 1,
-
-            },
-            {
-                state : S.JUMP,
-                facing: DIRECTIONS.RIGHT,
-                frames: data.jumpR,
-                isReversed: false,
-                duration: 1,
-
-            },
-            {
-                state:S.DEAD,
-                facing: DIRECTIONS.RIGHT,
-                frames:data.deadR,
-                isReversed: false,
-                duration: 1,
-            },
-            {
-                state:S.DEAD,
-                facing: DIRECTIONS.LEFT,
-                frames:data.deadR,
-                isReversed: true,
-                duration: 1,
+                frames: anim[DIRECTIONS.RIGHT] ?? anim[DIRECTIONS.LEFT],
+                duration: anim.duration,
+                isReversed: (!anim[DIRECTIONS.RIGHT]), // if the right is undefined, reverse
             }
-        ];
+            const dataLeft = {
+                state: state,
+                facing: DIRECTIONS.LEFT,
+                frames: anim[DIRECTIONS.LEFT] ?? anim[DIRECTIONS.RIGHT],
+                duration: anim.duration,
+                isReversed: (!anim[DIRECTIONS.LEFT]), // if the left is undefined, reverse
+            }
+            
+            if (state === Player.states.ATTACK) {
+                dataRight.callback = ANIMATOR_CONSTANTS.ATTACK_CALLBACK(player);
+                dataRight.isLooping = false;
+                dataLeft.callback = ANIMATOR_CONSTANTS.ATTACK_CALLBACK(player);
+                dataLeft.isLooping = false;
+            }
+            
+            animations.push(dataRight);
+            animations.push(dataLeft);
+        }
+
 
         // compileAnimators but applied to THIS player
         for (let prop of animations) {
