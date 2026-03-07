@@ -12,11 +12,6 @@ import {PropertyChangeSupport} from "../../lib/propertychangesupport.js";
  */
 export class Character extends DynamicEntity {
 
-    /**
-     * The scale of this character in the X and Y
-     * @type {{x: number, y: number}}
-     */
-    scale = {x: 1, y: 1};
 
     /**
      * The state of this character
@@ -116,12 +111,13 @@ export class Character extends DynamicEntity {
         // are we switching animations?
         if (!anim) return; // no animation for this state+facing
 
-        this.currentAnimation.update(tick);
-
         if (anim !== this.currentAnimation) {
             this.currentAnimation = anim;
             this.currentAnimation.reset();
         }
+
+        this.currentAnimation.update(tick);
+
         this.drawingProperties.spriteRow = this.currentAnimation.currentFrame.row;
         this.drawingProperties.spriteCol = this.currentAnimation.currentFrame.col;
         this.drawingProperties.isReversed = this.currentAnimation.reversed;

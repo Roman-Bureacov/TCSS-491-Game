@@ -29,6 +29,11 @@ export const CHARACTER_NAMES = Object.freeze({
  */
 export const ANIMATOR_CONSTANTS = Object.freeze({
     ATTACK_DURATION: 0.5,
+    FINISHER_DURATION: 1,
+    FINISHER_CALLBACK: (player) => () => {
+        player.stateLock = false;
+        player.state = player.lastState;
+    },
     ATTACK_CALLBACK: (player) => () => {
         player.attackHitbox.enabled = false;
         player.stateLock = false;
@@ -39,7 +44,7 @@ export const ANIMATOR_CONSTANTS = Object.freeze({
     BLOCK_CALLBACK: (player) => () => {
         player.stateLock = false;
         player.state = player.lastState;
-    }
+    },
 })
 
 /**
@@ -110,6 +115,10 @@ const CHARACTER_DATA = {
             [Player.states.BLOCK]: {
                 [DIRECTIONS.RIGHT]: [[2, 0], [2, 1], [2, 2]],
                 duration: ANIMATOR_CONSTANTS.BLOCK_DURATION
+            },
+            [Player.states.FINISHER]: {
+                [DIRECTIONS.RIGHT]: [[2, 0], [2, 0], [2, 0], [2, 3], [2, 5]],
+                duration: ANIMATOR_CONSTANTS.FINISHER_DURATION
             },
 
             [Player.states.STAGGERED]: {
@@ -205,6 +214,9 @@ const CHARACTER_DATA = {
                 [DIRECTIONS.RIGHT]: [[0,0]],
                 duration: ANIMATOR_CONSTANTS.BLOCK_DURATION
             },
+			[Player.states.FINISHER]: {
+				// TODO: implement
+			},
 
             [Player.states.STAGGERED]: {
                 [DIRECTIONS.RIGHT]: [[0, 0], [0, 1], [0, 2], [0, 3]],
@@ -251,6 +263,9 @@ const CHARACTER_DATA = {
                 [DIRECTIONS.RIGHT]: [[11, 0], [11, 1], [11, 2],[11,3],[11,4]],
                 duration: ANIMATOR_CONSTANTS.BLOCK_DURATION
             },
+			[Player.states.FINISHER]: {
+				// TODO: implement
+			},
             [Player.states.STAGGERED]: {
                 [DIRECTIONS.RIGHT]: [[9, 0], [9, 1]],
                 duration:  ANIMATOR_CONSTANTS.STAGGER_DURATION
@@ -299,6 +314,9 @@ const CHARACTER_DATA = {
                 [DIRECTIONS.RIGHT]: [[7, 0], [7, 1], [7, 2]],
                 duration: ANIMATOR_CONSTANTS.BLOCK_DURATION
             },
+			[Player.states.FINISHER]: {
+				// TODO: implement
+			},
             [Player.states.STAGGERED]: {
                 [DIRECTIONS.RIGHT]: [[9, 0], [9, 1], [9, 2]],
                 duration:  ANIMATOR_CONSTANTS.STAGGER_DURATION
@@ -341,6 +359,9 @@ const CHARACTER_DATA = {
                 [DIRECTIONS.RIGHT]: [[8, 0], [8, 1], [8, 2]],
                 duration: ANIMATOR_CONSTANTS.BLOCK_DURATION
             },
+			[Player.states.FINISHER]: {
+				// TODO: implement
+			},
             [Player.states.STAGGERED]: {
                 [DIRECTIONS.RIGHT]: [[9, 0], [9, 1]],
                 duration:  ANIMATOR_CONSTANTS.STAGGER_DURATION
@@ -381,6 +402,9 @@ const CHARACTER_DATA = {
                 [DIRECTIONS.RIGHT]: [[6,0], [6,1]],
                 duration: ANIMATOR_CONSTANTS.BLOCK_DURATION
             },
+			[Player.states.FINISHER]: {
+				// TODO: implement
+			},
              [Player.states.STAGGERED]: {
                 [DIRECTIONS.RIGHT]: [[8,0],[8,1],[8,2]],
                 duration:  ANIMATOR_CONSTANTS.STAGGER_DURATION
@@ -421,6 +445,9 @@ const CHARACTER_DATA = {
                 [DIRECTIONS.RIGHT]: [[8,0], [8,1],[8,2],[8,3]],
                 duration: ANIMATOR_CONSTANTS.BLOCK_DURATION
             },
+			[Player.states.FINISHER]: {
+				// TODO: implement
+			},
              [Player.states.STAGGERED]: {
                 [DIRECTIONS.RIGHT]: [[4,0],[4,1],[4,2]],
                 duration:  ANIMATOR_CONSTANTS.STAGGER_DURATION
@@ -461,6 +488,9 @@ const CHARACTER_DATA = {
                 [DIRECTIONS.RIGHT]: [[3,0], [3,1],[3,2]],
                 duration: ANIMATOR_CONSTANTS.BLOCK_DURATION
             },
+			[Player.states.FINISHER]: {
+				// TODO: implement
+			},
              [Player.states.STAGGERED]: {
                 [DIRECTIONS.RIGHT]: [[4,0],[4,1]],
                 duration:  ANIMATOR_CONSTANTS.STAGGER_DURATION
@@ -501,6 +531,9 @@ const CHARACTER_DATA = {
                 [DIRECTIONS.RIGHT]: [[5,0], [5,1]],
                 duration: ANIMATOR_CONSTANTS.BLOCK_DURATION
             },
+			[Player.states.FINISHER]: {
+				// TODO: implement
+			},
              [Player.states.STAGGERED]: {
                 [DIRECTIONS.RIGHT]: [[9,0], [9,1]],
                 duration:  ANIMATOR_CONSTANTS.STAGGER_DURATION
@@ -541,6 +574,9 @@ const CHARACTER_DATA = {
                 [DIRECTIONS.RIGHT]: [[8,0], [8,1],[8,2]],
                 duration: ANIMATOR_CONSTANTS.BLOCK_DURATION
             },
+			[Player.states.FINISHER]: {
+				// TODO: implement
+			},
             [Player.states.STAGGERED]: {
                 [DIRECTIONS.RIGHT]: [[9,0],[9,1],[9,2]],
                 duration:  ANIMATOR_CONSTANTS.STAGGER_DURATION
@@ -581,6 +617,9 @@ const CHARACTER_DATA = {
                 [DIRECTIONS.RIGHT]: [[8,0], [8,1],[8,2],[8,3]],
                 duration: ANIMATOR_CONSTANTS.BLOCK_DURATION
             },
+			[Player.states.FINISHER]: {
+				// TODO: implement
+			},
             [Player.states.STAGGERED]: {
                 [DIRECTIONS.RIGHT]: [[9,0],[9,1],[9,2]],
                 duration:  ANIMATOR_CONSTANTS.STAGGER_DURATION

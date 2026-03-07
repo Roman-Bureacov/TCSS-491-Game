@@ -51,19 +51,28 @@ export class CharacterConfigurator {
                 isReversed: (!anim[DIRECTIONS.LEFT]), // if the left is undefined, reverse
                 isLooping: true,
             }
-            
-            if (state === Player.states.ATTACK) {
-                dataRight.callback = ANIMATOR_CONSTANTS.ATTACK_CALLBACK(player);
-                dataRight.isLooping = false;
-                dataLeft.callback = ANIMATOR_CONSTANTS.ATTACK_CALLBACK(player);
-                dataLeft.isLooping = false;
-            } else if (state === Player.states.BLOCK) {
-                dataRight.callback = ANIMATOR_CONSTANTS.BLOCK_CALLBACK(player);
-                dataRight.isLooping = false;
-                dataLeft.callback = ANIMATOR_CONSTANTS.BLOCK_CALLBACK(player);
-                dataLeft.isLooping = false;
+
+            switch (state) {
+                case Player.states.ATTACK:
+                    dataRight.callback = ANIMATOR_CONSTANTS.ATTACK_CALLBACK(player);
+                    dataRight.isLooping = false;
+                    dataLeft.callback = ANIMATOR_CONSTANTS.ATTACK_CALLBACK(player);
+                    dataLeft.isLooping = false;
+                    break;
+                case Player.states.BLOCK:
+                    dataRight.callback = ANIMATOR_CONSTANTS.BLOCK_CALLBACK(player);
+                    dataRight.isLooping = false;
+                    dataLeft.callback = ANIMATOR_CONSTANTS.BLOCK_CALLBACK(player);
+                    dataLeft.isLooping = false;
+                    break;
+                case Player.states.FINISHER:
+                    dataRight.callback = ANIMATOR_CONSTANTS.FINISHER_CALLBACK(player);
+                    dataRight.isLooping = false;
+                    dataLeft.callback = ANIMATOR_CONSTANTS.FINISHER_CALLBACK(player);
+                    dataLeft.isLooping = false;
+                    break;
             }
-            
+
             animations.push(dataRight);
             animations.push(dataLeft);
         }

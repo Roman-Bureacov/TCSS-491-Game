@@ -10,6 +10,7 @@ import {TileEntity} from "./tileEntity.js";
 import {Rectangle2D} from "../engine/primitives.js";
 import {SoundFX} from "../engine/soundFX.js";
 import {DIRECTIONS} from "../engine/constants.js";
+import {ANIMATOR_CONSTANTS} from "./characterData.js";
 
 /**
  * The collection of vitality statistics
@@ -88,10 +89,11 @@ export class Player extends Character {
         MOVE: "move ",
         ATTACK: "attack ",
         IDLE: "idle ",
-        JUMP: "jump",
-        DEAD: "dead",
-        STAGGERED: "staggered",
-        BLOCK: "block"
+        JUMP: "jump ",
+        DEAD: "dead ",
+        STAGGERED: "staggered ",
+        BLOCK: "block ",
+        FINISHER: "finisher ",
     });
 
     /**
@@ -590,8 +592,11 @@ export class Player extends Character {
     performFinisher() {
         if (this.stateLock) return;
 
+        this.stateLock = true;
+        this.lastState = this.state;
+        this.state = Player.states.FINISHER;
         // spawn at where the player is looking
-        const hw = this.finisherHitbox.bounds.dimension.width
+        const hw = this.finisherHitbox.bounds.dimension.width;
         if (this.facing === DIRECTIONS.LEFT) {
             this.finisherHitbox.bounds.setStart(
                 -hw,
@@ -854,17 +859,20 @@ class FinisherHitbox extends Hitbox {
 
     reset() {
         super.reset();
+        this.enabled = false;
         this.totalTime = 0;
     }
 
     update(timestep) {
         this.totalTime += timestep;
 
-        if (this.totalTime > 0.9) {
+        if (this.totalTime > ANIMATOR_CONSTANTS.FINISHER_DURATION * 0.9) {
             // despawn
             this.enabled = false;
             this.expired = true;
             this.totalTime = 0;
+        } else if (this.totalTime > ANIMATOR_CONSTANTS.FINISHER_DURATION * 0.5) {
+            this.enabled = true;
         }
     }
 
@@ -875,6 +883,15 @@ class FinisherHitbox extends Hitbox {
         if (other instanceof Player) {
             if (other.state === Player.states.STAGGERED) {
                 other.finish();
+
+                const sign = (
+                    other.facing === DIRECTIONS.LEFT
+                ) ? 1 : -1;
+
+                other.push(
+                    sign * Player.CONSTANTS.KNOCKBACK.HIT.x,
+                    Player.CONSTANTS.KNOCKBACK.HIT.y
+                )
             }
         }
     }
