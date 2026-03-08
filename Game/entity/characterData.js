@@ -86,7 +86,7 @@ const CHARACTER_DATA = {
     [CHARACTER_NAMES.GUY] : {
         spritesheet: {
             img: "character/guy1/Guy.png",
-            numRow: 3,
+            numRow: 7,
             numCol: 14,
         },
         swordSound: "quickSwordSwoosh2",
@@ -113,20 +113,20 @@ const CHARACTER_DATA = {
             },
 
             [Player.states.BLOCK]: {
-                [DIRECTIONS.RIGHT]: [[2, 0], [2, 1], [2, 2]],
+                [DIRECTIONS.RIGHT]: [[4, 0], [4, 1], [4, 2], [4, 3]],
                 duration: ANIMATOR_CONSTANTS.BLOCK_DURATION
             },
             [Player.states.FINISHER]: {
-                [DIRECTIONS.RIGHT]: [[2, 0], [2, 0], [2, 0], [2, 3], [2, 5]],
+                [DIRECTIONS.RIGHT]: [[5, 0], [5, 0], [5, 0], [5, 1], [5, 2], [5, 3], [5, 4], [5, 5], [5, 6]],
                 duration: ANIMATOR_CONSTANTS.FINISHER_DURATION
             },
 
             [Player.states.STAGGERED]: {
-                [DIRECTIONS.RIGHT]: [[0, 0]],
+                [DIRECTIONS.RIGHT]: [[3, 0]],
                 duration:  ANIMATOR_CONSTANTS.STAGGER_DURATION
             },
             [Player.states.DEAD]: {
-                [DIRECTIONS.RIGHT]: [[0, 0]],
+                [DIRECTIONS.RIGHT]: [[6, 0], [6, 1], [6, 2], [6, 3]],
                 duration: 1
             }
         },
@@ -167,6 +167,9 @@ const CHARACTER_DATA = {
             [Player.states.STAGGERED]: {
                 [DIRECTIONS.RIGHT]: [[0, 0]],
                 duration:  ANIMATOR_CONSTANTS.STAGGER_DURATION
+            },
+            [Player.states.FINISHER]: {
+                // TODO: implement
             },
             [Player.states.DEAD]: {
                 [DIRECTIONS.RIGHT]: [[0, 0]],
