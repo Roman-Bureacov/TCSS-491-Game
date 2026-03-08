@@ -45,6 +45,9 @@ export const ANIMATOR_CONSTANTS = Object.freeze({
         player.stateLock = false;
         player.state = player.lastState;
     },
+    DEAD_CALLBACK: (player) => () => {
+        player.notifyListeners(Player.PROPERTIES.DIED);
+    }
 })
 
 /**

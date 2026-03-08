@@ -400,11 +400,10 @@ export class Player extends Character {
      * Initiates the event that this player has died.
      */
     kill() {
+        if (this.vitality.souls > 0) this.setters.souls(0);
         this.stateLock = true;
         this.state = Player.states.DEAD;
         this.soundEvents.playDeadSound();
-
-        this.notifyListeners(Player.PROPERTIES.DIED);
     }
 
     /**

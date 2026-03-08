@@ -71,6 +71,11 @@ export class CharacterConfigurator {
                     dataLeft.callback = ANIMATOR_CONSTANTS.FINISHER_CALLBACK(player);
                     dataLeft.isLooping = false;
                     break;
+                case Player.states.DEAD:
+                    dataRight.callback = ANIMATOR_CONSTANTS.DEAD_CALLBACK(player);
+                    dataRight.isLooping = false;
+                    dataLeft.callback = ANIMATOR_CONSTANTS.DEAD_CALLBACK(player);
+                    dataLeft.isLooping = false;
             }
 
             animations.push(dataRight);
