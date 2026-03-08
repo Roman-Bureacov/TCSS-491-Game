@@ -24,7 +24,7 @@ export class MenuSystem {
                     HUD.updateHealth(1, now);
                     break;
                 case Player.PROPERTIES.DIED:
-                    HUD.updateHealth(1, 0);
+                    HUD.updateHealth(1, now);
                     break;
                 case Player.PROPERTIES.POSTURE:
                     HUD.updatePosture(1, now)
@@ -46,7 +46,7 @@ export class MenuSystem {
                     HUD.updateHealth(2, now);
                     break;
                 case Player.PROPERTIES.DIED:
-                    HUD.updateHealth(2, 0);
+                    HUD.updateHealth(2, now);
                     break;
                 case Player.PROPERTIES.POSTURE:
                     HUD.updatePosture(2, now)
