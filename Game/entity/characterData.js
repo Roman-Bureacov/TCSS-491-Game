@@ -55,7 +55,8 @@ export const ANIMATOR_CONSTANTS = Object.freeze({
  * @property {string} img the spritesheet image path
  * @property {number} numRow the number of rows in the spritesheet
  * @property {number} numCol the number of columns in the spritesheet
- * @property {Object<x: nubmer, y: number>} [start] the start point for the sprite bounds
+ * @property {Object<x: nubmer, y: number>} [start] the start point for the sprite bounds;
+ * if this property is defined, then so must be the dim property
  * @property {Object<x: nubmer, y: number>} [dim] the end point for the sprite bounds
  */
 
@@ -195,29 +196,25 @@ const CHARACTER_DATA = {
         spritesheet: {
             img: "character/warriorWoman/warriorWoman.png",
             numRow: 5,
-            numCol: 24,
+            numCol: 12,
+            start: { x: -0.5, y: 1 },
+            dim: { x: 2, y: 2 }
         },
         swordSound: "heavySwordSwoosh1",
         gender: "female",
         animation: {
             [Player.states.MOVE]: {
                 [DIRECTIONS.RIGHT]: [[1, 0], [1, 1], [1, 2], [1, 3], [1, 4], [1, 5], [1, 6], [1, 7]],
-                [DIRECTIONS.LEFT]: [[1, 23], [1, 22], [1, 21], [1, 20], [1, 19], [1, 18], [1, 17], [1, 16]],
                 duration: 1,
             },
             [Player.states.IDLE]: {
                 [DIRECTIONS.RIGHT]: [[0, 0], [0, 1], [0, 2], [0, 3], [0, 4], [0, 5], [0, 6], [0, 7]],
-                [DIRECTIONS.LEFT]: [[0, 23], [0, 22], [0, 21], [0, 20], [0, 19], [0, 18], [0, 17], [0, 16]],
                 duration: 10,
             },
             [Player.states.ATTACK]: {
                 [DIRECTIONS.RIGHT]: [
                     [2, 0], [2, 1], [2, 2], [2, 3], [2, 4], [2, 5], [2, 6], [2, 7], [2, 8], [2, 9], 
                     [2, 10], [2, 11]
-                ],
-                [DIRECTIONS.LEFT]: [
-                    [2, 23], [2, 22], [2, 21], [2, 20], [2, 19], [2, 18], [2, 17], [2, 16], [2, 15], 
-                    [2, 14], [2, 13], [2, 12]
                 ],
                 duration: ANIMATOR_CONSTANTS.ATTACK_DURATION
             },
@@ -252,6 +249,8 @@ const CHARACTER_DATA = {
             img: "character/knight/knight.png",
             numRow: 12,
             numCol: 16,
+            start: {x: -0.5, y: 0.75},
+            dim: {x: 2, y: 1.75}
         },
         swordSound: "heavySwordSwoosh3",
         gender: "male",
@@ -302,6 +301,8 @@ const CHARACTER_DATA = {
             img: "character/samurai/samurai1.png",
             numRow: 10,
             numCol: 18,
+            start: { x: -0.4, y: 0.9 },
+            dim: { x: 1.9, y: 1.9 }
         },
         swordSound: "heavySwordSwoosh1",
         gender: "male",
@@ -353,6 +354,8 @@ const CHARACTER_DATA = {
             img: "character/samurai/samurai2.png",
             numRow: 10,
             numCol: 12,
+            start: { x: -0.35, y: 0.6 },
+            dim: { x: 1.6, y: 1.6 }
         },
         swordSound: "heavySwordSwoosh1",
         gender: "male",
@@ -398,6 +401,8 @@ const CHARACTER_DATA = {
             img: "character/skeleton/skeleton.png",
             numRow: 10,
             numCol: 10,
+            start: { x: -0.5, y: 1 },
+            dim: { x: 2, y: 2 }
         },
         swordSound: "heavySwordSwoosh1",
         gender: "male",
@@ -442,6 +447,8 @@ const CHARACTER_DATA = {
             img: "character/monk/monk.png",
             numRow: 10,
             numCol: 9,
+            start: { x: -0.25, y: 0.5 },
+            dim: { x: 1.5, y: 1.5 }
         },
         swordSound: "heavySwordSwoosh1",
         gender: "male",
@@ -486,6 +493,8 @@ const CHARACTER_DATA = {
             img: "character/minotaur/minotaur.png",
             numRow: 6,
             numCol: 12,
+            start: { x: -0.35, y: 0.75 },
+            dim: { x: 1.75, y: 1.75 }
         },
         swordSound: "heavySwordSwoosh1",
         gender: "male",
@@ -530,6 +539,8 @@ const CHARACTER_DATA = {
             img: "character/gangsters/Gangsters.png",
             numRow: 10,
             numCol: 13,
+            start: { x: -0.5, y: 1 },
+            dim: { x: 2, y: 2 }
         },
         swordSound: "heavySwordSwoosh1",
         gender: "male",
@@ -574,6 +585,8 @@ const CHARACTER_DATA = {
             img: "character/mage/mage.png",
             numRow: 10,
             numCol: 15,
+            start: { x: -0.5, y: 1 },
+            dim: { x: 2, y: 2 }
         },
         swordSound: "heavySwordSwoosh1",
         gender: "female",
@@ -618,6 +631,8 @@ const CHARACTER_DATA = {
             img: "character/ninja/monk.png",
             numRow: 10,
             numCol: 9,
+            start: { x: -0.5, y: 1 },
+            dim: { x: 2, y: 2 }
         },
         swordSound: "heavySwordSwoosh1",
         gender: "male",
