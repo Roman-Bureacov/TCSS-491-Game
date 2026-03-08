@@ -51,8 +51,17 @@ export const ANIMATOR_CONSTANTS = Object.freeze({
 })
 
 /**
+ * @typedef SpritesheetDatum
+ * @property {string} img the spritesheet image path
+ * @property {number} numRow the number of rows in the spritesheet
+ * @property {number} numCol the number of columns in the spritesheet
+ * @property {Object<x: nubmer, y: number>} [start] the start point for the sprite bounds
+ * @property {Object<x: nubmer, y: number>} [dim] the end point for the sprite bounds
+ */
+
+/**
  * @typedef CharacterDatum
- * @property {{img: string, numRow: number, numCol: number}} spritesheet the spritesheet data
+ * @property {SpritesheetDatum} spritesheet the spritesheet data
  * @property {Object.<Player.states : AnimatorProps>} animation
  * @property {string} swordSound
  * @property {string} gender
@@ -172,7 +181,7 @@ const CHARACTER_DATA = {
                 duration:  ANIMATOR_CONSTANTS.STAGGER_DURATION
             },
             [Player.states.FINISHER]: {
-                // TODO: implement
+                [DIRECTIONS.RIGHT]: [[0, 0]],
 				duration: ANIMATOR_CONSTANTS.FINISHER_DURATION
             },
             [Player.states.DEAD]: {
@@ -222,7 +231,7 @@ const CHARACTER_DATA = {
                 duration: ANIMATOR_CONSTANTS.BLOCK_DURATION
             },
 			[Player.states.FINISHER]: {
-				// TODO: implement
+				[DIRECTIONS.RIGHT]: [[0, 0]],
 				duration: ANIMATOR_CONSTANTS.FINISHER_DURATION
 			},
 
@@ -272,7 +281,7 @@ const CHARACTER_DATA = {
                 duration: ANIMATOR_CONSTANTS.BLOCK_DURATION
             },
 			[Player.states.FINISHER]: {
-				// TODO: implement
+				[DIRECTIONS.RIGHT]: [[0, 0]],
 				duration: ANIMATOR_CONSTANTS.FINISHER_DURATION
 			},
             [Player.states.STAGGERED]: {
@@ -324,7 +333,7 @@ const CHARACTER_DATA = {
                 duration: ANIMATOR_CONSTANTS.BLOCK_DURATION
             },
 			[Player.states.FINISHER]: {
-				// TODO: implement
+				[DIRECTIONS.RIGHT]: [[0, 0]],
 				duration: ANIMATOR_CONSTANTS.FINISHER_DURATION
 			},
             [Player.states.STAGGERED]: {
@@ -370,7 +379,7 @@ const CHARACTER_DATA = {
                 duration: ANIMATOR_CONSTANTS.BLOCK_DURATION
             },
 			[Player.states.FINISHER]: {
-				// TODO: implement
+				[DIRECTIONS.RIGHT]: [[0, 0]],
 				duration: ANIMATOR_CONSTANTS.FINISHER_DURATION
 			},
             [Player.states.STAGGERED]: {
@@ -414,7 +423,7 @@ const CHARACTER_DATA = {
                 duration: ANIMATOR_CONSTANTS.BLOCK_DURATION
             },
 			[Player.states.FINISHER]: {
-				// TODO: implement
+				[DIRECTIONS.RIGHT]: [[0, 0]],
 				duration: ANIMATOR_CONSTANTS.FINISHER_DURATION
 			},
              [Player.states.STAGGERED]: {
@@ -458,7 +467,7 @@ const CHARACTER_DATA = {
                 duration: ANIMATOR_CONSTANTS.BLOCK_DURATION
             },
 			[Player.states.FINISHER]: {
-				// TODO: implement
+				[DIRECTIONS.RIGHT]: [[0, 0]],
 				duration: ANIMATOR_CONSTANTS.FINISHER_DURATION
 			},
              [Player.states.STAGGERED]: {
@@ -502,7 +511,7 @@ const CHARACTER_DATA = {
                 duration: ANIMATOR_CONSTANTS.BLOCK_DURATION
             },
 			[Player.states.FINISHER]: {
-				// TODO: implement
+				[DIRECTIONS.RIGHT]: [[0, 0]],
 				duration: ANIMATOR_CONSTANTS.FINISHER_DURATION
 			},
              [Player.states.STAGGERED]: {
@@ -546,7 +555,7 @@ const CHARACTER_DATA = {
                 duration: ANIMATOR_CONSTANTS.BLOCK_DURATION
             },
 			[Player.states.FINISHER]: {
-				// TODO: implement
+				[DIRECTIONS.RIGHT]: [[0, 0]],
 				duration: ANIMATOR_CONSTANTS.FINISHER_DURATION
 			},
              [Player.states.STAGGERED]: {
@@ -590,7 +599,7 @@ const CHARACTER_DATA = {
                 duration: ANIMATOR_CONSTANTS.BLOCK_DURATION
             },
 			[Player.states.FINISHER]: {
-				// TODO: implement
+				[DIRECTIONS.RIGHT]: [[0, 0]],
 				duration: ANIMATOR_CONSTANTS.FINISHER_DURATION
 			},
             [Player.states.STAGGERED]: {
@@ -634,7 +643,7 @@ const CHARACTER_DATA = {
                 duration: ANIMATOR_CONSTANTS.BLOCK_DURATION
             },
 			[Player.states.FINISHER]: {
-				// TODO: implement
+				[DIRECTIONS.RIGHT]: [[0, 0]],
 				duration: ANIMATOR_CONSTANTS.FINISHER_DURATION
 			},
             [Player.states.STAGGERED]: {

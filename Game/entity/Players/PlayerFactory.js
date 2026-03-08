@@ -41,11 +41,13 @@ export class PlayerFactory {
     static makePlayer(name, type, game,
                       initX, initY,
                       dimX, dimY) {
+        const data = getCharacterData(name);
+        
         const spritesheet =
             new Spritesheet(
-                AssetManager.getAsset(getCharacterData(name).spritesheet.img),
-                getCharacterData(name).spritesheet.numRow,
-                getCharacterData(name).spritesheet.numCol
+                AssetManager.getAsset(data.spritesheet.img),
+                data.spritesheet.numRow,
+                data.spritesheet.numCol
             );
 
         let player;
@@ -70,6 +72,18 @@ export class PlayerFactory {
                 break;
             default:
                 throw new Error(`Unknown player type ${type}`)
+        }
+
+        // set the drawing bounds, if any
+        if (data.spritesheet.start) {
+            player.drawingProperties.bounds.setStart(
+                data.spritesheet.start.x,
+                data.spritesheet.start.y
+            );
+            player.drawingProperties.bounds.setDimension(
+                data.spritesheet.dim.x,
+                data.spritesheet.dim.y
+            );
         }
 
         // then call the configurator on it
