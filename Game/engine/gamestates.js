@@ -19,6 +19,8 @@ The game engine is stateless, this game state is the thing that has state.
 
 import {PropertyChangeSupport} from "../../lib/propertychangesupport.js";
 import {Player} from "../entity/player.js";
+import {HUD} from "../../userInterface/hudHelper.js";
+import {launchGame} from "../gamelauncher.js";
 
 /**
  * A game state object, holding onto the state of the game in play.
@@ -109,7 +111,7 @@ export class GameState {
     resumeGame() {
         this.game.running = true;
 
-        new Promise(() => this.game.start())
+        Promise.resolve(this.game.start())
             .catch((reason) => console.log("Something went wrong: ", reason));
 
         this.notifyListeners(GameState.PROPERTIES.RESUME_GAME);
@@ -119,21 +121,7 @@ export class GameState {
      * Starts a new game
      */
     newGame() {
-        this.playerOne.setPosition(
-            this.arena.playerAStart.x ?? -1,
-            this.arena.playerAStart.y ?? 0
-        );
-        this.playerOne.reinit();
-
-        this.playerTwo.setPosition(
-            this.arena.playerBStart.x ?? 1,
-            this.arena.playerBStart.y ?? 0
-        );
-        this.playerTwo.reinit();
-
-        new Promise(() => this.game.start())
-            .catch((reason) => console.log("Something went wrong: ", reason));
-
+        HUD.newGame();
         this.notifyListeners(GameState.PROPERTIES.NEW_GAME);
     }
 
@@ -141,9 +129,14 @@ export class GameState {
      * Ends the game
      */
     endGame() {
-        this.game.running = false;
+        HUD.stopTimer();
 
-        this.notifyListeners(GameState.PROPERTIES.GAME_OVER);
+        setTimeout(() => {
+            this.game.running = false;
+            this.notifyListeners(GameState.PROPERTIES.GAME_OVER);
+
+        }, 4000);
+
     }
 
     // implemented behaviors
@@ -153,6 +146,9 @@ export class GameState {
             case Player.PROPERTIES.DIED:
                 this.game.running = false;
                 this.endGame();
+                break;
+            case GameState.PROPERTIES.NEW_GAME:
+                this.newGame();
                 break;
         }
     }

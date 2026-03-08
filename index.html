@@ -26,7 +26,7 @@
                         <img class="char-preview-img" src="./Game/assets/character/guy2/Guy2_img.png" alt="Warrior2">
                         <span>Warrior2</span>
                     </button>
-                    <button class="character-btn" data-player="1" data-character="knight">
+                    <button class="character-btn" data-player="1" data-character="Knight">
                         <div class="char-preview"></div>
                         <img class="char-preview-img" src="./Game/assets/character/knight/knight_img.png" alt="Knight">
                         <span>Knight</span>
@@ -91,7 +91,7 @@
                         <img class="char-preview-img" src="./Game/assets/character/guy2/Guy2_img.png" alt="Warrior2">
                         <span>Warrior2</span>
                     </button>
-                    <button class="character-btn" data-player="2" data-character="knight">
+                    <button class="character-btn" data-player="2" data-character="Knight">
                         <div class="char-preview"></div>
                         <img class="char-preview-img" src="./Game/assets/character/knight/knight_img.png" alt="Knight">
                         <span>Knight</span>
@@ -146,10 +146,10 @@
             <h3>Select Arena</h3>
             <div class="arena-options">
                 <button class="arena-btn selected" data-arena="arena1">
-                    <span>New Temple</span>
+                    <span>Sky Battlefield</span>
                 </button>
                 <button class="arena-btn" data-arena="arena2">
-                    <span>Temple Ruins</span>
+                    <span>Royal Temple</span>
                 </button>
             </div>
         </div>
@@ -247,8 +247,8 @@
             </div>
 
             <div class="center-hud">
-                <div class="timer" id="gameTimer">99</div>
-                <div class="round-info" id="roundInfo">ROUND 1</div>
+                <div class="timer" id="gameTimer">180</div>
+<!--                <div class="round-info" id="roundInfo">ROUND 1</div>-->
             </div>
 
             <div class="player-hud player-2-hud">
@@ -262,13 +262,13 @@
                     <div class="health-text" id="p2HealthText"></div>
                     <div class="posture-text" id="p2PostureText"></div>
                     <div class="life_container" id="p2Life">
+                        <div class="life_stock" id="p2Life0"><img
+                                src="./Game/assets/sprites/Life%20Assets/life_stock.png"
+                                                     alt="Life"></div>
                         <div class="life_stock" id="p2Life1"><img
                                 src="./Game/assets/sprites/Life%20Assets/life_stock.png"
                                                      alt="Life"></div>
                         <div class="life_stock" id="p2Life2"><img
-                                src="./Game/assets/sprites/Life%20Assets/life_stock.png"
-                                                     alt="Life"></div>
-                        <div class="life_stock" id="p2Life3"><img
                                 src="./Game/assets/sprites/Life%20Assets/life_stock.png"
                                                      alt="Life"></div>
                     </div>
@@ -283,7 +283,7 @@
             </div>
         </div>
 
-        <canvas id="gameWorld" width="1024" height="768"
+        <canvas id="gameWorld" width="1024" height="760"
                 style="background: white; border: 1px solid black"
                 tabindex="0" autofocus></canvas>
 

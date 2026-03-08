@@ -29,7 +29,7 @@ import {EngineDebugger} from "./engine/render/visualdebugger.js";
  * @see {GameState}
  *
  * @author Roman Bureacov
- * @param {GameProperties} props the properties to start the game with
+ * @param {{playerOneCharacter: null, playerTwoCharacter: null, arenaName: string, canvas: Element}} props the properties to start the game with
  * @return {Promise<GameState>} the promise instantiating the `GameState` object
  */
 export const launchGame = (props) => {

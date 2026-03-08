@@ -9,7 +9,7 @@ import {Player} from "../entity/player.js";
 
 /**
  * The game engine
- * 
+ *
  * @implements {PropertyChangeNotifier}
  */
 export class GameEngine {
@@ -18,7 +18,7 @@ export class GameEngine {
      * The maximum time step for the game to run, in milliseconds
      * @type {Number}
      */
-    static SIM_STEP = 1/60 * 1000;
+    static SIM_STEP = 1 / 60 * 1000;
 
     /**
      * The maximum number of sim steps that may occur before
@@ -118,10 +118,12 @@ export class GameEngine {
     addPropertyListener(prop, listener) {
         this.PCS.addPropertyListener(prop, listener);
     }
+
     /** @inheritDoc */
     removePropertyListener(prop, listener) {
         this.PCS.removePropertyListener(prop, listener);
     }
+
     /** @inheritDoc */
     notifyListeners(prop, then = undefined, now = undefined) {
         this.PCS.notifyListeners(prop, then, now);
@@ -159,53 +161,9 @@ export class GameEngine {
 
     startInput() {
 
-        // const getXandY = e => ({
-        //     x: e.clientX - this.ctx.canvas.getBoundingClientRect().left,
-        //     y: e.clientY - this.ctx.canvas.getBoundingClientRect().top
-        // });
-        //
-        // this.ctx.canvas.addEventListener("mousemove", e => {
-        //     if (this.options.debugging) {
-        //         console.log("MOUSE_MOVE", getXandY(e));
-        //     }
-        //     this.mouse = getXandY(e);
-        // });
-        //
-        // this.ctx.canvas.addEventListener("click", e => {
-        //     if (this.options.debugging) {
-        //         console.log("CLICK", getXandY(e));
-        //     }
-        //     this.click = getXandY(e);
-        // });
-        //
-        // this.ctx.canvas.addEventListener("wheel", e => {
-        //     if (this.options.debugging) {
-        //         console.log("WHEEL", getXandY(e), e.wheelDelta);
-        //     }
-        //     e.preventDefault(); // Prevent Scrolling
-        //     this.wheel = e;
-        // });
-        //
-        // this.ctx.canvas.addEventListener("contextmenu", e => {
-        //     if (this.options.debugging) {
-        //         console.log("RIGHT_CLICK", getXandY(e));
-        //     }
-        //     e.preventDefault(); // Prevent Context Menu
-        //     this.rightclick = getXandY(e);
-        // });
-        //
-        // this.ctx.canvas.addEventListener("keydown", event => {
-        //     this.keys[event.key] = true;
-        //     console.log(event.key);
-        // });
-        // this.ctx.canvas.addEventListener("keyup", event => this.keys[event.key] = false);
-
 
         const acknowledge = (event) => {
             this.keys[event.code] = event;
-            // if (this.options.debugging) {
-            //     console.log(event);
-            // }
 
         };
 
@@ -427,7 +385,7 @@ export class GameEngine {
         while (
             this.accumulatedTime >= GameEngine.SIM_STEP
             && steps < GameEngine.SIM_MAX_STEP_COUNT
-        ) {
+            ) {
             this.clockTick = GameEngine.SIM_STEP / 1000;
             this.updateEntities();
             this.detectIntersections();
@@ -442,8 +400,8 @@ export class GameEngine {
             console.log(`
 Warning: took too many steps updating.
 simulation behind ${
-    Math.floor(this.accumulatedTime / GameEngine.SIM_STEP)
-} step(s).
+                Math.floor(this.accumulatedTime / GameEngine.SIM_STEP)
+            } step(s).
 Truncating...
             `);
             this.accumulatedTime %= GameEngine.SIM_STEP;
@@ -453,22 +411,3 @@ Truncating...
     };
 
 }
-//
-// /** Creates an alias for requestAnimationFrame for backwards compatibility */
-// window.requestAnimFrame = (() => {
-//     return window.requestAnimationFrame ||
-//         window.webkitRequestAnimationFrame ||
-//         window.mozRequestAnimationFrame ||
-//         window.oRequestAnimationFrame ||
-//         window.msRequestAnimationFrame ||
-//         /**
-//          * Compatibility for requesting animation frames in older browsers
-//          * @param {Function} callback Function
-//          * @param {DOM} element DOM ELEMENT
-//          */
-//         ((callback, element) => {
-//             window.setTimeout(callback, 1000 / 60);
-//         });
-// })();
-
-// KV Le was here :)

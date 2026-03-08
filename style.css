@@ -9,6 +9,8 @@ body {
     font-family: 'Arial', sans-serif;
     background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
     color: #fff;
+    height:100%;
+    width: 100%;
     overflow: hidden;
 }
 
@@ -22,33 +24,64 @@ body {
 
 .menu-screen {
     position: fixed;
-    top: 0;
-    left: 0;
+    inset: 0;
     width: 100vw;
     height: 100vh;
     background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
     display: flex;
-    align-items: center;
     justify-content: center;
+    align-items: flex-start;   /* was center */
+    overflow-y: auto;          /* allow vertical scrolling inside menu screen */
+    overflow-x: hidden;
+    padding: 20px 0;           /* breathing room top/bottom */
     z-index: 1000;
     animation: fadeIn 0.5s ease-in;
 }
+
+.menu-container {
+    text-align: center;
+    width: min(1200px, 96vw);
+    max-width: 1200px;
+    max-height: calc(100vh - 40px);  /* stay inside viewport */
+    padding: 40px;
+    background: rgba(0, 0, 0, 0.5);
+    border-radius: 20px;
+    border: 2px solid rgba(255, 215, 0, 0.3);
+    box-shadow: 0 10px 50px rgba(0, 0, 0, 0.7);
+    margin: 0 auto;
+    overflow-y: auto;          /* scroll inside bordered panel if needed */
+    overflow-x: hidden;
+}
+
+/*.menu-screen {*/
+/*    position: fixed;*/
+/*    top: 0;*/
+/*    left: 0;*/
+/*    width: 100vw;*/
+/*    height: 100vh;*/
+/*    background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);*/
+/*    display: flex;*/
+/*    align-items: center;*/
+/*    justify-content: center;*/
+/*    z-index: 1000;*/
+/*    animation: fadeIn 0.5s ease-in;*/
+/*}*/
 
 @keyframes fadeIn {
     from { opacity: 0; }
     to { opacity: 1; }
 }
 
-.menu-container {
-  text-align: center;
-  width: min(1200px, 96vw);
-  padding: 40px;
-  background: rgba(0, 0, 0, 0.5);
-  border-radius: 20px;
-  border: 2px solid rgba(255, 215, 0, 0.3);
-  box-shadow: 0 10px 50px rgba(0, 0, 0, 0.7);
-  margin: 0 auto;
-}
+/*.menu-container {*/
+/*  text-align: center;*/
+/*  width: min(1200px, 96vw);*/
+/*  padding: 40px;*/
+/*  background: rgba(0, 0, 0, 0.5);*/
+/*  border-radius: 20px;*/
+/*  border: 2px solid rgba(255, 215, 0, 0.3);*/
+/*  box-shadow: 0 10px 50px rgba(0, 0, 0, 0.7);*/
+/*  margin: 0 auto;*/
+/*}*/
 
 .game-title {
     font-size: 4em;

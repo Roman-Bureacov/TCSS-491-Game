@@ -4,8 +4,24 @@ import {CHARACTER_NAMES} from "../Game/entity/characterData.js";
 import {ArenaFactory} from "../Game/arena/arenaFactory.js";
 import {GameState} from "../Game/engine/gamestates.js";
 import {HUD} from "./hudHelper.js";
-import {PropertyChangeListener, PropertyChangeNotifier, PropertyChangeSupport} from "../lib/propertychangesupport.js";
+import {PropertyChangeListener} from "../lib/propertychangesupport.js";
 import {Player} from "../Game/entity/player.js";
+
+
+const CHARACTERS = {
+    [CHARACTER_NAMES.GUY]: 'Warrior',
+    [CHARACTER_NAMES.GUY2]: 'Warrior2',
+    [CHARACTER_NAMES.WARRIOR_WOMAN]: 'Valkyrie',
+    [CHARACTER_NAMES.SAMURAI_A]: 'Samurai1',
+    [CHARACTER_NAMES.SAMURAI_B]: 'Samurai2',
+    [CHARACTER_NAMES.MONK]: 'Monk',
+    [CHARACTER_NAMES.MINOTAUR]: 'Minotaur',
+    [CHARACTER_NAMES.MAGE]: 'Mage',
+    [CHARACTER_NAMES.GANGSTER]: 'Gangster',
+    [CHARACTER_NAMES.KNIGHT]: 'Knight',
+    [CHARACTER_NAMES.SKELETON]: 'Skeleton',
+
+};
 
 /**
  *
@@ -13,6 +29,7 @@ import {Player} from "../Game/entity/player.js";
  * @author Parker Nelson
  */
 export class MenuSystem {
+
 
     /**
      * @type {PropertyChangeListener}
@@ -30,7 +47,7 @@ export class MenuSystem {
                     HUD.updatePosture(1, now)
                     break;
                 case Player.PROPERTIES.SOULS:
-                    HUD.updateStock(1, now);
+                    HUD.removeLifeStock(1, now);
                     break;
             }
         }
@@ -52,7 +69,7 @@ export class MenuSystem {
                     HUD.updatePosture(2, now)
                     break;
                 case Player.PROPERTIES.SOULS:
-                    HUD.updateStock(2, now);
+                    HUD.removeLifeStock(2, now);
                     break;
             }
         }
@@ -60,6 +77,8 @@ export class MenuSystem {
 
     constructor() {
         this.gameCanvas = document.querySelector('#gameWorld');
+        this.currentGameState = null;
+
         this.selectedCharacters = {
             player1: null,
             player2: null
@@ -91,22 +110,10 @@ export class MenuSystem {
 
                 // Update display
                 const displayElement = document.getElementById(`p${player}Selected`);
-                const characterNames = {
-                    [CHARACTER_NAMES.GUY]: 'Warrior',
-                    [CHARACTER_NAMES.GUY2]: 'Warrior2',
-                    [CHARACTER_NAMES.WARRIOR_WOMAN]: 'Valkyrie',
-                    [CHARACTER_NAMES.SAMURAI_A]: 'Samurai1',
-                    [CHARACTER_NAMES.SAMURAI_B]: 'Samurai2',
-                    [CHARACTER_NAMES.MONK]: 'Monk',
-                    [CHARACTER_NAMES.MINOTAUR]: 'Minotaur',
-                    [CHARACTER_NAMES.MAGE]: 'Mage',
-                    [CHARACTER_NAMES.GANGSTER]: 'Gangster',
-                    [CHARACTER_NAMES.NINJA]: 'Ninja',
-                };
 
-                displayElement.textContent = characterNames[character];
+                displayElement.textContent = CHARACTERS[character];
 
-                // Check if we can enable start button
+                // Check if we can enable the start button
                 this.updateStartButton();
             });
         });
@@ -148,36 +155,19 @@ export class MenuSystem {
 
     updateStartButton() {
         const startBtn = document.getElementById('startGameBtn');
-        if (this.selectedCharacters.player1 && this.selectedCharacters.player2) {
-            startBtn.disabled = false;
-        } else {
-            startBtn.disabled = true;
-        }
+        startBtn.disabled = !(this.selectedCharacters.player1 && this.selectedCharacters.player2);
     }
 
     startGame() {
-        const characterNames = {
-            [CHARACTER_NAMES.GUY]: 'Warrior',
-            [CHARACTER_NAMES.GUY2]: 'Warrior2',
-            [CHARACTER_NAMES.WARRIOR_WOMAN]: 'Valkyrie',
-            [CHARACTER_NAMES.SAMURAI_A]: 'Samurai1',
-            [CHARACTER_NAMES.SAMURAI_B]: 'Samurai2',
-            [CHARACTER_NAMES.MONK]: 'Monk',
-            [CHARACTER_NAMES.MINOTAUR]: 'Minotaur',
-            [CHARACTER_NAMES.MAGE]: 'Mage',
-            [CHARACTER_NAMES.GANGSTER]: 'Gangster',
-            [CHARACTER_NAMES.KNIGHT]: 'Knight',
-            [CHARACTER_NAMES.SKELETON]: 'Skeleton',
 
-        };
         // Hide menu, show game
         document.getElementById('mainMenu').classList.add('hidden');
         document.getElementById('gameScreen').classList.remove('hidden');
 
         const player1 = document.querySelector(".player-1-name");
         const player2 = document.querySelector(".player-2-name");
-        player1.textContent = characterNames[this.selectedCharacters.player1];
-        player2.textContent = characterNames[this.selectedCharacters.player2];
+        player1.textContent = CHARACTERS[this.selectedCharacters.player1];
+        player2.textContent = CHARACTERS[this.selectedCharacters.player2];
 
 
         // Initialize the game with selected options
@@ -194,7 +184,9 @@ export class MenuSystem {
             canvas: this.gameCanvas,
         }).then((gameState) => {
 
-            HUD.startTimer(99, function () {
+            this.currentGameState = gameState;
+
+            HUD.startTimer(180, function () {
                 gameState.endGame();
             })
 
@@ -236,12 +228,63 @@ export class MenuSystem {
 
     }
 
+    returnToMenu() {
+        HUD.stopTimer();
+
+        if (this.currentGameState) {
+            try {
+                this.currentGameState.endGame();
+            } catch (evt) {
+                console.warn("Could not end game cleanly", evt);
+            }
+            this.currentGameState = null;
+        }
+
+        document.getElementById('gameScreen').classList.add('hidden');
+        document.getElementById('mainMenu').classList.remove('hidden');
+
+        this.resetMenu();
+
+        HUD.resetHealth();
+        HUD.updatePosture(1, 0);
+        HUD.updatePosture(2, 0);
+        HUD.resetLifeStock(1);
+        HUD.resetLifeStock(2);
+        HUD.resetTimer();
+    }
+
+    resetMenu() {
+        this.selectedCharacters = {
+            player1:null,
+            player2:null
+        };
+
+        this.selectedArena = ArenaFactory.ARENAS.ARENA1;
+
+        document.querySelectorAll('.character-btn').forEach(btn => {
+            btn.classList.remove('selected');
+        });
+
+        document.querySelectorAll('.arena-btn').forEach(btn => {
+            btn.classList.remove('selected');
+        });
+
+        const defaultArenaBtn = document.querySelector('[data-arena="arena1"]');
+        if (defaultArenaBtn) {
+            defaultArenaBtn.classList.add('selected');
+
+            document.getElementById('p1Selected').textContent = 'Select Character';
+            document.getElementById('p2Selected').textContent = 'Select Character';
+
+            document.getElementById('startGameBtn').disabled = true;
+        }
+    }
+
     notify(prop, then, now) {
         switch (prop) {
             case GameState.PROPERTIES.GAME_OVER:
                 // TODO: splash game over screen here
                 console.log("Game Over, player died");
-                HUD.stopTimer();
                 break;
             case GameState.PROPERTIES.PAUSE_GAME:
                 console.log("Game was paused");
@@ -259,14 +302,8 @@ export class HUDSystem {
         this.maxHealth = 100;
         this.maxPosture = 100;
         this.maxStocks = 3;
-        this.player1Health = 100;
-        this.player2Health = 100;
-        this.player1Posture = 0;
-        this.player2Posture = 0;
-        this.player2Stock = 3;
-        this.player1Stock = 3;
-        this.timer = 99;
-        this.round = 1;
+        this.timer = 180;
+        this.maxTime = 180;
         this.timerIntervalId = null;
     }
 
@@ -274,10 +311,8 @@ export class HUDSystem {
         const posture = Math.max(0, Math.min(this.maxPosture, postureNow));
 
         if (player === 1) {
-            this.player1Posture = posture;
             this.updatePostureBar('p1', posture);
         } else if (player === 2) {
-            this.player2Posture = posture;
             this.updatePostureBar('p2', posture);
         }
     }
@@ -286,38 +321,41 @@ export class HUDSystem {
         const healthPercentage = Math.max(0, Math.min(this.maxHealth, health));
 
         if (player === 1) {
-            this.player1Health = healthPercentage;
             this.updateHealthBar('p1', healthPercentage);
         } else if (player === 2) {
-            this.player2Health = healthPercentage;
             this.updateHealthBar('p2', healthPercentage);
         }
     }
 
-    updateStock(player, life) {
+    /**
+     * removes the stock
+     * @param {Number} player The player id [1 | 2]
+     * @param {Number} life The number of life left
+     */
+    removeStock(player, life) {
         const stocks = Math.max(0, Math.min(this.maxStocks, life));
 
         if (player === 1) {
-            this.player1Stock = stocks;
             this.updateStockNumber('p1', stocks);
         } else if (player === 2) {
-            this.player2Stock = stocks;
             this.updateStockNumber('p2', stocks);
         }
     }
 
     updateStockNumber(playerPrefix, life) {
+        // This removes the life as 2,1,0. The stocks are 0 indexed.
         document.getElementById(`${playerPrefix}Life${life}`).style.display = "none";
     }
 
-    // Used to rest the stock visibility.
-    showStock(playerPrefix, life) {
-        const el = document.getElementById(`${playerPrefix}Life${life}`);
-        if (el) el.style.display = "";
-    }
 
-    resetStocks(playerPrefix) {
-        for (let i = 1; i <= 3; i++) {
+    /**
+     * Resets the stocks back to default
+     * @param {Number} player The player id [1 | 2]
+     */
+    resetStocks(player) {
+        const playerPrefix = player === 1 ? 'p1' : 'p2';
+
+        for (let i = 0; i <= 2; i++) {
             const el = document.getElementById(`${playerPrefix}Life${i}`);
             if (el) el.style.display = "";
         }
@@ -363,25 +401,11 @@ export class HUDSystem {
         }
     }
 
-    updateRound(round) {
-        this.round = round;
-        const roundElement = document.getElementById('roundInfo');
-        if (roundElement) {
-            roundElement.textContent = `ROUND ${round}`;
-        }
-    }
+    resetTimer() {
+        const timerElement = document.getElementById('gameTimer');
 
-    updateCharacterName(player, characterName) {
-        const characterNames = { // TODO: this fragment is duplicated, maybe it could be simplified?
-            [CHARACTER_NAMES.GUY]: 'Warrior',
-            [CHARACTER_NAMES.GUY2]: 'Knight',
-            [CHARACTER_NAMES.WARRIOR_WOMAN]: 'Valkyrie'
-        };
-
-        const displayName = characterNames[characterName] || characterName;
-        const element = document.getElementById(`p${player}CharName`);
-        if (element) {
-            element.textContent = displayName;
+        if (timerElement) {
+            timerElement.textContent = this.maxTime;
         }
     }
 
@@ -416,12 +440,6 @@ export class HUDSystem {
             this.timerIntervalId = null;
         }
     }
-
-    // Optional: pause without clearing remainingSeconds
-    pauseTimer() {
-        this.stopTimer();
-    }
-
 }
 
 // Initialize menu when DOM is loaded

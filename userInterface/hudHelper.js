@@ -2,6 +2,7 @@
  * HUD Helper Module
  * Provides simple functions to update the HUD from game code
  */
+import MenuSystem from "./menu.js";
 
 export class HUD {
     /**
@@ -29,44 +30,32 @@ export class HUD {
     /**
      * Update the number stocks left.
      * @param {number} player - Player number (1 or 2)
-     * @param {number} life - stock value (1,3)
+     * @param {number} life - stock value (0-2)
      */
-    static updateStock(player, life) {
+    static removeLifeStock(player, life) {
         if(window.hudSystem) {
-            window.hudSystem.updateStock(player, life);
+            window.hudSystem.removeStock(player, life);
         }
     }
 
     /**
-     * Update game timer
-     * @param {number} seconds - Seconds remaining
+     * Resets the stock to 3
+     *
+     * @param {number} player The player id 1 or 2
      */
-    static updateTimer(seconds) {
-        if (window.hudSystem) {
-            window.hudSystem.updateTimer(seconds);
+    static resetLifeStock(player) {
+        if(window.hudSystem) {
+            window.hudSystem.resetStocks(player);
         }
     }
 
-    /**
-     * Update round number
-     * @param {number} round - Current round number
-     */
-    static updateRound(round) {
+
+    static resetTimer() {
         if (window.hudSystem) {
-            window.hudSystem.updateRound(round);
+            window.hudSystem.resetTimer();
         }
     }
 
-    /**
-     * Update character name display
-     * @param {number} player - Player number (1 or 2)
-     * @param {string} characterName - Character identifier
-     */
-    static updateCharacterName(player, characterName) {
-        if (window.hudSystem) {
-            window.hudSystem.updateCharacterName(player, characterName);
-        }
-    }
 
     /**
      * Reset health bars to full
@@ -96,8 +85,10 @@ export class HUD {
         }
         return null;
     }
-}
 
-// Example usage:
-// import { HUD } from './hudHelper.js';
-// HUD.updateHealth(1, 75);
+    static newGame() {
+        if (window.menuSystem) {
+            window.menuSystem.returnToMenu();
+        }
+    }
+}
