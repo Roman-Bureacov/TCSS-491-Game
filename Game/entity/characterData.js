@@ -381,7 +381,7 @@ const CHARACTER_DATA = {
                 duration: 1,
             },
             [Player.states.BLOCK]: {
-                [DIRECTIONS.RIGHT]: [[8, 0], [8, 1], [8, 2]],
+                [DIRECTIONS.RIGHT]: [[8, 0], [8, 1]],
                 duration: ANIMATOR_CONSTANTS.BLOCK_DURATION
             },
 			[Player.states.FINISHER]: {
