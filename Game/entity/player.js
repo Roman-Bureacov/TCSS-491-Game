@@ -298,9 +298,9 @@ export class Player extends Character {
     reinit() {
         this.stateLock = false;
         this.state = Player.states.IDLE;
-        this.vitality.health = Player.CONSTANTS.VITALITY_MAXIMUMS.health;
-        this.vitality.posture = 0;
-        this.vitality.souls = Player.CONSTANTS.VITALITY_MAXIMUMS.souls;
+        this.setters.posture(0);
+        this.setters.health(Player.CONSTANTS.VITALITY_MAXIMUMS.health);
+        this.setters.souls(Player.CONSTANTS.VITALITY_MAXIMUMS.souls);
     }
 
     initKeymap() {
