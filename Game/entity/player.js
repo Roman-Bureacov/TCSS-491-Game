@@ -5,7 +5,7 @@ A concrete implementation of the character class
 import {Character} from "./character.js"
 import {Spritesheet} from "./animation.js";
 import {KeyMapper} from "../engine/keymapper.js";
-import {Hitbox, HITBOX_TYPE, HitboxOp} from "../engine/hitbox.js";
+ import {Hitbox, HITBOX_TYPE, HitboxOp} from "../engine/hitbox.js";;
 import {TileEntity} from "./tileEntity.js";
 import {Rectangle2D} from "../engine/primitives.js";
 import {SoundFX} from "../engine/soundFX.js";
