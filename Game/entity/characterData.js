@@ -401,7 +401,7 @@ const CHARACTER_DATA = {
 
     [CHARACTER_NAMES.SKELETON]: {
         spritesheet: {
-            img: "character/skeleton/skeleton.png",
+            img: "character/skeleton/Skeleton.png",
             numRow: 10,
             numCol: 10,
             start: { x: -0.5, y: 1 },
