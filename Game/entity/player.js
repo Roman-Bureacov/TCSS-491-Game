@@ -361,6 +361,20 @@ export class Player extends Character {
     }
 
     /**
+     * Checks if player fell off the map.
+     * Resets the player position.
+     * @param {Number} pos The current y position of the player.
+     */
+    fellOffMap(pos) {
+        if(pos < -10) {
+            this.physics.position.y = 5;
+            this.physics.position.x = 0;
+            const currentSouls = this.vitality.souls - 1;
+            this.setters.souls(currentSouls);
+        }
+    }
+
+    /**
      * Initializes the finisher hitbox
      */
     initFinisherHitbox() {
@@ -428,6 +442,7 @@ export class Player extends Character {
         this.state = Player.states.IDLE;
         this.stateLock = false;
         this.setters.souls(this.vitality.souls - 1);
+
         if (this.vitality.souls > 0) {
             this.setters.posture(0);
             this.setters.health(Player.CONSTANTS.VITALITY_MAXIMUMS.health);
@@ -453,7 +468,7 @@ export class Player extends Character {
         } else if (t <= Player.CONSTANTS.BLOCKING.TIME_FAIR) {
             // poor block
             console.log("poor block")
-            this.hit(damage / 2); // TODO: maybe not make it a magic number?
+            this.hit(damage / 2);
             this.knockback(
                 Player.CONSTANTS.KNOCKBACK.HIT.x,
                 Player.CONSTANTS.KNOCKBACK.HIT.y
@@ -470,7 +485,7 @@ export class Player extends Character {
         } else if (t <= Player.CONSTANTS.BLOCKING.TIME_SUCCESSFUL) {
             // fair block
             console.log("fair block")
-            this.hit(damage / 3); // TODO: maybe not make it a magic number?
+            this.hit(damage / 3);
             this.knockback(
                 Player.CONSTANTS.KNOCKBACK.HIT.x,
                 Player.CONSTANTS.KNOCKBACK.HIT.y
@@ -632,6 +647,10 @@ export class Player extends Character {
 
         // send the keys for this player to process
         for (let key in this.game.keys) this.keymapper.sendKeyEvent(this.game.keys[key]);
+
+        const currentPos = this.physics.position.y;
+        this.fellOffMap(currentPos);
+
 
         // natural drain of the posture
         if (this.state !== Player.states.STAGGERED) {
@@ -821,7 +840,6 @@ class AttackHitbox extends Hitbox {
                     SoundFX.play("swordCollide8");
                 } else if (otherParent.state === Player.states.BLOCK) {
                     if (areFacingEachOther(this.parent, otherParent)) {
-                        // TODO: we may want to do something about these damage values being magic numbers...
                         otherParent.block(10, this.parent);
                     } else {
                         otherParent.hit(10);
