@@ -361,20 +361,6 @@ export class Player extends Character {
     }
 
     /**
-     * Checks if player fell off the map.
-     * Resets the player position.
-     * @param {Number} pos The current y position of the player.
-     */
-    fellOffMap(pos) {
-        if(pos < -10) {
-            this.physics.position.y = 5;
-            this.physics.position.x = 0;
-            const currentSouls = this.vitality.souls - 1;
-            this.setters.souls(currentSouls);
-        }
-    }
-
-    /**
      * Initializes the finisher hitbox
      */
     initFinisherHitbox() {
@@ -649,8 +635,6 @@ export class Player extends Character {
         for (let key in this.game.keys) this.keymapper.sendKeyEvent(this.game.keys[key]);
 
         const currentPos = this.physics.position.y;
-        this.fellOffMap(currentPos);
-
 
         // natural drain of the posture
         if (this.state !== Player.states.STAGGERED) {

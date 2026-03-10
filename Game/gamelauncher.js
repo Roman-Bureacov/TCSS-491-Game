@@ -15,13 +15,16 @@ The UI will call upon this to initialize the game
 import {ArenaFactory} from "./arena/arenaFactory.js";
 import {PlayerFactory} from "./entity/Players/PlayerFactory.js";
 import {GameEngine} from "./engine/gameengine.js";
-import {Camera, Pane, Render, World} from "./engine/render/Render.js";
+import {Camera, Pane, Render, SpaceObject, World} from "./engine/render/Render.js";
 import {SoundFX} from "./engine/soundFX.js";
 import {AssetManager} from "./assets/assetmanager.js";
 import {getCharacterData} from "./entity/characterData.js";
 import {arenaData} from "./arena/arenaData.js";
 import {GameState} from "./engine/gamestates.js";
 import {EngineDebugger} from "./engine/render/visualdebugger.js";
+import {Hitbox} from "./engine/hitbox.js";
+import {Player} from "./entity/player.js";
+import {Rectangle2D} from "./engine/primitives.js";
 
 /**
  * Tells the game to start with the specified parameters.
@@ -29,7 +32,7 @@ import {EngineDebugger} from "./engine/render/visualdebugger.js";
  * @see {GameState}
  *
  * @author Roman Bureacov
- * @param {{playerOneCharacter: null, playerTwoCharacter: null, arenaName: string, canvas: Element}} props the properties to start the game with
+ * @param {GameProperties} props the properties to start the game with
  * @return {Promise<GameState>} the promise instantiating the `GameState` object
  */
 export const launchGame = (props) => {
@@ -72,6 +75,7 @@ export const launchGame = (props) => {
             // init game with entities
             arena.tiles.forEach(t => game.addStaticEntity(t));
             game.addDynamicEntity(playerOne, playerTwo);
+            game.spawnDynamicHitbox(new OutOfBoundsHitbox())
 
             // start the game
             window.DEBUG = { // debug on window
@@ -149,4 +153,27 @@ const downloadAssets = async (props) => {
     // finally, grab the audio asset
     // ??? the file assets are all pre-loaded in the SoundFX static class
 
+}
+
+class OutOfBoundsHitbox extends Hitbox {
+    constructor() {
+        super(new SpaceObject(), new Rectangle2D(
+            -25 / 2, -1,
+            25, 10
+        ));
+    }
+
+    resolveIntersection(props) {
+        const parent = props.other.parent;
+        if (parent instanceof Player) {
+            // player fell out of bounds
+            parent.setters.souls(parent.vitality.souls - 1);
+            parent.stagger();
+            // write position instead of
+            parent.physics.position.x = 0;
+            parent.physics.position.y = 10;
+            parent.physics.velocity.y = 0;
+            parent.physics.velocity.x = 0;
+        }
+    }
 }
