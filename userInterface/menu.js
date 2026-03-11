@@ -240,11 +240,6 @@ export class MenuSystem {
         HUD.stopTimer();
 
         if (this.currentGameState) {
-            try {
-                this.currentGameState.endGame();
-            } catch (evt) {
-                console.warn("Could not end game cleanly", evt);
-            }
             this.currentGameState = null;
         }
 
