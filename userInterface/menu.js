@@ -200,27 +200,27 @@ export class MenuSystem {
                 Player.PROPERTIES.HEALTH,
                 this.playerOneListener
             );
-            gameState.playerTwo.addPropertyListener(
-                Player.PROPERTIES.HEALTH,
-                this.playerTwoListener
-            )
             gameState.playerOne.addPropertyListener(
                 Player.PROPERTIES.SOULS,
                 this.playerOneListener
-            )
+            );
+            gameState.playerOne.addPropertyListener(
+                Player.PROPERTIES.POSTURE,
+                this.playerOneListener
+            );
 
+            gameState.playerTwo.addPropertyListener(
+                Player.PROPERTIES.HEALTH,
+                this.playerTwoListener
+            );
             gameState.playerTwo.addPropertyListener(
                 Player.PROPERTIES.SOULS,
                 this.playerTwoListener
-            )
-
-            gameState.playerOne.addPropertyListener(
-                Player.PROPERTIES.POSTURE,
-                this.playerOneListener);
-
+            );
             gameState.playerTwo.addPropertyListener(
                 Player.PROPERTIES.POSTURE,
-                this.playerTwoListener);
+                this.playerTwoListener
+            );
 
 
             window.GAMESTATE = gameState;
