@@ -292,6 +292,10 @@ export class Player extends Character {
         ));
     }
 
+    getSouls() {
+        return this.vitality.souls;
+    }
+
     /**
      * Reinitializes this player.
      */

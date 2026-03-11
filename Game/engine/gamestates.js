@@ -133,7 +133,10 @@ export class GameState {
 
         setTimeout(() => {
             this.game.running = false;
-            this.notifyListeners(GameState.PROPERTIES.GAME_OVER);
+
+            const player = this.playerOne.getSouls() > this.playerTwo.getSouls() ?"Player 1 Wins!" : "Player 2 Wins!";
+
+            this.notifyListeners(GameState.PROPERTIES.GAME_OVER, undefined, player);
 
         }, 4000);
 
