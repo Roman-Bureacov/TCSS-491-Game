@@ -151,6 +151,10 @@ export class MenuSystem {
         document.getElementById('closeInstructionsBtn').addEventListener('click', () => {
             document.getElementById('instructionsOverlay').classList.add('hidden');
         });
+
+        document.getElementById('newGameBtn').addEventListener('click', () => {
+            this.returnToMenu();
+        })
     }
 
     updateStartButton() {
@@ -224,6 +228,10 @@ export class MenuSystem {
 
 
             window.GAMESTATE = gameState;
+
+            requestAnimationFrame(() => {
+                this.gameCanvas.focus();
+            })
         });
 
     }
@@ -242,6 +250,7 @@ export class MenuSystem {
 
         document.getElementById('gameScreen').classList.add('hidden');
         document.getElementById('mainMenu').classList.remove('hidden');
+        document.getElementById('gameOverScreenOverlay').classList.add('hidden');
 
         this.resetMenu();
 
@@ -251,12 +260,14 @@ export class MenuSystem {
         HUD.resetLifeStock(1);
         HUD.resetLifeStock(2);
         HUD.resetTimer();
+
+
     }
 
     resetMenu() {
         this.selectedCharacters = {
-            player1:null,
-            player2:null
+            player1: null,
+            player2: null
         };
 
         this.selectedArena = ArenaFactory.ARENAS.ARENA1;
@@ -283,8 +294,10 @@ export class MenuSystem {
     notify(prop, then, now) {
         switch (prop) {
             case GameState.PROPERTIES.GAME_OVER:
-                // TODO: splash game over screen here
                 console.log("Game Over, player died");
+                document.getElementById('gameOverScreenOverlay').classList.remove('hidden');
+                const winnersName = document.querySelector('.winnersName');
+                winnersName.textContent = now;
                 break;
             case GameState.PROPERTIES.PAUSE_GAME:
                 console.log("Game was paused");
