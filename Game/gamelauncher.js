@@ -83,6 +83,7 @@ export const launchGame = (props) => {
                 renderer: renderer,
                 playerOne: playerOne,
                 playerTwo: playerTwo,
+                assets: AssetManager,
                 visualDebugger: new EngineDebugger(game, entityPane)
             }
 
