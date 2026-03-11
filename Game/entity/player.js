@@ -73,9 +73,9 @@ export class Player extends Character {
         },
         KNOCKBACK: {
             CLASH: {x: 5, y: 5},
-            SUCCESSFUL_BLOCK: {x: 10, y: 3},
-            FAIR_BLOCK: {x: 5, y: 3},
-            POOR_BLOCK: {x: 3, y: 3},
+            SUCCESSFUL_BLOCK: {x: 10, y: 1},
+            FAIR_BLOCK: {x: 5, y: 0},
+            POOR_BLOCK: {x: 3, y: 0},
             HIT: {x: 3, y: 3},
         }
     });
