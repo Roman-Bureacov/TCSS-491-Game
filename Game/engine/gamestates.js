@@ -73,6 +73,10 @@ export class GameState {
      */
     arena;
 
+    gameOverTimeoutId = null;
+
+    isEnding = false;
+
     /**
      * Creates a new game state object to handle the game and its state.
      *
@@ -121,7 +125,6 @@ export class GameState {
      * Starts a new game
      */
     newGame() {
-        HUD.newGame();
         this.notifyListeners(GameState.PROPERTIES.NEW_GAME);
     }
 
@@ -129,17 +132,34 @@ export class GameState {
      * Ends the game
      */
     endGame() {
+        if (this.isEnding) return;
+        this.isEnding = true;
+
         HUD.stopTimer();
 
-        setTimeout(() => {
+        if (this.gameOverTimeoutId !== null) {
+            clearTimeout(this.gameOverTimeoutId);
+            this.gameOverTimeoutId = null;
+        }
+
+        this.gameOverTimeoutId = setTimeout(() => {
             this.game.running = false;
 
-            const player = this.playerOne.getSouls() > this.playerTwo.getSouls() ?"Player 1 Wins!" : "Player 2 Wins!";
+            const player = this.playerOne.getSouls() > this.playerTwo.getSouls()
+                ? "Player 1 Wins!"
+                : "Player 2 Wins!";
 
             this.notifyListeners(GameState.PROPERTIES.GAME_OVER, undefined, player);
+            this.gameOverTimeoutId = null;
+        }, 2000);
+    }
 
-        }, 4000);
-
+    cancelPendingGameOver() {
+        if (this.gameOverTimeoutId !== null) {
+            clearTimeout(this.gameOverTimeoutId);
+            this.gameOverTimeoutId = null;
+        }
+        this.isEnding = false;
     }
 
     // implemented behaviors
@@ -147,12 +167,9 @@ export class GameState {
     notify(prop, then, now) {
         switch (prop) {
             case Player.PROPERTIES.DIED:
-                this.game.running = false;
                 this.endGame();
                 break;
-            case GameState.PROPERTIES.NEW_GAME:
-                this.newGame();
-                break;
+
         }
     }
 

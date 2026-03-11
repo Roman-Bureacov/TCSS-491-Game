@@ -154,7 +154,8 @@ export class MenuSystem {
 
         document.getElementById('newGameBtn').addEventListener('click', () => {
             this.returnToMenu();
-        })
+
+        });
     }
 
     updateStartButton() {
@@ -163,6 +164,9 @@ export class MenuSystem {
     }
 
     startGame() {
+
+        document.getElementById('gameOverScreenOverlay')?.classList.add('hidden');
+        document.getElementById('instructionsOverlay')?.classList.add('hidden');
 
         // Hide menu, show game
         document.getElementById('mainMenu').classList.add('hidden');
@@ -241,16 +245,19 @@ export class MenuSystem {
 
         if (this.currentGameState) {
             try {
-                this.currentGameState.endGame();
+                this.currentGameState.cancelPendingGameOver?.();
+                this.currentGameState.game.running = false;
             } catch (evt) {
                 console.warn("Could not end game cleanly", evt);
             }
             this.currentGameState = null;
         }
 
+        document.getElementById('gameOverScreenOverlay')?.classList.add('hidden');
+        document.getElementById('instructionsOverlay')?.classList.add('hidden');
+
         document.getElementById('gameScreen').classList.add('hidden');
         document.getElementById('mainMenu').classList.remove('hidden');
-        document.getElementById('gameOverScreenOverlay').classList.add('hidden');
 
         this.resetMenu();
 
@@ -260,8 +267,6 @@ export class MenuSystem {
         HUD.resetLifeStock(1);
         HUD.resetLifeStock(2);
         HUD.resetTimer();
-
-
     }
 
     resetMenu() {
@@ -304,6 +309,9 @@ export class MenuSystem {
                 break;
             case GameState.PROPERTIES.RESUME_GAME:
                 console.log("Game was resumed");
+                break;
+            case GameState.PROPERTIES.NEW_GAME:
+                console.log("New Game Started");
                 break;
         }
     }

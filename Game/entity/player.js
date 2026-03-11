@@ -101,9 +101,12 @@ export class Player extends Character {
      * @type {SoundEvents}
      */
     soundEvents = {
-        playHitSound : () => {},
-        playDeadSound : () => {},
-        playSwingSound : () => {},
+        playHitSound: () => {
+        },
+        playDeadSound: () => {
+        },
+        playSwingSound: () => {
+        },
     }
 
     /**
@@ -156,7 +159,7 @@ export class Player extends Character {
          *
          * @param {number} newHealth the new health to set
          */
-        health : (newHealth) => {
+        health: (newHealth) => {
             newHealth = Math.max( // bounds check on health
                 0,
                 Math.min(
@@ -184,7 +187,7 @@ export class Player extends Character {
          *
          * @param {number} newPosture
          */
-        posture : (newPosture) => {
+        posture: (newPosture) => {
             newPosture = Math.max( // bounds check
                 0,
                 Math.min(
@@ -216,7 +219,7 @@ export class Player extends Character {
          *
          * @param {number} newSouls
          */
-        souls : (newSouls) => {
+        souls: (newSouls) => {
             newSouls = Math.max( // bounds check on health
                 0,
                 Math.min(
@@ -370,7 +373,7 @@ export class Player extends Character {
      * @param {Number} pos The current y position of the player.
      */
     fellOffMap(pos) {
-        if(pos < -10) {
+        if (pos < -10) {
             this.physics.position.y = 5;
             this.physics.position.x = 0;
             const currentSouls = this.vitality.souls - 1;
@@ -388,7 +391,7 @@ export class Player extends Character {
                 0, 0,
                 this.attackHitbox.bounds.dimension.width,
                 this.attackHitbox.bounds.dimension.height
-                )
+            )
         )
     }
 
@@ -418,10 +421,16 @@ export class Player extends Character {
      * Initiates the event that this player has died.
      */
     kill() {
-        if (this.vitality.souls > 0) this.setters.souls(0);
+        if (this.state === Player.states.DEAD) return;
+
+        if (this.vitality.souls > 0) {
+            this.setters.souls(0);
+        }
+
         this.stateLock = true;
         this.state = Player.states.DEAD;
         this.soundEvents.playDeadSound();
+        this.notifyListeners(Player.PROPERTIES.DIED);
     }
 
     /**
@@ -599,7 +608,7 @@ export class Player extends Character {
         if (!this.stateLock) {
             if (this.onGround) {
                 this.onGround = false;
-                this.physics.velocity.y = -this.gravity/3;
+                this.physics.velocity.y = -this.gravity / 3;
             }
         }
     }
@@ -822,11 +831,11 @@ class AttackHitbox extends Hitbox {
                 this.parent.knockback(
                     Player.CONSTANTS.KNOCKBACK.CLASH.x,
                     Player.CONSTANTS.KNOCKBACK.CLASH.y
-                    );
+                );
                 otherParent.knockback(
                     Player.CONSTANTS.KNOCKBACK.CLASH.x,
                     Player.CONSTANTS.KNOCKBACK.CLASH.y
-                    );
+                );
                 SoundFX.play("swordCollide8");
             } else if (otherHb.kind === HITBOX_TYPE.BODY) {
                 // do we bounce off?
