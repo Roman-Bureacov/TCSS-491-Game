@@ -255,7 +255,7 @@ export class Player extends Character {
         };
         this.physics.velocityMax.x = 50;
         this.physics.velocityMax.y = 10;
-        this.physics.accelerationMax.x = 10;
+        this.physics.accelerationMax.x = 25;
         this.physics.accelerationMax.y = 10;
         this.physics.drag.x = 100;
         this.physics.drag.y = 0;
