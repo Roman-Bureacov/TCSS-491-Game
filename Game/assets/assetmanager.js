@@ -77,14 +77,14 @@ export class AssetManager {
      */
     static async downloadOne(relativePath) {
         return new Promise((res, rej) => {
-            if (!relativePath) rej(`bad asset file path: ${relativePath}`)
-
+            if (!relativePath) return rej(`bad asset file path: ${relativePath}`)
             if (
                 this.imageCache[relativePath]
                 || this.textCache[relativePath]
                 || this.audioCache[relativePath]
             ) { // this asset may or may not already exist
-                res(`Asset "${relativePath}" already loaded, skipping...`);
+                console.log(`Asset "${relativePath}" already loaded, skipping...`)
+                return res(`Asset "${relativePath}" already loaded, skipped`);
             }
             
             const absolutePath = this.#resolve(relativePath);
@@ -93,12 +93,12 @@ export class AssetManager {
             const successMsg = () => {
                 this.successCount++;
                 console.log("Loaded " + file.src);
-                res(file);
+                return res(file);
             };
             const failMsg = () => {
                 this.errorCount++;
                 console.log("Error loading " + file.src);
-                rej(file);
+                return rej(file);
             };
 
             const ext = relativePath.split(".").pop().toLowerCase();
@@ -136,7 +136,7 @@ export class AssetManager {
                         })
                     break;
                 default:
-                    rej("Unknown file extension: " + ext);
+                    return rej("Unknown file extension: " + ext);
             }
 
         })

@@ -145,9 +145,9 @@ export class GameState {
         this.gameOverTimeoutId = setTimeout(() => {
             this.game.running = false;
 
-            const player = this.playerOne.getSouls() > this.playerTwo.getSouls()
-                ? "Player 1 Wins!"
-                : "Player 2 Wins!";
+            const player = (
+                this.playerOne.getters.souls() > this.playerTwo.getters.souls()
+            ) ? "Player 1 Wins!" : "Player 2 Wins!";
 
             this.notifyListeners(GameState.PROPERTIES.GAME_OVER, undefined, player);
             this.gameOverTimeoutId = null;
