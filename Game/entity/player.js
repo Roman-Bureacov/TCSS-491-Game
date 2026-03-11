@@ -200,11 +200,6 @@ export class Player extends Character {
                     this.vitality.posture = newPosture
                 );
             }
-
-            // initiate staggered state when we max out posture
-            if (newPosture === Player.CONSTANTS.VITALITY_MAXIMUMS.posture) {
-                this.stagger();
-            }
         },
 
         /**
@@ -231,10 +226,6 @@ export class Player extends Character {
                     this.vitality.souls,
                     this.vitality.souls = newSouls
                 );
-            }
-
-            if (newSouls <= 0) {
-                this.kill();
             }
         }
     }
@@ -266,7 +257,7 @@ export class Player extends Character {
         this.physics.velocityMax.y = 10;
         this.physics.accelerationMax.x = 10;
         this.physics.accelerationMax.y = 10;
-        this.physics.drag.x = 50;
+        this.physics.drag.x = 100;
         this.physics.drag.y = 0;
 
         this.state = Player.states.IDLE;
@@ -401,9 +392,6 @@ export class Player extends Character {
      */
     kill() {
         if (this.vitality.souls > 0) this.setters.souls(0);
-        this.stateLock = true;
-        this.state = Player.states.DEAD;
-        this.soundEvents.playDeadSound();
     }
 
     /**
@@ -411,12 +399,7 @@ export class Player extends Character {
      */
     stagger() {
         console.log("I've been staggered!")
-        this.state = Player.states.STAGGERED;
-        this.stateLock = true;
-        this.timeouts[Player.states.STAGGERED] = Player.CONSTANTS.STAGGER_TIMEOUT;
-        // deactivate relevant hitboxes
-        this.attackHitbox.expired = true;
-        this.finisherHitbox.expired = true;
+        this.setters.posture(Player.CONSTANTS.VITALITY_MAXIMUMS.posture)
     }
 
     /**
@@ -627,14 +610,14 @@ export class Player extends Character {
     // SECTION: overrides
 
     update() {
+        this.checkVitals();
+
         const drag = this.physics.getDragVector()
         this.physics.acceleration.y = this.gravity + drag.y;
         this.physics.acceleration.x = drag.x;
 
         // send the keys for this player to process
         for (let key in this.game.keys) this.keymapper.sendKeyEvent(this.game.keys[key]);
-
-        const currentPos = this.physics.position.y;
 
         // natural drain of the posture
         if (this.state !== Player.states.STAGGERED) {
@@ -696,6 +679,26 @@ export class Player extends Character {
     }
 
     // SECTION: helpers
+
+    /**
+     * Verifies this player's vitals.
+     *
+     * Intended to be exclusively used within the update of this player
+     */
+    checkVitals() {
+        if (this.vitality.posture >= Player.CONSTANTS.VITALITY_MAXIMUMS.posture) {
+            this.state = Player.states.STAGGERED;
+            this.stateLock = true;
+            this.timeouts[Player.states.STAGGERED] = Player.CONSTANTS.STAGGER_TIMEOUT;
+            // deactivate relevant hitboxes
+            this.attackHitbox.expired = true;
+            this.finisherHitbox.expired = true;
+        } else if (this.vitality.souls <= 0) {
+            this.stateLock = true;
+            this.state = Player.states.DEAD;
+            this.soundEvents.playDeadSound();
+        }
+    }
 
     updateAttackHitboxBounds() {
         const box = this.hitbox.bounds;
