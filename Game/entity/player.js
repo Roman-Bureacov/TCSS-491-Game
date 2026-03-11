@@ -144,7 +144,7 @@ export class Player extends Character {
     finisherHitbox;
 
     /**
-     * Collection of setters for this object.
+     * Collection of setters for this player.
      */
     setters = {
         /**
@@ -231,6 +231,27 @@ export class Player extends Character {
     }
 
     /**
+     * Collection of setters for this player.
+     */
+    getters = {
+        /**
+         * Gets this player's health
+         * @return {number}
+         */
+        health : () => { return this.vitality.health },
+        /**
+         * Gets this player's posture
+         * @return {number}
+         */
+        posture : () => { return this.vitality.posture },
+        /**
+         * Gets this player's souls
+         * @return {number}
+         */
+        souls : () => { return this.vitality.souls }
+    }
+
+    /**
      * Constructs a new playable character with no animators and an empty input map.
      *
      * @param {GameEngine} game the game
@@ -281,10 +302,6 @@ export class Player extends Character {
             0, -this.hitbox.bounds.dimension.height * 0.1,
             .05, this.hitbox.bounds.dimension.height * 0.9
         ));
-    }
-
-    getSouls() {
-        return this.vitality.souls;
     }
 
     /**
