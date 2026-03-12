@@ -1,0 +1,29 @@
+STR         ""<any>""
+TEXT        <text>
+
+NUMBER      0..9 { 0..9 }
+LETTER      A..Z
+
+PIPE        "|"
+DOT         "."
+COLN        ":"
+MINS        "-"
+ASTR        "*"
+
+DIMENSION   "dimension"
+
+SET         "set"
+
+MATRIX      "matrix"
+SIZE        "size"
+BY          "by"
+ROWS        "rows"
+COLS        "columns"
+
+TILES       "tiles"
+DEFAULT     "default"
+AUTO        "auto"
+
+DETAIL      "detail"
+BACKGROUND  "background"
+MUSIC       "music"

@@ -1,6 +1,6 @@
 import test from "node:test";
-import { strictEqual } from "node:assert/strict";
-import {Matrix, MatrixOp} from "../Matrix/Matrix.js";
+import {strictEqual} from "node:assert/strict";
+import {Matrix, MatrixOp} from "../lib/Matrix/Matrix.js";
 
 /**
  * Fills a matrix with incrementing values 1-9
@@ -25,7 +25,7 @@ let approx = (A, B) => {
 test("Make the identity matrix", () => {
     let dimension = 4;
 
-    let actual = Matrix.prototype.identity(dimension);
+    let actual = MatrixOp.identity(dimension);
     for (let r = 0; r < dimension; r++) {
         for (let c = 0; c < dimension; c++) {
             if (r === c) {
