@@ -286,6 +286,8 @@ export class Player extends Character {
 
         this.gravity = -20;
 
+        this.alreadyPlayed = false;
+
         this.initKeymap();
         this.initSelfHitbox();
         this.initAttackHitbox();
@@ -420,7 +422,7 @@ export class Player extends Character {
 
         this.stateLock = true;
         this.state = Player.states.DEAD;
-        this.soundEvents.playDeadSound();
+        // this.soundEvents.playDeadSound();
         this.notifyListeners(Player.PROPERTIES.DIED);
     }
 
@@ -640,6 +642,8 @@ export class Player extends Character {
     // SECTION: overrides
 
     update() {
+
+
         this.checkVitals();
 
         const drag = this.physics.getDragVector()
@@ -723,10 +727,11 @@ export class Player extends Character {
             // deactivate relevant hitboxes
             this.attackHitbox.expired = true;
             this.finisherHitbox.expired = true;
-        } else if (this.vitality.souls <= 0) {
+        } else if (this.vitality.souls <= 0 && !this.alreadyPlayed) {
             this.stateLock = true;
             this.state = Player.states.DEAD;
             this.soundEvents.playDeadSound();
+            this.alreadyPlayed = true;
         }
     }
 

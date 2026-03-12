@@ -21,6 +21,7 @@ import {PropertyChangeSupport} from "../../lib/propertychangesupport.js";
 import {Player} from "../entity/player.js";
 import {HUD} from "../../userInterface/hudHelper.js";
 import {launchGame} from "../gamelauncher.js";
+import {SoundFX} from "./soundFX.js";
 
 /**
  * A game state object, holding onto the state of the game in play.
@@ -136,6 +137,7 @@ export class GameState {
         this.isEnding = true;
 
         HUD.stopTimer();
+        SoundFX.stop();
 
         if (this.gameOverTimeoutId !== null) {
             clearTimeout(this.gameOverTimeoutId);
