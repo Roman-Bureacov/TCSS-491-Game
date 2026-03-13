@@ -54,8 +54,8 @@ export class TileFactory {
     static makeTile(setName, name) {
         let tile = new TileEntity(TileFactory.getSpritesheet(setName))
         let data = tileData[setName];
-        let row = Math.floor(TileFactory.alphaNumber[name] / data.rows);
-        let col = TileFactory.alphaNumber[name] % data.rows;
+        let row = Math.floor(TileFactory.alphaNumber[name] / data.cols);
+        let col = TileFactory.alphaNumber[name] % data.cols;
         tile.drawingProperties.spriteRow = row;
         tile.drawingProperties.spriteCol = col;
 
