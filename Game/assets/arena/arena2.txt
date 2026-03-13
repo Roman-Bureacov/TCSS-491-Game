@@ -1,13 +1,13 @@
 set: "tileset/Industrial_Tileset/1_Industrial_Tileset_1B.png"
-dimension:
+backdrop: "background/background03.jpeg"
+music: "backgroundMusic1"
+
+arena:
 | origin: -7, 6
 | matrix: 12 rows by 32 columns
 | size: 14 by 6
 | tiles: auto
-detail:
-| backdrop: "background/background03.jpeg"
-| music: "backgroundMusic1"
-arena:
+| map:
 ................................
 ................................
 ................................
