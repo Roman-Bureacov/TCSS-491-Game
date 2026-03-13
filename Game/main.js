@@ -149,7 +149,7 @@ AssetManager.downloadAll(async () => {
  * @param {Pane} bg
  */
 const addBackground = (arena, bg) => {
-    const backgroundDrawable = arena.background;
+    const backgroundDrawable = arena.backdrop;
     if (backgroundDrawable === undefined) return;
 
     // position background

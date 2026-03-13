@@ -1,31 +1,54 @@
 // the grammar depicting the language of the arena text files
 
-root ::= specifiers arena
+root ::= metaSpecifiers mapSpecifiers
 
-specifiers ::= setSpecifier dimensionSpecifier [ arenaDetailsSpecifier ]
+metaSpecifiers ::= setSpecifier [musicSpecifier] [backdropSpecifier]
 
 setSpecifier ::= SET COLN STR
+backdropSpecifier ::= BACKDROP COLN STR
+musicSpecifier ::= MUSIC COLN STR
 
-dimensionSpecifier ::= DIMENSION COLN
-    PIPE originSpecifier
-    PIPE matrixSpecifier
-    PIPE worldSpecifier
-    PIPE tileSpecifier
+mapSpecifier ::= mapping { mapping }
+
+mapping ::= mapName COLN mapData END
+
+mapName ::= ARENA | BACKGROUND | FOREGROUND
+
+mapData ::= PIPE specifier { PIPE specifier }
+
+specifier ::= [
+    matrixSpecifier
+    | originSpecifier
+    | worldSpecifier
+    | tileSpecifier
+    | depthSpecifier
+    | mapSpecifier
+    ]
+
+scenicSpecifier ::=
+    dimensionSpecifier
+    PIPE depthSpecifier
 
 arenaDetailsSpecifier ::=  DETAIL COLN
-    PIPE BACKGROUND COLN STR
+    PIPE BACKDROP COLN STR
     PIPE MUSIC COLN STR
 
-originSpecifier ::= ORIGIN COLN [MINS] NUMBER
+originSpecifier ::= ORIGIN COLN ([MINS] NUMBER COMMA [MINS] NUMBER | SAME)
 
-matrixSpecifier ::= MATRIX COLN NUMBER ROWS BY NUMBER COLS
+matrixSpecifier ::= MATRIX COLN (NUMBER ROWS BY NUMBER COLS | SAME)
 
-worldSpecifier ::= SIZE COLN sizeSpecific
+worldSpecifier ::= SIZE COLN (sizeSpecific | SAME)
 
-tileSpecifier ::= TILES COLN ( sizeSpecific | DEFAULT | AUTO )
+tileSpecifier ::= TILES COLN ( sizeSpecific | DEFAULT | AUTO | SAME)
+
+depthSpecifier ::= [MINS] NUMBER
 
 sizeSpecific ::= NUMBER BY NUMBER
 
-arena ::= ARENA COLN { arenaSymbol } END
+map ::= MAP COLN { arenaSymbol } END
+
+foreground ::= FOREGROUND COLN arenaDetailsSpecifier map END
+
+background ::= BACKGROUND COLN map END
 
 arenaSymbol ::= LETTER | DOT | ASTR

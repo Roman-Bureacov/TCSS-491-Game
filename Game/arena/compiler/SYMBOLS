@@ -9,21 +9,28 @@ DOT         "."
 COLN        ":"
 MINS        "-"
 ASTR        "*"
+EOF         "<EOF>"
 
-DIMENSION   "dimension"
+ORIGIN      "origin"
 
 SET         "set"
+BACKDROP    "backdrop"
+MUSIC       "music"
 
 MATRIX      "matrix"
 SIZE        "size"
 BY          "by"
 ROWS        "rows"
 COLS        "columns"
+DEPTH       "depth"
 
 TILES       "tiles"
 DEFAULT     "default"
 AUTO        "auto"
+SAME        "same"
 
-DETAIL      "detail"
+MAP         "map"
+
+ARENA       "arena"
+FOREGROUND  "foreground"
 BACKGROUND  "background"
-MUSIC       "music"

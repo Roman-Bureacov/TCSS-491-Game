@@ -5,7 +5,7 @@ dimension:
 | size: 14 by 6
 | tiles: auto
 detail:
-| background: "background/background03.jpeg"
+| backdrop: "background/background03.jpeg"
 | music: "backgroundMusic1"
 arena:
 ................................

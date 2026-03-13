@@ -10,9 +10,26 @@ import {AssetManager} from "../../assets/assetmanager.js";
  * @typedef ArenaProperties an object representing what the arena has
  * @property {{x: number | undefined, y: number | undefined}} playerAStart the starting position of a player
  * @property {{x: number | undefined, y: number | undefined}} playerBStart the starting position of a player
+ * @property {{tiles: StaticEntity[], depth: number}} [foreground] the scenic foreground tiles
+ * @property {{tiles: StaticEntity[], depth: number}} [background] the scenic background tiles
  * @property {TileEntity[]} tiles the list of tiles in this arena
- * @property {StaticEntity} [background] the background static entity
+ * @property {StaticEntity} [backdrop] the backdrop static entity
  * @property {string} [music] the music name for this arena
+ */
+
+/**
+ * @typedef mapProperties an object representing a map and its properties
+ * @property {string} mapName the name of the map
+ * @property {number} rows the number of tile rows in this map
+ * @property {number} columns the number of tile columns in this map
+ * @property {number} width the width in space the tiles consume
+ * @property {number} height the height in space the tiles consume
+ * @property {number} originX where the tiles start placing
+ * @property {number} originY where the tiles start placing
+ * @property {number} tileWidth the width of each tile
+ * @property {number} tileHeight the width of each tile
+ * @property {number} depth the depth of the map in space
+ * @property {TileEntity[]} tiles the collection of tiles in this map
  */
 
 /**
@@ -28,14 +45,48 @@ export class ArenaParser {
      */
     parameters = {
         set : undefined,
-        rows : undefined,
-        columns : undefined,
-        width : undefined,
-        height : undefined,
-        originX : undefined,
-        originY : undefined,
-        tileWidth : undefined,
-        tileHeight : undefined,
+        /** @type mapProperties */
+        arena : {
+            mapName : "arena",
+            rows : undefined,
+            columns : undefined,
+            width : undefined,
+            height : undefined,
+            originX : undefined,
+            originY : undefined,
+            tileWidth : undefined,
+            tileHeight : undefined,
+            depth: undefined,
+            tiles: undefined,
+        },
+        /** @type mapProperties */
+        foreground : {
+            mapName : "foreground",
+            rows : undefined,
+            columns : undefined,
+            width : undefined,
+            height : undefined,
+            originX : undefined,
+            originY : undefined,
+            tileWidth : undefined,
+            tileHeight : undefined,
+            depth: undefined,
+            tiles: undefined,
+        },
+        /** @type mapProperties */
+        background : {
+            mapName : "background",
+            rows : undefined,
+            columns : undefined,
+            width : undefined,
+            height : undefined,
+            originX : undefined,
+            originY : undefined,
+            tileWidth : undefined,
+            tileHeight : undefined,
+            depth: undefined,
+            tiles: undefined,
+        }
     }
 
     /**
@@ -71,8 +122,16 @@ export class ArenaParser {
                 x: undefined,
                 y: undefined,
             },
+            background: {
+                tiles: undefined,
+                depth: undefined
+            },
+            foreground: {
+                tiles: undefined,
+                depth: undefined
+            },
             tiles: undefined,
-            background: undefined,
+            backdrop: undefined,
             music: undefined,
         }
     }
@@ -85,6 +144,11 @@ export class ArenaParser {
     buildArena() {
         this.root();
 
+        this.arenaProps.tiles = this.parameters.arena.tiles;
+        this.arenaProps.background.tiles = this.parameters.background.tiles;
+        this.arenaProps.background.depth = this.parameters.background.depth;
+        this.arenaProps.foreground.tiles = this.parameters.foreground.tiles;
+        this.arenaProps.foreground.depth = this.parameters.foreground.depth;
         return this.arenaProps;
     }
 
@@ -92,19 +156,19 @@ export class ArenaParser {
      * Read the root symbol
      */
     root() {
-        this.specifiers();
-        this.arena();
+        this.metaSpecifiers();
+        this.mapSpecifiers();
     }
 
     /**
      * Read the specifiers
      */
-    specifiers() {
+    metaSpecifiers() {
         this.setSpecifier();
-        this.dimensionSpecifier();
-        if (this.see(Token.TYPES.DETAIL)) this.arenaDetailSpecifier();
+        if (this.see(Token.TYPES.BACKDROP)) this.backdropSpecifier();
+        if (this.see(Token.TYPES.MUSIC)) this.musicSpecifier();
     }
-
+    
     /**
      * Read the tileset specifier
      */
@@ -114,53 +178,24 @@ export class ArenaParser {
         this.mustBe(Token.TYPES.STR);
         this.parameters.set = ArenaParser.stripQuotes(this.token.image);
     }
-
-    /**
-     * Read the dimension specifier
-     */
-    dimensionSpecifier() {
-        this.mustBe(Token.TYPES.DIMENSION);
+    
+    musicSpecifier() {
+        this.mustBe(Token.TYPES.MUSIC);
         this.mustBe(Token.TYPES.COLN);
-        this.mustBe(Token.TYPES.PIPE);
-        this.originSpecifier();
-        this.mustBe(Token.TYPES.PIPE);
-        this.matrixSpecifier();
-        this.mustBe(Token.TYPES.PIPE);
-        this.worldSpecifier();
-        this.mustBe(Token.TYPES.PIPE);
-        this.tileSpecifier();
+        this.mustBe(Token.TYPES.STR);
+        
+        // make this string
+        let path = ArenaParser.stripQuotes(this.token.image);
+        // TODO: is there a way to make sure this file exists considering it is loaded outside of AssetManager?
+        // TODO: error check?
+        this.arenaProps.music = path;
     }
-
-    /**
-     * Read the origin specifier
-     */
-    originSpecifier() {
-        this.mustBe(Token.TYPES.ORIGIN);
+    
+    backdropSpecifier() {
+        this.mustBe(Token.TYPES.BACKDROP);
         this.mustBe(Token.TYPES.COLN);
+        this.mustBe(Token.TYPES.STR);
 
-        let sign;
-        if (this.have(Token.TYPES.MINS)) sign = -1;
-        else sign = 1;
-        this.mustBe(Token.TYPES.NUMBER)
-        this.parameters.originX = sign * parseFloat(this.token.image);
-
-        this.mustBe(Token.TYPES.COMMA)
-
-        if (this.have(Token.TYPES.MINS)) sign = -1;
-        else sign = 1;
-        this.mustBe(Token.TYPES.NUMBER)
-        this.parameters.originY = sign * parseFloat(this.token.image);
-
-    }
-
-    arenaDetailSpecifier() {
-        this.mustBe(Token.TYPES.DETAIL);
-        this.mustBe(Token.TYPES.COLN);
-
-        this.mustBe(Token.TYPES.PIPE);
-        this.mustBe(Token.TYPES.BACKGROUND);
-        this.mustBe(Token.TYPES.COLN);
-        this.mustBe(Token.TYPES.STR)
         // build this tile
         let path = ArenaParser.stripQuotes(this.token.image);
 
@@ -173,71 +208,208 @@ on line ${this.token.line}
 
         let spritesheet = new Spritesheet(asset, 1, 1);
 
-        this.arenaProps.background = new StaticEntity(
+        this.arenaProps.backdrop = new StaticEntity(
             spritesheet,
             spritesheet.image.width,
             spritesheet.image.height
         );
+    }
 
-        this.mustBe(Token.TYPES.PIPE);
-        this.mustBe(Token.TYPES.MUSIC);
+    /**
+     * Read the map specifiers
+     */
+    mapSpecifiers() {
+        // we need to guarantee that arena is defined first for us to use `same` later
+        if (!this.see(Token.TYPES.ARENA)) this.semanticError(
+            `expected arena to be defined first but found "${this.token.image}" instead`)
+        
+        while (
+            this.see(Token.TYPES.ARENA)
+            || this.see(Token.TYPES.BACKGROUND)
+            || this.see(Token.TYPES.FOREGROUND)
+        ) this.mapping()
+    }
+    
+    mapping() {
+        let details;
+        if (this.have(Token.TYPES.ARENA)) {
+            details = this.parameters.arena;
+        } else if (this.have(Token.TYPES.BACKGROUND)) {
+            details = this.parameters.background;
+        } else {
+            this.mustBe(Token.TYPES.FOREGROUND);
+            details = this.parameters.foreground;
+        }
+        this.mustBe(Token.TYPES.COLN)
+        
+        while (this.have(Token.TYPES.PIPE)) this.specifier(details);
+    }
+
+    /**
+     * reads a specifier
+     * @param {mapProperties} context what part to read the specifier into (arena, foreground, or background parameters)
+     */
+    specifier(context) {
+        if (this.see(Token.TYPES.MATRIX)) this.matrixSpecifier(context)
+        else if (this.see(Token.TYPES.ORIGIN)) this.originSpecifier(context)
+        else if (this.see(Token.TYPES.SIZE)) this.worldSpecifier(context)
+        else if (this.see(Token.TYPES.TILES)) this.tileSpecifier(context)
+        else if (this.see(Token.TYPES.DEPTH)) this.depthSpecifier(context)
+        else {
+            this.mapSpecifier(context)
+        }
+    }
+    
+    /**
+     * Read the origin specifier
+     * @param {mapProperties} context what part to read the specifier into (arena, foreground, or background parameters)
+     */
+    originSpecifier(context) {
+        this.mustBe(Token.TYPES.ORIGIN);
         this.mustBe(Token.TYPES.COLN);
-        this.mustBe(Token.TYPES.STR)
-        // make this string
-        path = ArenaParser.stripQuotes(this.token.image);
-        // TODO: is there a way to make sure this file exists considering it is loaded outside of AssetManager?
-        // TODO: error check?
-        this.arenaProps.music = path;
+
+        !(Number.isFinite(context.originX))
+            || this.semanticError(
+            "origin already specified (duplicate specifier or mapping)"
+            );
+        
+        if (this.have(Token.TYPES.SAME)) {
+            context.originX = this.parameters.arena.originX;
+            context.originY = this.parameters.arena.originY;
+        } else {
+            let sign;
+            if (this.have(Token.TYPES.MINS)) sign = -1;
+            else sign = 1;
+            this.mustBe(Token.TYPES.NUMBER)
+            context.originX = sign * parseFloat(this.token.image);
+
+            this.mustBe(Token.TYPES.COMMA)
+
+            if (this.have(Token.TYPES.MINS)) sign = -1;
+            else sign = 1;
+            this.mustBe(Token.TYPES.NUMBER)
+            context.originY = sign * parseFloat(this.token.image);
+        }
     }
 
     /**
      * Read the matrix specifier
+     * @param {mapProperties} context what part to read the specifier into (arena, foreground, or background parameters)
      */
-    matrixSpecifier() {
+    matrixSpecifier(context) {
         this.mustBe(Token.TYPES.MATRIX);
         this.mustBe(Token.TYPES.COLN);
-        this.mustBe(Token.TYPES.NUMBER);
-        this.parameters.rows = parseInt(this.token.image);
-        this.mustBe(Token.TYPES.ROWS);
-        this.mustBe(Token.TYPES.BY);
-        this.mustBe(Token.TYPES.NUMBER);
-        this.parameters.columns = parseInt(this.token.image);
-        this.mustBe(Token.TYPES.COLS);
 
+        !(Number.isFinite(context.rows))
+            || this.semanticError(
+            "matrix already specified (duplicate specifier or mapping)"
+            )
+        
+        if (this.have(Token.TYPES.SAME)) {
+            context.rows = this.parameters.arena.rows;
+            context.columns = this.parameters.arena.columns;
+        } else {
+            this.mustBe(Token.TYPES.NUMBER);
+            context.rows = parseInt(this.token.image);
+            this.mustBe(Token.TYPES.ROWS);
+            this.mustBe(Token.TYPES.BY);
+            this.mustBe(Token.TYPES.NUMBER);
+            context.columns = parseInt(this.token.image);
+            this.mustBe(Token.TYPES.COLS);
+        }
     }
 
     /**
      * Read the world dimension specifier
+     * @param {mapProperties} context what part to read the specifier into (arena, foreground, or background parameters)
      */
-    worldSpecifier() {
+    worldSpecifier(context) {
         this.mustBe(Token.TYPES.SIZE);
         this.mustBe(Token.TYPES.COLN);
-        const size = this.sizeSpecific();
-        this.parameters.width = size[0];
-        this.parameters.height = size[1];
+
+        !(Number.isFinite(context.width))
+            || this.semanticError(
+            "tile world already specified (duplicate specifier or mapping)"
+            );
+        
+        if (this.have(Token.TYPES.SAME)) {
+            context.width = this.parameters.arena.width;
+            context.height = this.parameters.arena.height;
+        } else {
+            const size = this.sizeSpecific();
+            context.width = size[0];
+            context.height = size[1];
+        }
     }
 
     /**
      * Read the tile size specifier
+     * @param {mapProperties} context what part to read the specifier into (arena, foreground, or background parameters)
      */
-    tileSpecifier() {
+    tileSpecifier(context) {
         this.mustBe(Token.TYPES.TILES);
         this.mustBe(Token.TYPES.COLN);
-        let size = [];
-        if (this.have(Token.TYPES.AUTO)) {
-            size[0] = this.parameters.width / this.parameters.columns;
-            size[1] = this.parameters.height / this.parameters.rows;
-        } else if (this.see(Token.TYPES.NUMBER)) {
-            size = this.sizeSpecific();
-        } else {
-            this.mustBe(Token.TYPES.DEFAULT)
-            size = [1, 1];
-        }
 
-        this.parameters.tileWidth = size[0];
-        this.parameters.tileHeight = size[1];
+        !(Number.isFinite(context.tileWidth))
+            || this.semanticError(
+            "tile size already specified (duplicate specifier or mapping)"
+            );
+        
+        
+        if (this.have(Token.TYPES.SAME)) {
+            context.tileWidth = this.parameters.arena.tileWidth;
+            context.tileHeight = this.parameters.arena.tileHeight;
+        } else {
+            Number.isFinite(context.width)
+                || this.parserError("Trying to define tile dimensions before defining size width");
+            Number.isFinite(context.height)
+                || this.parserError("Trying to define tile dimensions before defining size height")
+            Number.isFinite(context.rows)
+                || this.parserError("Trying to define tile dimensions before defining row count");
+            Number.isFinite(context.columns)
+                || this.parserError("Trying to define tile dimensions before defining column count");
+            
+            let size = [];
+            if (this.have(Token.TYPES.AUTO)) {
+                size[0] = context.width / context.columns;
+                size[1] = context.height / context.rows;
+            } else if (this.see(Token.TYPES.NUMBER)) {
+                size = this.sizeSpecific();
+            } else {
+                this.mustBe(Token.TYPES.DEFAULT)
+                size = [1, 1];
+            }
+
+            context.tileWidth = size[0];
+            context.tileHeight = size[1];
+
+        }
     }
 
+    /**
+     * Read the map depth specifier
+     * @param {mapProperties} context what part to read the specifier into (arena, foreground, or background parameters)
+     */
+    depthSpecifier(context) {
+        this.mustBe(Token.TYPES.DEPTH);
+        this.mustBe(Token.TYPES.COLN);
+
+        !(Number.isFinite(context.depth))
+            || this.semanticError(
+            "depth already specified (duplicate specifier or mapping)"
+            )
+        
+        if (this.have(Token.TYPES.SAME)) {
+            context.depth = this.parameters.arena.depth;
+        } else {
+            let sign = (
+                this.have(Token.TYPES.MINS)
+            ) ? -1 : 1;
+            this.mustBe(Token.TYPES.NUMBER)
+            let depth = Number.parseFloat(this.token.image)
+            context.depth = sign * depth;
+        }
+    }
 
     /**
      * reads a size specifier
@@ -258,20 +430,34 @@ on line ${this.token.line}
     }
 
     /**
-     * Read the arena
+     * Read the map
+     * @param {mapProperties} context what part to read the specifier into (arena, foreground, or background parameters)
      */
-    arena() {
-        this.mustBe(Token.TYPES.ARENA);
+    mapSpecifier(context) {
+        this.mustBe(Token.TYPES.MAP);
         this.mustBe(Token.TYPES.COLN);
 
-        console.log(this.parameters)
-        let compiledArena = [];
+        // is this map well-defined?
+        Number.isFinite(context.width) 
+            || this.parserError(`size width was left unspecified for ${context.mapName}`);
+        Number.isFinite(context.height) 
+            || this.parserError(`size height was left unspecified for ${context.mapName}`);
+        Number.isFinite(context.tileWidth) 
+            || this.parserError(`tile width was left unspecified for ${context.mapName}`);
+        Number.isFinite(context.tileHeight) 
+            || this.parserError(`tile height was left unspecified for ${context.mapName}`);
+        Number.isFinite(context.originX) 
+            || this.parserError(`world origin X was left unspecified for ${context.mapName}`);
+        Number.isFinite(context.originY) 
+            || this.parserError(`world origin Y was left unspecified for ${context.mapName}`);
+
+        let compiledMap = [];
         let player = 1;
         // we now have enough information to build the arena
-        let rowSpacing = (1.0 * this.parameters.height) / this.parameters.rows;
-        let colSpacing = (1.0 * this.parameters.width) / this.parameters.columns;
-        for (let r = 0; r < this.parameters.rows; r++) {
-            for (let c = 0; c < this.parameters.columns; c++) {
+        let rowSpacing = context.height / context.rows;
+        let colSpacing = context.width / context.columns;
+        for (let r = 0; r < context.rows; r++) {
+            for (let c = 0; c < context.columns; c++) {
                 if (this.have(Token.TYPES.LETTER)) {
                     let tile = (
                         TileFactory.makeTile(
@@ -281,23 +467,27 @@ on line ${this.token.line}
                     );
 
                     tile.setObjectPosition(
-                        this.parameters.originX + c * colSpacing,
-                        this.parameters.originY - r * rowSpacing,
+                        context.originX + c * colSpacing,
+                        context.originY - r * rowSpacing,
                         0
                     );
                     tile.drawingProperties.bounds.setDimension(
-                        this.parameters.tileWidth,
-                        this.parameters.tileHeight
+                        context.tileWidth,
+                        context.tileHeight
                     );
                     tile.hitbox.bounds.setDimension(
-                        this.parameters.tileWidth,
-                        this.parameters.tileHeight
+                        context.tileWidth,
+                        context.tileHeight
                     );
 
-                    compiledArena.push(tile);
+                    compiledMap.push(tile);
                 } else if (this.have(Token.TYPES.ASTR)) {
-                    let startX = this.parameters.originX + c * colSpacing;
-                    let startY = this.parameters.originY - r * rowSpacing;
+                    if (context.mapName !== this.parameters.arena.mapName) {
+                        this.semanticError("Tried to specify a player spawn outside of the arena pane")
+                    }
+
+                    let startX = context.originX + c * colSpacing;
+                    let startY = context.originY - r * rowSpacing;
                     switch (player++) {
                         case 1:
                             this.arenaProps.playerAStart.x = startX;
@@ -323,7 +513,7 @@ found ${this.token.type} at line ${this.token.line}
 
         this.mustBe(Token.TYPES.END);
 
-        this.arenaProps.tiles = compiledArena;
+        context.tiles = compiledMap;
 
     }
 
@@ -336,6 +526,22 @@ found ${this.token.type} at line ${this.token.line}
      */
     static stripQuotes(str) {
         return str.replaceAll("\"", "");
+    }
+
+    /**
+     * Throws a semantic error from the parser
+     * @param {string} what description of the error
+     */
+    semanticError(what) {
+        throw new Error(`Semantic error: ${what}\n(line ${this.token.line})`)
+    }
+
+    /**
+     * Throws a parser error
+     * @param {string} what description of the error
+     */
+    parserError(what) {
+        throw new Error(`Parser error: ${what}\n(line ${this.token.line})`);
     }
 
     /**

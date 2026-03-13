@@ -14,7 +14,6 @@ export class ArenaScanner {
     line = 1;
 
     reservedWords = {
-        "dimension" : Token.TYPES.DIMENSION,
         "matrix" : Token.TYPES.MATRIX,
         "size" : Token.TYPES.SIZE,
         "arena" : Token.TYPES.ARENA,
@@ -27,9 +26,13 @@ export class ArenaScanner {
         "default" : Token.TYPES.DEFAULT,
         "auto" : Token.TYPES.AUTO,
         "tiles" : Token.TYPES.TILES,
-        "detail" : Token.TYPES.DETAIL,
+        "backdrop" : Token.TYPES.BACKDROP,
         "background" : Token.TYPES.BACKGROUND,
+        "foreground" : Token.TYPES.FOREGROUND,
         "music" : Token.TYPES.MUSIC,
+        "same" : Token.TYPES.SAME,
+        "depth" : Token.TYPES.DEPTH,
+        "map" : Token.TYPES.MAP,
     }
 
     /**
@@ -47,7 +50,7 @@ export class ArenaScanner {
      */
     next() {
 
-        if (this.index >= this.text.length) throw new Error("Asking for more token when at EOF")
+        if (this.index >= this.text.length) return new Token(Token.TYPES.EOF, "<EOF>", this.line);
 
         while (this.regexWhitespace.test(this.ch)) {
             if (this.ch === "\n") this.line++;

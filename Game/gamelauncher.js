@@ -64,12 +64,22 @@ export const launchGame = (props) => {
             );
 
             // init renderable world
-            const backgroundPane = new Pane() // here lives the background
+            const backdropPane = new Pane() // here lives the background
+            const backgroundPane = new Pane();
+            const foregroundPane = new Pane();
             const entityPane = new Pane(); // here live the entities
-            world.addPane(backgroundPane, entityPane)
+            world.addPane(backdropPane, backgroundPane, entityPane, foregroundPane)
 
-            addBackground(backgroundPane, arena.background);
+            addBackground(backdropPane, arena.backdrop);
             arena.tiles.forEach(t => entityPane.addDrawable(t));
+            if (arena.background.tiles) {
+                arena.background.tiles.forEach(t => backgroundPane.addDrawable(t))
+                backgroundPane.setObjectPosition(0, 0, arena.background.depth ?? 0)
+            }
+            if (arena.foreground.tiles) {
+                arena.foreground.tiles.forEach(t => foregroundPane.addDrawable(t))
+                foregroundPane.setObjectPosition(0, 0, arena.foreground.depth ?? 0)
+            }
             entityPane.addDrawable(playerOne, playerTwo);
 
             // init game with entities

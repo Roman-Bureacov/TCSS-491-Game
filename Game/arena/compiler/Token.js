@@ -20,27 +20,33 @@ export class Token {
         COMMA : "Comma",
         MINS : "Minus",
         ASTR : "Asterisk",
+        EOF : "<EOF>",
 
-        BY : "By",
         ORIGIN : "Origin",
 
         SET : "Set",
+        BACKDROP: "backdrop",
+        MUSIC: "music",
 
         MATRIX : "Matrix",
         SIZE : "Size",
-        ARENA : "Arena",
+        BY : "By",
         END : "End",
         ROWS : "Rows",
         COLS : "Columns",
-        DIMENSION : "Dimension",
+        DEPTH : "Depth",
 
         DEFAULT : "Default",
         AUTO : "Auto",
         TILES : "Tiles",
+        SAME : "same",
 
-        DETAIL: "detail",
-        BACKGROUND: "background",
-        MUSIC: "music",
+        MAP : "map",
+
+        ARENA : "Arena",
+        FOREGROUND : "Foreground",
+        BACKGROUND : "Background",
+
     })
 
     /**
