@@ -50,12 +50,23 @@ export class ArenaScanner {
      */
     next() {
 
-        if (this.index >= this.text.length) return new Token(Token.TYPES.EOF, "<EOF>", this.line);
+        // first see if there are any comments or whitespace we need to skip
+        let done = false
+        while (!done) {
+            done = true;
 
-        while (this.regexWhitespace.test(this.ch)) {
-            if (this.ch === "\n") this.line++;
-            this.nextCh();
+            if (this.ch === ";") {
+                this.readComment();
+                done = false;
+            } else if (this.regexWhitespace.test(this.ch)) {
+                if (this.ch === "\n") this.line++;
+                this.nextCh();
+                done = false;
+            }
         }
+
+        // now we probably are at the end of file, so just to be sure...
+        if (this.index >= this.text.length) return new Token(Token.TYPES.EOF, "<EOF>", this.line);
 
         switch (this.ch) {
             case "*":
@@ -155,6 +166,15 @@ export class ArenaScanner {
         }
 
         return n;
+    }
+
+    /**
+     * Reads a comment up to but not including the newline
+     */
+    readComment() {
+        while (this.ch !== "\n") {
+            this.nextCh();
+        }
     }
 
     /**
