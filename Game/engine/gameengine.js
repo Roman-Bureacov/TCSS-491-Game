@@ -54,6 +54,17 @@ export class GameEngine {
     }
 
     /**
+     * The camera properties, specifying the minimum and maximums of how the
+     * camera will see the world.
+     * @type {{lookX: {max: number, min: number}, lookY: {max: number, min: number}, depth: {max: number, min: number}}}
+     */
+    cameraProperties = {
+        lookX: {max: 5, min: -5},
+        lookY: {max: 6, min: -2},
+        depth: {max: 8, min: 4}
+    }
+
+    /**
      * The last time stamp recorder in ms
      * @type {number}
      */
@@ -225,8 +236,6 @@ export class GameEngine {
 
         // should we focus?
         if (this.focus.playerA && this.focus.playerB) {
-            const minDepth = 4;
-            const maxDepth = 8;
 
             // make the looking "bounding box" by using the centers of the primary hitboxes
             let A = this.focus.playerA;
@@ -257,7 +266,8 @@ export class GameEngine {
 
 
             this.render.camera.lookAt(
-                lookX, lookY
+                Math.max(this.cameraProperties.lookX.min, Math.min(lookX, this.cameraProperties.lookX.max)),
+                Math.max(this.cameraProperties.lookY.min, Math.min(lookY, this.cameraProperties.lookY.max))
             );
 
 
@@ -270,9 +280,9 @@ export class GameEngine {
             const newDepth = lookRadius / (canvas.right * 2 / this.render.camera.focalLength);
 
             this.render.camera.setDepth(
-                Math.min(
-                    Math.max(minDepth, newDepth),
-                    maxDepth
+                Math.max(
+                    this.cameraProperties.depth.min,
+                    Math.min(newDepth, this.cameraProperties.depth.max)
                 )
             )
         }

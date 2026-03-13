@@ -100,6 +100,7 @@ export const launchGame = (props) => {
             if (arena.music) SoundFX.play(arena.music);
             game.focus.playerA = playerOne;
             game.focus.playerB = playerTwo;
+            setCameraBounds(game, arena);
             game.init(context);
             game.start();
 
@@ -164,6 +165,34 @@ const downloadAssets = async (props) => {
     // finally, grab the audio asset
     // ??? the file assets are all pre-loaded in the SoundFX static class
 
+}
+
+/**
+ * Sets the camera movement bounds with respect to the arena
+ * @param {GameEngine} game the game and its associated camera
+ * @param {ArenaProperties} arena the arena to set bounds with
+ */
+const setCameraBounds = (game, arena) => {
+    if (game.render === undefined) throw Error("game had no camera on launcher (possible bug)");
+    
+    // find bounds
+    let t = arena.tiles[0];
+    let minLookX = t.objectX() + t.getDrawingProperties().bounds.start.x()
+    let maxLookX = t.objectX() + t.getDrawingProperties().bounds.end.x()
+    let minLookY = t.objectY() + t.getDrawingProperties().bounds.start.y()
+    let maxLookY = t.objectY() + t.getDrawingProperties().bounds.end.y()
+    
+    arena.tiles.forEach(t => {
+        minLookX = Math.min(minLookX, t.objectX() + t.getDrawingProperties().bounds.start.x());
+        maxLookX = Math.max(maxLookX, t.objectX() + t.getDrawingProperties().bounds.end.x());
+        minLookY = Math.min(minLookY, t.objectY() + t.getDrawingProperties().bounds.start.y());
+        maxLookY = Math.max(maxLookY, t.objectY() + t.getDrawingProperties().bounds.end.y());
+    })
+
+    game.cameraProperties.lookX.min = minLookX;
+    game.cameraProperties.lookX.max = maxLookX;
+    game.cameraProperties.lookY.min = minLookY;
+    game.cameraProperties.lookY.max = maxLookY;
 }
 
 class OutOfBoundsHitbox extends Hitbox {
